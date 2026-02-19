@@ -13,6 +13,7 @@
 .history
 .github
 .vscode
+.idea
 
 # Flutter repo-specific
 /bin/cache/

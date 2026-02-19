@@ -1,3 +1,8 @@
+# Security
+.env
+*.p12
+*.jks
+
 # Miscellaneous
 *.class
 *.lock
@@ -6,7 +11,8 @@
 *.swp
 .buildlog/
 .history
-
+.github
+.vscode
 
 
 # Flutter repo-specific

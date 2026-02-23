@@ -3,6 +3,9 @@
 *.p12
 *.jks
 
+# Isar
+libisar.dll
+
 # Miscellaneous
 *.class
 *.lock

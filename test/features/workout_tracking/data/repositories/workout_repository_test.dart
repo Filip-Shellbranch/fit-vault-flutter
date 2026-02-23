@@ -24,96 +24,145 @@ void main() {
     await isar.close(deleteFromDisk: true);
   });
 
-  test("Test adding an empty workout to the database.", () async {
-    DateTime time = DateTime(10, 5, 2);
-    Workout workout = Workout(time);
-
-    expect(await isar.workoutModels.count(), 0);
-    await workoutRepository.saveWorkout(workout);
-    expect(await isar.workoutModels.count(), 1);
-  });
-
-  test("Test saving a workout assigns workout ID to the workout.", () async {
-    DateTime time = DateTime(10, 5, 2);
-    Workout workout = Workout(time);
-    Workout newWorkout = await workoutRepository.saveWorkout(workout);
-    expect(newWorkout.id, isNotNull);
-  });
-
-  test("Test saving a workout with an exercise updates database.", () async {
-    String exerciseName = "Benchpress";
-
-    DateTime time = DateTime(15, 5, 2);
-    Workout workout = Workout(time);
-    Exercise exercise = Exercise(exerciseName);
-    workout.exercises.add(exercise);
-
-    expect(await isar.workoutModels.count(), 0);
-    expect(await isar.exerciseModels.count(), 0);
-    await workoutRepository.saveWorkout(workout);
-    expect(await isar.workoutModels.count(), 1);
-    expect(await isar.exerciseModels.count(), 1);
-  });
-
-  test(
-    "Test saving a workout with an exercise assigns exercise ID:s.",
-    () async {
-      String exerciseName = "Benchpress";
-
-      DateTime time = DateTime(15, 5, 2);
+  group("Test adding new workouts", () {
+    test("Test adding an empty workout to the database.", () async {
+      DateTime time = DateTime(10, 5, 2);
       Workout workout = Workout(time);
-      Exercise exercise = Exercise(exerciseName);
-      workout.exercises.add(exercise);
 
+      expect(await isar.workoutModels.count(), 0);
+      await workoutRepository.saveWorkout(workout);
+      expect(await isar.workoutModels.count(), 1);
+    });
+
+    test("Test saving a workout assigns workout ID to the workout.", () async {
+      DateTime time = DateTime(10, 5, 2);
+      Workout workout = Workout(time);
       Workout newWorkout = await workoutRepository.saveWorkout(workout);
       expect(newWorkout.id, isNotNull);
-      expect(newWorkout.exercises.length, 1);
-      for (Exercise exercise in newWorkout.exercises) {
-        expect(exercise.id, isNotNull);
-      }
-    },
-  );
+    });
 
-  test(
-    "Test saving a workout with multiple exercises updates database.",
-    () async {
+    test("Test saving a workout with an exercise updates database.", () async {
       String exerciseName = "Benchpress";
-      String exerciseName2 = "Leg press";
 
       DateTime time = DateTime(15, 5, 2);
       Workout workout = Workout(time);
       Exercise exercise = Exercise(exerciseName);
       workout.exercises.add(exercise);
-      Exercise exercise2 = Exercise(exerciseName2);
-      workout.exercises.add(exercise2);
 
       expect(await isar.workoutModels.count(), 0);
       expect(await isar.exerciseModels.count(), 0);
       await workoutRepository.saveWorkout(workout);
       expect(await isar.workoutModels.count(), 1);
-      expect(await isar.exerciseModels.count(), 2);
-    },
-  );
+      expect(await isar.exerciseModels.count(), 1);
+    });
 
-  test(
-    "Test saving a workout with multiple exercises assigns exercise ID:s.",
-    () async {
-      String exerciseName = "Benchpress";
-      String exerciseName2 = "Leg press";
+    test(
+      "Test saving a workout with an exercise assigns exercise ID:s.",
+      () async {
+        String exerciseName = "Benchpress";
 
+        DateTime time = DateTime(15, 5, 2);
+        Workout workout = Workout(time);
+        Exercise exercise = Exercise(exerciseName);
+        workout.exercises.add(exercise);
+
+        Workout newWorkout = await workoutRepository.saveWorkout(workout);
+        expect(newWorkout.id, isNotNull);
+        expect(newWorkout.exercises.length, 1);
+        for (Exercise exercise in newWorkout.exercises) {
+          expect(exercise.id, isNotNull);
+        }
+      },
+    );
+
+    test(
+      "Test saving a workout with multiple exercises updates database.",
+      () async {
+        String exerciseName = "Benchpress";
+        String exerciseName2 = "Leg press";
+
+        DateTime time = DateTime(15, 5, 2);
+        Workout workout = Workout(time);
+        Exercise exercise = Exercise(exerciseName);
+        workout.exercises.add(exercise);
+        Exercise exercise2 = Exercise(exerciseName2);
+        workout.exercises.add(exercise2);
+
+        expect(await isar.workoutModels.count(), 0);
+        expect(await isar.exerciseModels.count(), 0);
+        await workoutRepository.saveWorkout(workout);
+        expect(await isar.workoutModels.count(), 1);
+        expect(await isar.exerciseModels.count(), 2);
+      },
+    );
+
+    test(
+      "Test saving a workout with multiple exercises assigns exercise ID:s.",
+      () async {
+        String exerciseName = "Benchpress";
+        String exerciseName2 = "Leg press";
+
+        DateTime time = DateTime(15, 5, 2);
+        Workout workout = Workout(time);
+        Exercise exercise = Exercise(exerciseName);
+        workout.exercises.add(exercise);
+        Exercise exercise2 = Exercise(exerciseName2);
+        workout.exercises.add(exercise2);
+
+        Workout newWorkout = await workoutRepository.saveWorkout(workout);
+        expect(newWorkout.id, isNotNull);
+        expect(newWorkout.exercises.length, 2);
+        for (Exercise exercise in newWorkout.exercises) {
+          expect(exercise.id, isNotNull);
+        }
+      },
+    );
+
+    test("Test saving a workout with a specific ID.", () async {
+      int id = 9;
       DateTime time = DateTime(15, 5, 2);
       Workout workout = Workout(time);
-      Exercise exercise = Exercise(exerciseName);
-      workout.exercises.add(exercise);
-      Exercise exercise2 = Exercise(exerciseName2);
-      workout.exercises.add(exercise2);
+      workout.id = 9;
 
       Workout newWorkout = await workoutRepository.saveWorkout(workout);
-      expect(newWorkout.id, isNotNull);
-      expect(newWorkout.exercises.length, 2);
-      for (Exercise exercise in newWorkout.exercises) {
-        expect(exercise.id, isNotNull);
-      }
-    },
-  );
+      expect(newWorkout.id, id);
+    });
+  });
+
+  group("Test overwriting workouts", () {
+    test("Test overwriting a workout without exercises", () async {
+      int id = 4;
+      DateTime time = DateTime(10, 5, 2);
+      Workout workout = Workout(time);
+      workout.id = id;
+
+      await workoutRepository.saveWorkout(workout);
+      DateTime newTime = DateTime(1, 1, 1, 1);
+      workout.startTime = newTime;
+      Workout newWorkout = await workoutRepository.saveWorkout(workout);
+      expect(newWorkout.startTime, newTime);
+      expect(newWorkout.id, id);
+    });
+
+    test(
+      "Test overwriting a workout with exercises removes orphan exercises",
+      () async {
+        int id = 99;
+
+        Workout workout = Workout(DateTime(10, 5, 2));
+        workout.id = id;
+
+        workout.exercises.add(Exercise("Benchpress"));
+        await workoutRepository.saveWorkout(workout);
+        expect(await isar.workoutModels.count(), 1);
+        expect(await isar.exerciseModels.count(), 1);
+
+        Workout newWorkout = Workout(DateTime(1, 1, 1, 1));
+        newWorkout.id = id;
+        await workoutRepository.saveWorkout(newWorkout);
+        expect(await isar.workoutModels.count(), 1);
+        expect(await isar.exerciseModels.count(), 0);
+      },
+    );
+  });
 }

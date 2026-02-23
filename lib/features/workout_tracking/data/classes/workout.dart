@@ -4,7 +4,7 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_
 class Workout {
   int? id;
 
-  final DateTime startTime;
+  DateTime startTime;
   DateTime? endTime;
 
   List<Exercise> exercises = [];

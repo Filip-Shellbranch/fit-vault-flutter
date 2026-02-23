@@ -24,6 +24,26 @@ class WorkoutRepository {
     }).toList();
 
     await db.writeTxn(() async {
+      if (workout.id != null) {
+        final oldWorkout = await db.workoutModels.get(workout.id!);
+        if (oldWorkout != null) {
+          // Clean up orphan exercises if they are no longer a part of this workout.
+          await oldWorkout.exercises.load();
+
+          Set<int> idsToKeep = workout.exercises
+              .where((exercise) => exercise.id != null)
+              .map((exercise) => exercise.id!)
+              .toSet(); // A set of all ID:s that will be a part of the new workout.
+
+          List<Id> orphanIds = oldWorkout.exercises
+              .where((exerciseModel) => !idsToKeep.contains(exerciseModel.id))
+              .map((exerciseModel) => exerciseModel.id)
+              .toList(); // A list of all ID:s that used to be a part of the workout but is not anymore.
+
+          await db.exerciseModels.deleteAll(orphanIds);
+        }
+      }
+
       final Id workoutId = await db.workoutModels.put(newWorkout);
       workout.id = workoutId;
 
@@ -32,6 +52,7 @@ class WorkoutRepository {
         workout.exercises[i].id = exerciseIds[i];
       }
 
+      newWorkout.exercises.clear();
       newWorkout.exercises.addAll(newExerices);
       await newWorkout.exercises.save();
     });

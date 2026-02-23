@@ -19,6 +19,7 @@ class WorkoutModel {
 
   factory WorkoutModel.fromWorkout(Workout workout) {
     WorkoutModel newWorkout = WorkoutModel(workout.startTime, workout.endTime);
+    newWorkout.id = workout.id ?? Isar.autoIncrement;
     return newWorkout;
   }
 }

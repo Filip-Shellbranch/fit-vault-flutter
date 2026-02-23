@@ -21,6 +21,7 @@ class ExerciseModel {
 
   factory ExerciseModel.fromExercise(Exercise exercise) {
     final newModel = ExerciseModel(exercise.name);
+    newModel.id = exercise.id ?? Isar.autoIncrement;
     for (ExerciseSet set in exercise.sets) {
       final newSet = ExerciseSetModel.fromSet(set);
       newModel.sets.add(newSet);

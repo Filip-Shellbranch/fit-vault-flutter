@@ -4,7 +4,8 @@ class Exercise {
   int? id;
 
   String name;
-  List<ExerciseSet> sets = [];
+  final List<ExerciseSet> _sets = [];
+  List<ExerciseSet> get sets => _sets;
 
   Exercise(this.name);
 
@@ -13,7 +14,9 @@ class Exercise {
     newExercise.id = model.id;
 
     for (ExerciseSetModel setModel in model.sets) {
-      // TODO: Error handling on null values.
+      if (setModel.reps == null || setModel.weight == null) {
+        continue;
+      }
       newExercise.addSet(setModel.weight!, setModel.reps!);
     }
 
@@ -22,7 +25,7 @@ class Exercise {
 
   void addSet(double weight, int reps) {
     final newSet = ExerciseSet(weight, reps);
-    sets.add(newSet);
+    _sets.add(newSet);
   }
 }
 

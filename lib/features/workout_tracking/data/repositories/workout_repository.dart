@@ -13,7 +13,6 @@ class WorkoutRepository {
     Saves the WorkoutModel and ExerciseModels described by the Workout,
     returns a new Workout with the database ID:s for the workout and exercises.
     */
-    // TODO: Add exercise orphan cleanup in case an exercise was removed from an existing workout.
     workout.endTime = workout.endTime ?? DateTime.now();
     WorkoutModel newWorkout = WorkoutModel.fromWorkout(workout);
 

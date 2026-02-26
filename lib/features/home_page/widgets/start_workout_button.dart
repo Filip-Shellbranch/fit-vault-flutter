@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 class StartWorkoutButton extends StatelessWidget {
   const StartWorkoutButton({super.key});
 
+  final SnackBar infoMessage = const SnackBar(
+    content: Text("Workout tracking has not yet been implemented."),
+  );
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () {
-        debugPrint("Start workout!");
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.clearSnackBars();
+        messenger.showSnackBar(infoMessage);
       },
       backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,

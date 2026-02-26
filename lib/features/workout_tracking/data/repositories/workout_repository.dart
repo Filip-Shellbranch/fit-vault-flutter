@@ -58,4 +58,25 @@ class WorkoutRepository {
 
     return workout;
   }
+
+  Future<Workout> _loadWorkoutFromModel(WorkoutModel model) async {
+    Workout workout = Workout.fromModel(model);
+
+    await model.exercises.load();
+    List<Exercise> newExercises = model.exercises
+        .map((exerciseModel) => Exercise.fromModel(exerciseModel))
+        .toList();
+    workout.addExercises(newExercises);
+    return workout;
+  }
+
+  Future<List<Workout>> getAllWorkouts() async {
+    List<WorkoutModel> models = await db.workoutModels.where().findAll();
+    List<Workout> workouts = [];
+    for (WorkoutModel model in models) {
+      Workout workout = await _loadWorkoutFromModel(model);
+      workouts.add(workout);
+    }
+    return workouts;
+  }
 }

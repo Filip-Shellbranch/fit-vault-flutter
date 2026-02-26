@@ -22,4 +22,8 @@ class Workout {
 
     return newWorkout;
   }
+
+  void addExercises(List<Exercise> newExercises) {
+    exercises.addAll(newExercises);
+  }
 }

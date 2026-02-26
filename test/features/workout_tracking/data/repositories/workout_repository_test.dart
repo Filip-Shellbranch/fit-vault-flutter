@@ -165,4 +165,67 @@ void main() {
       },
     );
   });
+
+  group("Test getting workouts", () {
+    test("Get all workouts when there are no workouts", () async {
+      expect(await isar.workoutModels.count(), 0);
+      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+      expect(allWorkouts.isEmpty, true);
+    });
+    test("Get all workouts when there is only 1 workout", () async {
+      DateTime date = DateTime(10, 5, 2);
+      Workout workout = Workout(date);
+      await workoutRepository.saveWorkout(workout);
+
+      expect(await isar.workoutModels.count(), 1);
+      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+      expect(allWorkouts.length, 1);
+    });
+    test("Get all workouts when there are multiple workouts", () async {
+      int numWorkouts = 4;
+      expect(
+        numWorkouts,
+        greaterThan(1),
+      ); // This test should be done with multiple workouts.
+      for (var i = 0; i < numWorkouts; i++) {
+        Workout workout = Workout(DateTime(i));
+        await workoutRepository.saveWorkout(workout);
+      }
+
+      expect(await isar.workoutModels.count(), numWorkouts);
+      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+      expect(allWorkouts.length, numWorkouts);
+    });
+
+    test(
+      "Check that loaded workout information is correct when there is only 1 workout",
+      () async {
+        DateTime date = DateTime(10, 5, 2);
+        int id = 5;
+        Workout workout = Workout(date);
+        workout.id = 5;
+
+        String exerciseName = "Bench";
+        Exercise e = Exercise(exerciseName);
+        double setWeight = 10;
+        int setReps = 4;
+        e.addSet(setWeight, setReps);
+        workout.addExercises([e]);
+        await workoutRepository.saveWorkout(workout);
+
+        expect(await isar.workoutModels.count(), 1);
+        List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+        Workout foundWorkout = allWorkouts.first;
+        expect(foundWorkout.startTime, date);
+        expect(foundWorkout.id, id);
+        expect(foundWorkout.exercises.length, 1);
+
+        Exercise loadedExercise = foundWorkout.exercises.first;
+        expect(loadedExercise.name, exerciseName);
+        expect(loadedExercise.sets.length, 1);
+        expect(loadedExercise.sets.first.reps, setReps);
+        expect(loadedExercise.sets.first.weight, setWeight);
+      },
+    );
+  });
 }

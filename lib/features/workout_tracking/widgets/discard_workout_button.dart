@@ -4,8 +4,8 @@ import 'package:fit_vault_flutter/features/workout_tracking/views/edit_workout_p
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StartWorkoutButton extends StatelessWidget {
-  const StartWorkoutButton({super.key});
+class DiscardWorkoutButton extends StatelessWidget {
+  const DiscardWorkoutButton({super.key});
 
   final SnackBar infoMessage = const SnackBar(
     content: Text("Workout tracking has not yet been implemented."),
@@ -17,25 +17,16 @@ class StartWorkoutButton extends StatelessWidget {
       builder: (context, ref, child) {
         return FloatingActionButton.extended(
           onPressed: () {
-            ref.read(currentActivityProvider.notifier).startWorkout();
-            Activity currentActivity = ref.watch(currentActivityProvider);
-            if (currentActivity is WorkoutActivity) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      EditWorkoutPage(workout: currentActivity.activeWorkout),
-                ),
-              );
-            }
+            ref.read(currentActivityProvider.notifier).stop();
+            Navigator.pop(context);
           },
           heroTag: null,
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.red,
           foregroundColor: Colors.white,
-          icon: ImageIcon(AssetImage("assets/icons/icons8-gym-100.png")),
+          icon: Icon(Icons.delete),
           label: SizedBox(
             width: 200,
-            child: Text("Start workout", style: TextStyle(fontSize: 26)),
+            child: Text("Discard workout", style: TextStyle(fontSize: 26)),
           ),
         );
       },

@@ -15,6 +15,7 @@ class StartRunButton extends StatelessWidget {
         messenger.clearSnackBars();
         messenger.showSnackBar(infoMessage);
       },
+      heroTag: null,
       backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,
       icon: ImageIcon(AssetImage("assets/icons/icons8-running-100.png")),

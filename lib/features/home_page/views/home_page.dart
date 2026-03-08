@@ -31,11 +31,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 50),
-              Text(
-                currentActivity is NoActivity
-                    ? "No activity"
-                    : "Workout active!",
-              ),
 
               Expanded(child: Container()),
             ],

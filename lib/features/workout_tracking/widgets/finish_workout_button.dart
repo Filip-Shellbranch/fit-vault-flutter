@@ -1,15 +1,15 @@
-import 'package:fit_vault_flutter/features/home_page/widgets/start_run_button.dart';
-import 'package:fit_vault_flutter/features/home_page/widgets/start_workout_button.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/widgets/discard_workout_button.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/widgets/save_workout_button.dart';
 import 'package:flutter/material.dart';
 
-class NewActivityButton extends StatefulWidget {
-  const NewActivityButton({super.key});
+class FinishWorkoutButton extends StatefulWidget {
+  const FinishWorkoutButton({super.key});
 
   @override
-  State<NewActivityButton> createState() => _NewActivityButtonState();
+  State<FinishWorkoutButton> createState() => _FinishWorkoutButtonState();
 }
 
-class _NewActivityButtonState extends State<NewActivityButton> {
+class _FinishWorkoutButtonState extends State<FinishWorkoutButton> {
   bool _isOpen = false;
 
   void toggleOptions() {
@@ -43,20 +43,20 @@ class _NewActivityButtonState extends State<NewActivityButton> {
           extendedPadding: EdgeInsets.symmetric(horizontal: 20),
           backgroundColor: Theme.of(context).primaryColor,
           icon: Icon(
-            _isOpen ? Icons.close : Icons.add_circle,
+            _isOpen ? Icons.close : Icons.check,
             size: 30,
             color: Colors.white,
           ),
           label: Text(
-            _isOpen ? "Close" : "New activity",
+            _isOpen ? "Close" : "Finish workout",
             style: TextStyle(fontSize: 24, color: Colors.white),
           ),
         ),
         SizedBox(height: 16.0),
         if (_isOpen) ...[
-          _buildAnimatedButton(button: StartWorkoutButton(), delay: 1),
+          _buildAnimatedButton(button: SaveWorkoutButton(), delay: 1),
           const SizedBox(height: 16.0),
-          _buildAnimatedButton(button: StartRunButton(), delay: 0),
+          _buildAnimatedButton(button: DiscardWorkoutButton(), delay: 0),
         ],
       ],
     );

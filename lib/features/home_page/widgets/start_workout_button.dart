@@ -1,5 +1,4 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/classes/activity.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_activity_provider.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/activity_controller.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/views/edit_workout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,17 +16,11 @@ class StartWorkoutButton extends StatelessWidget {
       builder: (context, ref, child) {
         return FloatingActionButton.extended(
           onPressed: () {
-            ref.read(currentActivityProvider.notifier).startWorkout();
-            Activity currentActivity = ref.watch(currentActivityProvider);
-            if (currentActivity is WorkoutActivity) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      EditWorkoutPage(workout: currentActivity.activeWorkout),
-                ),
-              );
-            }
+            ActivityController(ref).startWorkout();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditWorkoutPage()),
+            );
           },
           heroTag: null,
           backgroundColor: Theme.of(context).primaryColor,

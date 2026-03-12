@@ -1,34 +1,29 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/classes/activity.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/current_activity_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final currentActivityRepositoryProvider = Provider<CurrentActivityRepository>((
-  ref,
-) {
-  return CurrentActivityRepository();
-});
+part 'current_activity_provider.g.dart';
 
-class CurrentActivityNotifier extends Notifier<Activity> {
-  @override
-  Activity build() {
-    // Initialize the state from the repository
-    return ref.watch(currentActivityRepositoryProvider).currentActivity;
+enum ActivityType { none, workout, run }
+
+extension ActivityTypeChecks on ActivityType {
+  bool isWorkout() {
+    return this == ActivityType.workout;
   }
 
-  void startWorkout() {
-    final repository = ref.read(currentActivityRepositoryProvider);
-    repository.startWorkout();
-
-    state = repository.currentActivity; // Triggers UI rebuild
+  bool isRun() {
+    return this == ActivityType.run;
   }
 
-  void stop() {
-    ref.read(currentActivityRepositoryProvider).stopActivity();
-    state = NoActivity();
+  bool isNone() {
+    return this == ActivityType.none;
   }
 }
 
-final currentActivityProvider =
-    NotifierProvider<CurrentActivityNotifier, Activity>(() {
-      return CurrentActivityNotifier();
-    });
+@riverpod
+class CurrentActivity extends _$CurrentActivity {
+  @override
+  ActivityType build() => ActivityType.none;
+
+  void startWorkout() => state = ActivityType.workout;
+  void startRun() => state = ActivityType.run;
+  void stop() => state = ActivityType.none;
+}

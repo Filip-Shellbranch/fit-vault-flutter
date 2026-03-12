@@ -1,6 +1,4 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/classes/activity.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_activity_provider.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/views/edit_workout_page.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/widgets/deletion_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,8 +15,12 @@ class DiscardWorkoutButton extends StatelessWidget {
       builder: (context, ref, child) {
         return FloatingActionButton.extended(
           onPressed: () {
-            ref.read(currentActivityProvider.notifier).stop();
-            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (context) {
+                return DeletionConfirmDialog();
+              },
+            );
           },
           heroTag: null,
           backgroundColor: Colors.red,

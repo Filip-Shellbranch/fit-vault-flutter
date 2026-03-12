@@ -1,4 +1,3 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/classes/activity.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_activity_provider.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/views/edit_workout_page.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +15,13 @@ class _ContinueActivityButtonState extends State<ContinueActivityButton> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        Activity currentActivity = ref.watch(currentActivityProvider);
+        ActivityType currentActivity = ref.watch(currentActivityProvider);
         return FloatingActionButton.extended(
           onPressed: () {
-            if (currentActivity is WorkoutActivity) {
+            if (currentActivity.isWorkout()) {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      EditWorkoutPage(workout: currentActivity.activeWorkout),
-                ),
+                MaterialPageRoute(builder: (context) => EditWorkoutPage()),
               );
             }
           },
@@ -34,7 +30,7 @@ class _ContinueActivityButtonState extends State<ContinueActivityButton> {
           icon: Icon(Icons.edit, size: 32),
           label: Text(
             style: TextStyle(fontSize: 22),
-            currentActivity is WorkoutActivity
+            currentActivity.isWorkout()
                 ? "Continue workout"
                 : "Error unknown activity",
           ),

@@ -27,6 +27,37 @@ class Exercise {
     final newSet = ExerciseSet(weight, reps);
     _sets.add(newSet);
   }
+
+  String formatSetsAndReps() {
+    if (sets.isEmpty) {
+      return "No sets registered";
+    }
+    if (isNumRepsConstant()) {
+      return "${sets.length}x${sets.first.reps}";
+    }
+    String result = "";
+    for (var set in sets) {
+      result += set.reps.toString();
+      if (set != sets.last) {
+        result += "/";
+      }
+    }
+    return result;
+  }
+
+  bool isNumRepsConstant() {
+    if (sets.isEmpty) {
+      return true;
+    }
+    int? prevNumReps;
+    for (final set in sets) {
+      if (prevNumReps != null && prevNumReps != set.reps) {
+        return false;
+      }
+      prevNumReps = set.reps;
+    }
+    return true;
+  }
 }
 
 class ExerciseSet {

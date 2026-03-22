@@ -6,7 +6,7 @@ String format24h(DateTime time) {
 
 String formatDurationMinutesSeconds(Duration duration) {
   // Use inSegments to get absolute totals
-  String minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+  String minutes = duration.inMinutes.remainder(60).toString();
   String seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
 
   return "$minutes:$seconds";

@@ -5,38 +5,34 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/providers/curre
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final ActivityType currentActivity = ref.watch(currentActivityProvider);
-        return Scaffold(
-          appBar: AppBar(toolbarHeight: 20),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          floatingActionButton: currentActivity.isNone()
-              ? NewActivityButton()
-              : ContinueActivityButton(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          body: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TitleWidget(),
-                ),
-              ),
-              SizedBox(height: 50),
-
-              Expanded(child: Container()),
-            ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ActivityType currentActivity = ref.watch(currentActivityProvider);
+    return Scaffold(
+      appBar: AppBar(toolbarHeight: 20),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      floatingActionButton: currentActivity.isNone()
+          ? NewActivityButton()
+          : ContinueActivityButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TitleWidget(),
+            ),
           ),
-          resizeToAvoidBottomInset: false,
-        );
-      },
+          SizedBox(height: 50),
+
+          Expanded(child: Container()),
+        ],
+      ),
+      resizeToAvoidBottomInset: false,
     );
   }
 }

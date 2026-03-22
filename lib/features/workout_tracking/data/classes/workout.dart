@@ -26,4 +26,12 @@ class Workout {
   void addExercises(List<Exercise> newExercises) {
     exercises.addAll(newExercises);
   }
+
+  Workout copy() {
+    Workout newWorkout = Workout(startTime);
+    newWorkout.endTime = endTime;
+    newWorkout.exercises = exercises;
+    newWorkout.id = id;
+    return newWorkout;
+  }
 }

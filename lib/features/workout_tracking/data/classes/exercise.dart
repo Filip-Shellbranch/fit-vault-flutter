@@ -28,6 +28,12 @@ class Exercise {
     _sets.add(newSet);
   }
 
+  void updateSetAt(int index, double weight, int reps) {
+    final oldSet = _sets.elementAt(index);
+    oldSet.weight = weight;
+    oldSet.reps = reps;
+  }
+
   String formatSetsAndReps() {
     if (sets.isEmpty) {
       return "No sets registered";
@@ -65,4 +71,8 @@ class ExerciseSet {
   int reps;
 
   ExerciseSet(this.weight, this.reps);
+
+  ExerciseSet copy() {
+    return ExerciseSet(weight, reps);
+  }
 }

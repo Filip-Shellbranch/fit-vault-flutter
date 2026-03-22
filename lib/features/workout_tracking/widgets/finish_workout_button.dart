@@ -1,64 +1,85 @@
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/activity_controller.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/widgets/deletion_confirm_dialog.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/discard_workout_button.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/save_workout_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FinishWorkoutButton extends StatefulWidget {
+class FinishWorkoutButton extends ConsumerWidget {
   const FinishWorkoutButton({super.key});
 
-  @override
-  State<FinishWorkoutButton> createState() => _FinishWorkoutButtonState();
-}
-
-class _FinishWorkoutButtonState extends State<FinishWorkoutButton> {
-  bool _isOpen = false;
-
-  void toggleOptions() {
-    setState(() {
-      _isOpen = !_isOpen;
-    });
+  void onSavePressed(BuildContext context, WidgetRef ref) {
+    ActivityController(ref).stop();
+    Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
-  Widget _buildAnimatedButton({required Widget button, required int delay}) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(
-        milliseconds: 200 + (delay * 100),
-      ), // Staggers the timing
-      curve: Curves.easeOutBack,
-      builder: (context, value, child) {
-        return Transform.scale(scale: value, child: button);
+  void onDiscardPressed(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DeletionConfirmDialog();
       },
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      verticalDirection: VerticalDirection.up,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        FloatingActionButton.extended(
-          onPressed: toggleOptions,
-          heroTag: null,
-          extendedPadding: EdgeInsets.symmetric(horizontal: 20),
-          backgroundColor: Theme.of(context).primaryColor,
-          icon: Icon(
-            _isOpen ? Icons.close : Icons.check,
-            size: 30,
-            color: Colors.white,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: PopupMenuButton<String>(
+        onSelected: (value) {
+          switch (value) {
+            case "Save":
+              onSavePressed(context, ref);
+              break;
+            case "Discard":
+              onDiscardPressed(context, ref);
+              break;
+          }
+          debugPrint(value);
+        },
+        child: Ink(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor,
+            borderRadius: BorderRadius.circular(8), // Edit corner radius here
           ),
-          label: Text(
-            _isOpen ? "Close" : "Finish workout",
-            style: TextStyle(fontSize: 24, color: Colors.white),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            alignment: Alignment.center,
+            child: const Text(
+              "Finish workout",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-        SizedBox(height: 16.0),
-        if (_isOpen) ...[
-          _buildAnimatedButton(button: SaveWorkoutButton(), delay: 1),
-          const SizedBox(height: 16.0),
-          _buildAnimatedButton(button: DiscardWorkoutButton(), delay: 0),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: "Save",
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: Container(
+              color: Colors.green,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SaveWorkoutButton(),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: "Discard",
+            padding: EdgeInsets.all(8),
+            child: Container(
+              color: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DiscardWorkoutButton(),
+              ),
+            ),
+          ),
         ],
-      ],
+      ),
     );
   }
 }

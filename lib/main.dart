@@ -22,7 +22,12 @@ void main() async {
         theme: ThemeData.dark().copyWith(
           highlightColor: Color(0xffdf7315),
           primaryColor: Color(0xff035fa1),
+          appBarTheme: AppBarTheme(
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+          ),
         ),
+
         home: HomePage(),
         debugShowCheckedModeBanner: false,
       ),

@@ -8,12 +8,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 typedef UpdateSetCallback =
     void Function(int setIndex, int newReps, double newWeight);
 typedef AddSetCallback = void Function();
+typedef RemoveSetCallback = void Function(int setIndex);
 
 class ExerciseCard extends ConsumerWidget {
-  const ExerciseCard({super.key, required this.exercise, required this.index});
+  const ExerciseCard({
+    super.key,
+    required this.exercise,
+    required this.exerciseIndex,
+  });
 
   final Exercise exercise;
-  final int index;
+  final int exerciseIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +27,7 @@ class ExerciseCard extends ConsumerWidget {
       exercise.updateSetAt(setIndex, newWeight, newReps);
       ref
           .watch(currentWorkoutProvider.notifier)
-          .updateExercise(index, exercise);
+          .updateExercise(exerciseIndex, exercise);
     }
 
     void addSet() {
@@ -35,7 +40,14 @@ class ExerciseCard extends ConsumerWidget {
       exercise.addSet(newWeight, newReps);
       ref
           .watch(currentWorkoutProvider.notifier)
-          .updateExercise(index, exercise);
+          .updateExercise(exerciseIndex, exercise);
+    }
+
+    void removeSet(int setIndex) {
+      exercise.removeSetAt(setIndex);
+      ref
+          .watch(currentWorkoutProvider.notifier)
+          .updateExercise(exerciseIndex, exercise);
     }
 
     return Padding(
@@ -57,7 +69,7 @@ class ExerciseCard extends ConsumerWidget {
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
                     ),
-                    (index + 1).toString(),
+                    (exerciseIndex + 1).toString(),
                   ),
                   Text(exercise.name, style: TextStyle(fontSize: 20)),
                 ],
@@ -73,7 +85,12 @@ class ExerciseCard extends ConsumerWidget {
           ...exercise.sets.asMap().entries.map((entry) {
             int index = entry.key;
             ExerciseSet set = entry.value;
-            return SetCard(index: index, set: set, updateSetFunc: updateSet);
+            return SetCard(
+              index: index,
+              set: set,
+              updateSetFunc: updateSet,
+              removeSetFunc: removeSet,
+            );
           }),
           AddSetButton(addSetFunc: addSet),
         ],

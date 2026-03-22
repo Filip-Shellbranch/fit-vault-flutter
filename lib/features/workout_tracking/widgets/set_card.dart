@@ -6,11 +6,13 @@ class SetCard extends StatelessWidget {
   final int index;
   final ExerciseSet set;
   final UpdateSetCallback updateSetFunc;
+  final RemoveSetCallback removeSetFunc;
   const SetCard({
     super.key,
     required this.index,
     required this.set,
     required this.updateSetFunc,
+    required this.removeSetFunc,
   });
 
   void onRepsChanged(String newValueString) {
@@ -21,7 +23,6 @@ class SetCard extends StatelessWidget {
     }
 
     updateSetFunc(index, newValue, set.weight);
-    debugPrint("Reps changed");
   }
 
   void onWeightChanged(String newValueString) {
@@ -31,7 +32,6 @@ class SetCard extends StatelessWidget {
       return;
     }
     updateSetFunc(index, set.reps, newValue);
-    debugPrint("Weight changed");
   }
 
   @override
@@ -44,7 +44,7 @@ class SetCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Theme.of(context).primaryColor, width: 6.0),
+          top: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
         ),
       ),
       child: Row(
@@ -102,9 +102,7 @@ class SetCard extends StatelessWidget {
             ],
           ),
           IconButton(
-            onPressed: () {
-              // TODO: Remove set
-            },
+            onPressed: () => removeSetFunc(index),
             icon: Icon(Icons.remove, color: Colors.red),
           ),
         ],

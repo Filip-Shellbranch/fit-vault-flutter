@@ -24,7 +24,7 @@ class ExerciseList extends ConsumerWidget {
               Exercise exercise = exercises.elementAt(i);
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: ExerciseCard(exercise: exercise, index: i),
+                child: ExerciseCard(exercise: exercise, exerciseIndex: i),
               );
             },
           ),

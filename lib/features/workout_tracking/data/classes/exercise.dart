@@ -34,6 +34,10 @@ class Exercise {
     oldSet.reps = reps;
   }
 
+  void removeSetAt(int index) {
+    _sets.removeAt(index);
+  }
+
   String formatSetsAndReps() {
     if (sets.isEmpty) {
       return "No sets registered";

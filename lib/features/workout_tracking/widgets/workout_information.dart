@@ -1,3 +1,5 @@
+import 'package:fit_vault_flutter/core/utils/second_ticker_provider.dart';
+import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +11,7 @@ class BasicWorkoutInformation extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Workout workout = ref.watch(currentWorkoutProvider);
+    ref.watch(secondTickerProvider);
     final duration = DateTime.now().difference(workout.startTime);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -20,7 +23,7 @@ class BasicWorkoutInformation extends ConsumerWidget {
             child: Text(
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
-              "Workout Start: \n${workout.startTime.hour}:${workout.startTime.minute}",
+              "Workout Start: \n${format24h(workout.startTime)}",
             ),
           ),
           SizedBox(
@@ -28,7 +31,7 @@ class BasicWorkoutInformation extends ConsumerWidget {
             child: Text(
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
-              "Workout Duration: \n${duration.inSeconds} s",
+              "Workout Duration: \n${formatDurationMinutesSeconds(duration)}",
             ),
           ),
         ],

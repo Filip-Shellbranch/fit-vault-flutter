@@ -2,7 +2,7 @@ import 'package:fit_vault_flutter/core/utils/second_ticker_provider.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_workout_provider.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BasicWorkoutInformation extends ConsumerWidget {
@@ -18,25 +18,44 @@ class BasicWorkoutInformation extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            height: 50,
-            child: Text(
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-              "Workout Start: \n${format24h(workout.startTime)}",
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(color: Theme.of(context).highlightColor),
+              ),
+            ),
+            height: 70,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                  "Workout Start: \n${format24h(workout.startTime)}",
+                ),
+              ),
             ),
           ),
-          SizedBox(
-            height: 50,
-            child: Text(
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-              "Workout Duration: \n${formatDurationMinutesSeconds(duration)}",
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(color: Theme.of(context).highlightColor),
+              ),
+            ),
+            height: 70,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                  "Workout Duration: \n${formatDurationMinutesSeconds(duration)}",
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
-    //return const Text("Display workout information here!");
   }
 }

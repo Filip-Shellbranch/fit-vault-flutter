@@ -56,31 +56,37 @@ class ExerciseCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 16,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                spacing: 16,
+          Container(
+            color: Colors.white.withAlpha(10),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    (exerciseIndex + 1).toString(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    spacing: 16,
+                    children: [
+                      Text(
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        (exerciseIndex + 1).toString(),
+                      ),
+                      Text(exercise.name, style: TextStyle(fontSize: 20)),
+                    ],
                   ),
-                  Text(exercise.name, style: TextStyle(fontSize: 20)),
+                  IconButton(
+                    onPressed: () {
+                      // TODO: Implement edit function
+                    },
+                    icon: Icon(Icons.edit),
+                  ),
                 ],
               ),
-              IconButton(
-                onPressed: () {
-                  // TODO: Implement edit function
-                },
-                icon: Icon(Icons.edit),
-              ),
-            ],
+            ),
           ),
           ...exercise.sets.asMap().entries.map((entry) {
             int index = entry.key;

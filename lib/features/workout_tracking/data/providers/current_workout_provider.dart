@@ -14,10 +14,6 @@ class CurrentWorkout extends _$CurrentWorkout {
 
   void startWorkout({Workout? workout}) {
     workout ??= Workout(DateTime.now());
-    Exercise e1 = Exercise("hej");
-    e1.addSet(50, 10);
-    e1.addSet(40, 10);
-    workout.addExercises([e1, Exercise("tho")]); // TODO: Remove
     state = workout;
   }
 

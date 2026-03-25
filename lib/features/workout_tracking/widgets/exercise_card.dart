@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/views/edit_exercise_page.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/add_set_button.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/set_card.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,15 @@ class ExerciseCard extends ConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      // TODO: Implement edit function
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditExercisePage(
+                            exerciseIndex: exerciseIndex,
+                            exercise: exercise,
+                          ),
+                        ),
+                      );
                     },
                     icon: Icon(Icons.edit),
                   ),

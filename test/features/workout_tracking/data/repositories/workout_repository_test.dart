@@ -228,4 +228,112 @@ void main() {
       },
     );
   });
+
+  group("Test finding workouts containing specific exercise", () {
+    test("Test finding all workouts for exercise if there are none", () async {
+      Workout w1 = Workout(DateTime(1));
+      await workoutRepository.saveWorkout(w1);
+
+      Workout w2 = Workout(DateTime(3, 3));
+      w2.addExercises([Exercise("Abdominal")]);
+      await workoutRepository.saveWorkout(w2);
+
+      String exerciseName = "Chest press";
+      List<Workout> workouts = await workoutRepository.getWorkoutsWithExercise(
+        exerciseName,
+      );
+      int numWorkouts = await workoutRepository.countWorkoutsWithExercise(
+        exerciseName,
+      );
+      expect(workouts, isEmpty);
+      expect(numWorkouts, 0);
+    });
+
+    test("Test finding all workouts for exercise if there is one", () async {
+      Workout w1 = Workout(DateTime(1));
+      await workoutRepository.saveWorkout(w1);
+
+      String exerciseName = "Chest press";
+
+      Workout w2 = Workout(DateTime(3, 3));
+      w2.addExercises([Exercise(exerciseName)]);
+      await workoutRepository.saveWorkout(w2);
+
+      List<Workout> workouts = await workoutRepository.getWorkoutsWithExercise(
+        exerciseName,
+      );
+      int numWorkouts = await workoutRepository.countWorkoutsWithExercise(
+        exerciseName,
+      );
+      expect(workouts, isNotEmpty);
+      expect(workouts.length, 1);
+      expect(numWorkouts, 1);
+    });
+
+    test(
+      "Test finding all workouts for exercise if there are several",
+      () async {
+        Workout w1 = Workout(DateTime(1));
+        await workoutRepository.saveWorkout(w1);
+
+        String exerciseName = "Biceps curl";
+        int count = 5;
+        final saveTasks = List.generate(count, (int i) {
+          Workout w = Workout(DateTime(3, 3));
+          w.addExercises([Exercise(exerciseName)]);
+          return workoutRepository.saveWorkout(w);
+        });
+        await Future.wait(saveTasks);
+
+        String exerciseName2 = "Triceps press";
+        int count2 = 3;
+        final saveTasks2 = List.generate(count2, (int i) {
+          Workout w = Workout(DateTime(3, 3));
+          w.addExercises([Exercise(exerciseName2)]);
+          return workoutRepository.saveWorkout(w);
+        });
+        await Future.wait(saveTasks2);
+
+        List<Workout> workouts = await workoutRepository
+            .getWorkoutsWithExercise(exerciseName);
+        int numWorkouts = await workoutRepository.countWorkoutsWithExercise(
+          exerciseName,
+        );
+        expect(workouts, isNotEmpty);
+        expect(workouts.length, count);
+        expect(numWorkouts, count);
+
+        List<Workout> workouts2 = await workoutRepository
+            .getWorkoutsWithExercise(exerciseName2);
+        int numWorkouts2 = await workoutRepository.countWorkoutsWithExercise(
+          exerciseName,
+        );
+        expect(workouts2, isNotEmpty);
+        expect(workouts2.length, count2);
+        expect(numWorkouts2, count);
+      },
+    );
+
+    test(
+      "Test finding workout with exercise even if workouts also contain other exercises",
+      () async {
+        Workout w1 = Workout(DateTime(1));
+        await workoutRepository.saveWorkout(w1);
+
+        String exerciseName = "Chest press";
+        Workout w2 = Workout(DateTime(3, 3));
+        w2.addExercises([Exercise(exerciseName), Exercise("Abdominal")]);
+        await workoutRepository.saveWorkout(w2);
+
+        List<Workout> workouts = await workoutRepository
+            .getWorkoutsWithExercise(exerciseName);
+        int numWorkouts = await workoutRepository.countWorkoutsWithExercise(
+          exerciseName,
+        );
+        expect(workouts, isNotEmpty);
+        expect(workouts.length, 1);
+        expect(numWorkouts, 1);
+      },
+    );
+  });
 }

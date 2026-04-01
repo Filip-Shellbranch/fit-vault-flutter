@@ -79,4 +79,22 @@ class WorkoutRepository {
     }
     return workouts;
   }
+
+  Future<List<Workout>> getWorkoutsWithExercise(String exerciseName) async {
+    List<WorkoutModel> models = await db.workoutModels
+        .filter()
+        .exercises((e) => e.nameEqualTo(exerciseName))
+        .findAll();
+    Future<List<Workout>> workouts = Future.wait(
+      models.map((model) => _loadWorkoutFromModel(model)),
+    );
+    return workouts;
+  }
+
+  Future<int> countWorkoutsWithExercise(String exerciseName) async {
+    return db.workoutModels
+        .filter()
+        .exercises((e) => e.nameEqualTo(exerciseName))
+        .count();
+  }
 }

@@ -1,6 +1,8 @@
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
+
 final defaultExerciseList = [
-  "Chest press",
-  "Biceps curl",
-  "Abdominal",
-  "Chest press 2",
+  ExerciseType("Chest press"),
+  ExerciseType("Biceps curl"),
+  ExerciseType("Abdominal"),
+  ExerciseType("Chest press 2"),
 ];

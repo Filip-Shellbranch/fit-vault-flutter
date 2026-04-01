@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/saved_exercise_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
 
@@ -51,7 +50,8 @@ void main() {
   });
   group("Fetching saved exercises", () {
     test("Fetch exercises when there are no saved exercises", () async {
-      List<String> exercises = await exerciseRepository.getSavedExercises();
+      List<ExerciseType> exercises = await exerciseRepository
+          .getSavedExercises();
       expect(exercises.isEmpty, isTrue);
     });
 
@@ -59,7 +59,8 @@ void main() {
       String eName = "exercise1";
       bool success = await exerciseRepository.saveNewExerciseType(eName);
       expect(success, isTrue);
-      List<String> exercises = await exerciseRepository.getSavedExercises();
+      List<ExerciseType> exercises = await exerciseRepository
+          .getSavedExercises();
       expect(exercises.isEmpty, isFalse);
       expect(exercises.length, 1);
     });
@@ -72,7 +73,8 @@ void main() {
         expect(success, isTrue);
       }
 
-      List<String> exercises = await exerciseRepository.getSavedExercises();
+      List<ExerciseType> exercises = await exerciseRepository
+          .getSavedExercises();
       expect(exercises.isEmpty, isFalse);
       expect(exercises.length, numExercises);
     });

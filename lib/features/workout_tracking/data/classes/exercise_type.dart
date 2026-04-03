@@ -1,5 +1,10 @@
 class ExerciseType {
   final String exerciseName;
   final bool isCustom;
-  ExerciseType(this.exerciseName, {this.isCustom = false});
+  final bool isBodyWeight;
+  ExerciseType(
+    this.exerciseName, {
+    this.isCustom = false,
+    this.isBodyWeight = false,
+  });
 }

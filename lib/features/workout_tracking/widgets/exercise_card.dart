@@ -24,7 +24,6 @@ class ExerciseCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void updateSet(int setIndex, int newReps, double newWeight) {
-      debugPrint(setIndex.toString());
       exercise.updateSetAt(setIndex, newWeight, newReps);
       ref
           .watch(currentWorkoutProvider.notifier)

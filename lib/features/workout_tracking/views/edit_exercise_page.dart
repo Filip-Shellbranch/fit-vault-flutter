@@ -11,6 +11,12 @@ typedef SelectExerciseCallback = void Function(String exerciseName);
 typedef CreateExerciseCallback = Future<bool> Function(String exerciseName);
 typedef DeleteExerciseTypeCallback = Future<bool> Function(String exerciseName);
 
+Exercise createDefaultExercise(String exerciseName) {
+  final newExercise = Exercise(exerciseName);
+  newExercise.addSet(0, 10);
+  return newExercise;
+}
+
 class EditExercisePage extends ConsumerStatefulWidget {
   final int? exerciseIndex;
   final Exercise? exercise;
@@ -35,7 +41,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   void selectExercise(String exerciseName) {
     bool isNewExercise =
         widget.exercise == null || widget.exerciseIndex == null;
-    final newExercise = widget.exercise ?? Exercise(exerciseName);
+    final newExercise = widget.exercise ?? createDefaultExercise(exerciseName);
 
     if (isNewExercise) {
       ref.read(currentWorkoutProvider.notifier).addExercise(newExercise);

@@ -6,10 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class StartWorkoutButton extends StatelessWidget {
   const StartWorkoutButton({super.key});
 
-  final SnackBar infoMessage = const SnackBar(
-    content: Text("Workout tracking has not yet been implemented."),
-  );
-
   @override
   Widget build(BuildContext context) {
     return Consumer(

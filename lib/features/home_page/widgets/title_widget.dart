@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class TitleWidget extends StatelessWidget {
   const TitleWidget({super.key});

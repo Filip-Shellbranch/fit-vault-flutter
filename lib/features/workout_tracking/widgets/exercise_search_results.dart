@@ -2,20 +2,23 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercis
 import 'package:fit_vault_flutter/features/workout_tracking/views/edit_exercise_page.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/create_exercise_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ExerciseSearchResults extends StatelessWidget {
+class ExerciseSearchResults extends ConsumerWidget {
   final List<ExerciseType> searchResults;
   final SelectExerciseCallback selectExerciseFunc;
   final CreateExerciseCallback createExerciseFunc;
+  final DeleteExerciseTypeCallback deleteExerciseFunc;
   const ExerciseSearchResults({
     super.key,
     required this.searchResults,
     required this.selectExerciseFunc,
     required this.createExerciseFunc,
+    required this.deleteExerciseFunc,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListView.builder(
       itemCount: searchResults.length + 1,
       itemBuilder: (context, i) {
@@ -68,7 +71,22 @@ class ExerciseSearchResults extends StatelessWidget {
                 ),
               ),
               exerciseType.isCustom
-                  ? IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+                  ? IconButton(
+                      onPressed: () async {
+                        bool success = await deleteExerciseFunc(exerciseName);
+                        if (!success && context.mounted) {
+                          final snackBar = SnackBar(
+                            content: Text(
+                              "Exercise '$exerciseName' can not be deleted as it is used in one or more workouts!",
+                            ),
+                          );
+                          final messenger = ScaffoldMessenger.of(context);
+                          messenger.clearSnackBars();
+                          messenger.showSnackBar(snackBar);
+                        }
+                      },
+                      icon: Icon(Icons.delete),
+                    )
                   : Container(),
             ],
           ),

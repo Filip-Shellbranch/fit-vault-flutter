@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef SelectExerciseCallback = void Function(String exerciseName);
 typedef CreateExerciseCallback = Future<bool> Function(String exerciseName);
+typedef DeleteExerciseTypeCallback = Future<bool> Function(String exerciseName);
 
 class EditExercisePage extends ConsumerStatefulWidget {
   final int? exerciseIndex;
@@ -70,6 +71,24 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
     return success;
   }
 
+  Future<bool> tryDeleteExerciseType(String exerciseName) async {
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    if (currentWorkout.exercises.any(
+      (Exercise exercise) => exercise.name == exerciseName,
+    )) {
+      // The exercise is used in the current workout and should not be able to be deleted.
+      return false;
+    }
+    final repository = ref.read(savedExerciseRepositoryProvider);
+    bool success = await repository.tryDeleteExerciseType(exerciseName);
+    if (success) {
+      final newList = [...exerciseList];
+      newList.removeWhere((e) => e.exerciseName == exerciseName);
+      updateExerciseList(newList);
+    }
+    return success;
+  }
+
   @override
   void initState() {
     final repository = ref.read(savedExerciseRepositoryProvider);
@@ -109,6 +128,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
                     searchResults: _searchResults.value,
                     selectExerciseFunc: selectExercise,
                     createExerciseFunc: createExercise,
+                    deleteExerciseFunc: tryDeleteExerciseType,
                   ),
                 ),
               ),

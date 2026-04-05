@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/saved_exercise_repository.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/workout_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
@@ -11,13 +14,26 @@ import 'package:isar_community/isar.dart';
 void main() {
   late Isar isar;
   late WorkoutRepository workoutRepository;
+
+  final testDefaultList = [
+    ExerciseType("Abdominal"),
+    ExerciseType("Chest press"),
+    ExerciseType("Bench press"),
+    ExerciseType("Leg press"),
+    ExerciseType("Biceps curl"),
+    ExerciseType("Triceps press"),
+  ];
   setUp(() async {
     await Isar.initializeIsarCore(download: true);
     isar = await Isar.open([
       ExerciseModelSchema,
       WorkoutModelSchema,
+      SavedExerciseModelSchema,
     ], directory: Directory.systemTemp.path);
     workoutRepository = WorkoutRepository(isar);
+    await SavedExerciseRepository(
+      isar,
+    ).ensurePopulated(defaultTypes: testDefaultList);
   });
 
   tearDown(() async {
@@ -42,11 +58,11 @@ void main() {
     });
 
     test("Test saving a workout with an exercise updates database.", () async {
-      String exerciseName = "Benchpress";
+      String exerciseName = "Bench press";
 
       DateTime time = DateTime(15, 5, 2);
       Workout workout = Workout(time);
-      Exercise exercise = Exercise(exerciseName);
+      Exercise exercise = Exercise(exerciseType: ExerciseType(exerciseName));
       workout.exercises.add(exercise);
 
       expect(await isar.workoutModels.count(), 0);
@@ -59,11 +75,11 @@ void main() {
     test(
       "Test saving a workout with an exercise assigns exercise ID:s.",
       () async {
-        String exerciseName = "Benchpress";
+        String exerciseName = "Bench press";
 
         DateTime time = DateTime(15, 5, 2);
         Workout workout = Workout(time);
-        Exercise exercise = Exercise(exerciseName);
+        Exercise exercise = Exercise(exerciseType: ExerciseType(exerciseName));
         workout.exercises.add(exercise);
 
         Workout newWorkout = await workoutRepository.saveWorkout(workout);
@@ -78,14 +94,16 @@ void main() {
     test(
       "Test saving a workout with multiple exercises updates database.",
       () async {
-        String exerciseName = "Benchpress";
+        String exerciseName = "Bench press";
         String exerciseName2 = "Leg press";
 
         DateTime time = DateTime(15, 5, 2);
         Workout workout = Workout(time);
-        Exercise exercise = Exercise(exerciseName);
+        Exercise exercise = Exercise(exerciseType: ExerciseType(exerciseName));
         workout.exercises.add(exercise);
-        Exercise exercise2 = Exercise(exerciseName2);
+        Exercise exercise2 = Exercise(
+          exerciseType: ExerciseType(exerciseName2),
+        );
         workout.exercises.add(exercise2);
 
         expect(await isar.workoutModels.count(), 0);
@@ -99,14 +117,16 @@ void main() {
     test(
       "Test saving a workout with multiple exercises assigns exercise ID:s.",
       () async {
-        String exerciseName = "Benchpress";
+        String exerciseName = "Bench press";
         String exerciseName2 = "Leg press";
 
         DateTime time = DateTime(15, 5, 2);
         Workout workout = Workout(time);
-        Exercise exercise = Exercise(exerciseName);
+        Exercise exercise = Exercise(exerciseType: ExerciseType(exerciseName));
         workout.exercises.add(exercise);
-        Exercise exercise2 = Exercise(exerciseName2);
+        Exercise exercise2 = Exercise(
+          exerciseType: ExerciseType(exerciseName2),
+        );
         workout.exercises.add(exercise2);
 
         Workout newWorkout = await workoutRepository.saveWorkout(workout);
@@ -152,7 +172,9 @@ void main() {
         Workout workout = Workout(DateTime(10, 5, 2));
         workout.id = id;
 
-        workout.exercises.add(Exercise("Benchpress"));
+        workout.exercises.add(
+          Exercise(exerciseType: ExerciseType("Bench press")),
+        );
         await workoutRepository.saveWorkout(workout);
         expect(await isar.workoutModels.count(), 1);
         expect(await isar.exerciseModels.count(), 1);
@@ -205,8 +227,8 @@ void main() {
         Workout workout = Workout(date);
         workout.id = 5;
 
-        String exerciseName = "Bench";
-        Exercise e = Exercise(exerciseName);
+        String exerciseName = "Bench press";
+        Exercise e = Exercise(exerciseType: ExerciseType(exerciseName));
         double setWeight = 10;
         int setReps = 4;
         e.addSet(setWeight, setReps);
@@ -235,7 +257,7 @@ void main() {
       await workoutRepository.saveWorkout(w1);
 
       Workout w2 = Workout(DateTime(3, 3));
-      w2.addExercises([Exercise("Abdominal")]);
+      w2.addExercises([Exercise(exerciseType: ExerciseType("Abdominal"))]);
       await workoutRepository.saveWorkout(w2);
 
       String exerciseName = "Chest press";
@@ -256,7 +278,7 @@ void main() {
       String exerciseName = "Chest press";
 
       Workout w2 = Workout(DateTime(3, 3));
-      w2.addExercises([Exercise(exerciseName)]);
+      w2.addExercises([Exercise(exerciseType: ExerciseType(exerciseName))]);
       await workoutRepository.saveWorkout(w2);
 
       List<Workout> workouts = await workoutRepository.getWorkoutsWithExercise(
@@ -280,7 +302,7 @@ void main() {
         int count = 5;
         final saveTasks = List.generate(count, (int i) {
           Workout w = Workout(DateTime(3, 3));
-          w.addExercises([Exercise(exerciseName)]);
+          w.addExercises([Exercise(exerciseType: ExerciseType(exerciseName))]);
           return workoutRepository.saveWorkout(w);
         });
         await Future.wait(saveTasks);
@@ -289,7 +311,7 @@ void main() {
         int count2 = 3;
         final saveTasks2 = List.generate(count2, (int i) {
           Workout w = Workout(DateTime(3, 3));
-          w.addExercises([Exercise(exerciseName2)]);
+          w.addExercises([Exercise(exerciseType: ExerciseType(exerciseName2))]);
           return workoutRepository.saveWorkout(w);
         });
         await Future.wait(saveTasks2);
@@ -322,7 +344,10 @@ void main() {
 
         String exerciseName = "Chest press";
         Workout w2 = Workout(DateTime(3, 3));
-        w2.addExercises([Exercise(exerciseName), Exercise("Abdominal")]);
+        w2.addExercises([
+          Exercise(exerciseType: ExerciseType(exerciseName)),
+          Exercise(exerciseType: ExerciseType("Abdominal")),
+        ]);
         await workoutRepository.saveWorkout(w2);
 
         List<Workout> workouts = await workoutRepository

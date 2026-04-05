@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:isar_community/isar.dart';
 
 part 'saved_exercise_model.g.dart';
@@ -10,5 +11,14 @@ class SavedExerciseModel {
   @Index(unique: true, replace: true)
   String name;
 
-  SavedExerciseModel(this.name);
+  bool isBodyWeight;
+
+  SavedExerciseModel(this.name, this.isBodyWeight);
+
+  factory SavedExerciseModel.fromExerciseType(ExerciseType exerciseType) {
+    return SavedExerciseModel(
+      exerciseType.exerciseName,
+      exerciseType.isBodyWeight,
+    );
+  }
 }

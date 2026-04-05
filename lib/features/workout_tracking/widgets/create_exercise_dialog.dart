@@ -1,8 +1,9 @@
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/views/edit_exercise_page.dart';
 import 'package:flutter/material.dart';
 
 class CreateExerciseDialog extends StatefulWidget {
-  final CreateExerciseCallback createExerciseFunc;
+  final CreateExerciseTypeCallback createExerciseFunc;
   const CreateExerciseDialog({super.key, required this.createExerciseFunc});
 
   @override
@@ -69,7 +70,12 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
             String exerciseName = exerciseNameController.text
                 .trim()
                 .toLowerCase();
-            bool success = await widget.createExerciseFunc(exerciseName);
+            ExerciseType newType = ExerciseType(
+              exerciseName,
+              isCustom: true,
+              isBodyWeight: isBodyWeight,
+            );
+            bool success = await widget.createExerciseFunc(newType);
             if (!context.mounted) {
               return;
             }

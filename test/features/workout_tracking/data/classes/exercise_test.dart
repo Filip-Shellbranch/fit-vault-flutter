@@ -4,17 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("test create Exercise from Exercise Model without sets.", () {
-    ExerciseModel model = ExerciseModel("Benchpress");
+    ExerciseModel model = ExerciseModel();
     model.id = 99;
 
     Exercise exercise = Exercise.fromModel(model);
     expect(exercise.id, model.id);
-    expect(exercise.name, model.name);
     expect(exercise.sets.isEmpty, true);
   });
 
   test("test create Exercise from Exercise Model with multiple sets.", () {
-    ExerciseModel model = ExerciseModel("Benchpress");
+    ExerciseModel model = ExerciseModel();
     model.id = 49;
     int numSets = 3;
     for (var i = 0; i < numSets; i++) {
@@ -22,7 +21,6 @@ void main() {
     }
 
     Exercise exercise = Exercise.fromModel(model);
-    expect(exercise.name, model.name);
     expect(exercise.id, model.id);
     expect(exercise.sets.length, numSets);
     for (var i = 0; i < numSets; i++) {
@@ -33,12 +31,12 @@ void main() {
 
   group("test isNumRepsConstant", () {
     test("test on exercise without sets should be true", () {
-      final e = Exercise("press");
+      final e = Exercise();
       expect(e.isNumRepsConstant(), true);
     });
 
     test("test on exercise with 1 set should be true", () {
-      final e = Exercise("press");
+      final e = Exercise();
       e.addSet(10, 5);
       expect(e.isNumRepsConstant(), true);
     });
@@ -46,7 +44,7 @@ void main() {
     test(
       "test on exercise with 2 set with same number of reps should be true",
       () {
-        final e = Exercise("press");
+        final e = Exercise();
         e.addSet(10, 5);
         e.addSet(30, 5);
         expect(e.isNumRepsConstant(), true);
@@ -56,7 +54,7 @@ void main() {
     test(
       "test on exercise with 2 set with different number of reps should be false",
       () {
-        final e = Exercise("press");
+        final e = Exercise();
         e.addSet(10, 5);
         e.addSet(30, 2);
         expect(e.isNumRepsConstant(), false);
@@ -66,20 +64,20 @@ void main() {
 
   group("test formatting of sets and reps", () {
     test("test format Exercise without sets", () {
-      final e = Exercise("bench");
+      final e = Exercise();
       expect(e.sets.isEmpty, true);
       expect(e.formatSetsAndReps(), "No sets registered");
     });
 
     test("test format Exercise with 1 set", () {
-      final e = Exercise("bench");
+      final e = Exercise();
       e.addSet(10, 4);
       expect(e.sets.length, 1);
 
       String formatted = e.formatSetsAndReps();
       expect(formatted, "1x4");
 
-      final e2 = Exercise("bench");
+      final e2 = Exercise();
       e2.addSet(10, 9);
       expect(e2.sets.length, 1);
 
@@ -88,7 +86,7 @@ void main() {
     });
 
     test("test format Exercise with several sets with equal reps", () {
-      final e = Exercise("bench");
+      final e = Exercise();
       e.addSet(10, 4);
       e.addSet(20, 4);
       expect(e.sets.length, 2);
@@ -96,7 +94,7 @@ void main() {
       String formatted = e.formatSetsAndReps();
       expect(formatted, "2x4");
 
-      final e2 = Exercise("bench");
+      final e2 = Exercise();
       e2.addSet(10, 9);
       e2.addSet(500, 9);
       e2.addSet(102, 9);
@@ -107,7 +105,7 @@ void main() {
     });
 
     test("test format Exercise with several sets with non-equal reps", () {
-      final e = Exercise("bench");
+      final e = Exercise();
       e.addSet(10, 5);
       e.addSet(20, 4);
       expect(e.sets.length, 2);
@@ -115,7 +113,7 @@ void main() {
       String formatted = e.formatSetsAndReps();
       expect(formatted, "5/4");
 
-      final e2 = Exercise("bench");
+      final e2 = Exercise();
       e2.addSet(10, 2);
       e2.addSet(500, 7);
       e2.addSet(102, 4);

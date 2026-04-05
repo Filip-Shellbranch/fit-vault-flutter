@@ -7,12 +7,14 @@ import 'package:fit_vault_flutter/features/workout_tracking/widgets/exercise_sea
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-typedef SelectExerciseCallback = void Function(String exerciseName);
-typedef CreateExerciseCallback = Future<bool> Function(String exerciseName);
+typedef SelectExerciseCallback = void Function(ExerciseType exerciseType);
+typedef CreateExerciseTypeCallback =
+    Future<bool> Function(ExerciseType exerciseType);
 typedef DeleteExerciseTypeCallback = Future<bool> Function(String exerciseName);
 
-Exercise createDefaultExercise(String exerciseName) {
-  final newExercise = Exercise(exerciseName);
+Exercise createDefaultExercise(ExerciseType exerciseType) {
+  final newExercise = Exercise();
+  newExercise.exerciseType = exerciseType;
   newExercise.addSet(0, 10);
   return newExercise;
 }
@@ -38,15 +40,15 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
     _searchResults.value = newList;
   }
 
-  void selectExercise(String exerciseName) {
+  void selectExercise(ExerciseType exerciseType) {
     bool isNewExercise =
         widget.exercise == null || widget.exerciseIndex == null;
-    final newExercise = widget.exercise ?? createDefaultExercise(exerciseName);
+    final newExercise = widget.exercise ?? createDefaultExercise(exerciseType);
 
     if (isNewExercise) {
       ref.read(currentWorkoutProvider.notifier).addExercise(newExercise);
     } else {
-      newExercise.name = exerciseName;
+      newExercise.exerciseType = exerciseType;
       ref
           .read(currentWorkoutProvider.notifier)
           .updateExercise(widget.exerciseIndex!, newExercise);
@@ -63,15 +65,12 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
     _searchResults.value = foundExercises;
   }
 
-  Future<bool> createExercise(String exerciseName) async {
+  Future<bool> createExerciseType(ExerciseType newType) async {
     final repository = ref.read(savedExerciseRepositoryProvider);
 
-    bool success = await repository.saveNewExerciseType(exerciseName);
+    bool success = await repository.saveNewExerciseType(newType);
     if (success) {
-      final newList = [
-        ...exerciseList,
-        ExerciseType(exerciseName, isCustom: true),
-      ];
+      final newList = [...exerciseList, newType];
       updateExerciseList(newList);
     }
     return success;
@@ -133,7 +132,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
                   child: ExerciseSearchResults(
                     searchResults: _searchResults.value,
                     selectExerciseFunc: selectExercise,
-                    createExerciseFunc: createExercise,
+                    createExerciseFunc: createExerciseType,
                     deleteExerciseFunc: tryDeleteExerciseType,
                   ),
                 ),

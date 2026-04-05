@@ -1,16 +1,20 @@
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
 
 class Exercise {
   int? id;
 
-  String name;
+  ExerciseType? exerciseType;
   final List<ExerciseSet> _sets = [];
   List<ExerciseSet> get sets => _sets;
 
-  Exercise(this.name);
+  String get name =>
+      exerciseType == null ? "Unknown" : exerciseType!.exerciseName;
+
+  Exercise({this.exerciseType});
 
   factory Exercise.fromModel(ExerciseModel model) {
-    Exercise newExercise = Exercise(model.name);
+    Exercise newExercise = Exercise();
     newExercise.id = model.id;
 
     for (ExerciseSetModel setModel in model.sets) {

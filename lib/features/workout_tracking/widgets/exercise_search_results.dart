@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ExerciseSearchResults extends ConsumerWidget {
   final List<ExerciseType> searchResults;
   final SelectExerciseCallback selectExerciseFunc;
-  final CreateExerciseCallback createExerciseFunc;
+  final CreateExerciseTypeCallback createExerciseFunc;
   final DeleteExerciseTypeCallback deleteExerciseFunc;
   const ExerciseSearchResults({
     super.key,
@@ -64,12 +64,18 @@ class ExerciseSearchResults extends ConsumerWidget {
                       alignment: Alignment.centerLeft,
                     ),
                     onPressed: () {
-                      selectExerciseFunc(exerciseName);
+                      selectExerciseFunc(exerciseType);
                     },
                     child: Text(exerciseName),
                   ),
                 ),
               ),
+              exerciseType.isBodyWeight
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Text("Uses body weight"),
+                    )
+                  : Container(),
               exerciseType.isCustom
                   ? IconButton(
                       onPressed: () async {

@@ -12,15 +12,39 @@ class SavedExerciseRepository {
   Isar db;
   SavedExerciseRepository(this.db);
 
-  Future<bool> saveNewExerciseType(String exerciseName) async {
-    exerciseName = formatExerciseName(exerciseName);
+  Future<void> ensurePopulated({List<ExerciseType>? defaultTypes}) async {
+    defaultTypes ??= defaultExerciseList;
+
+    final count = await db.savedExerciseModels.count();
+    if (count == 0) {
+      await populateWithDefaults(defaultTypes);
+    }
+  }
+
+  Future<void> populateWithDefaults(List<ExerciseType> defaultTypes) async {
+    await db.writeTxn(() async {
+      final models = defaultTypes
+          .map(
+            (final defaultType) =>
+                SavedExerciseModel.fromExerciseType(defaultType),
+          )
+          .toList();
+      db.savedExerciseModels.putAll(models);
+    });
+  }
+
+  Future<bool> saveNewExerciseType(ExerciseType newType) async {
+    String exerciseName = formatExerciseName(newType.exerciseName);
     bool success = await db.writeTxn(() async {
       bool exists = await db.savedExerciseModels
           .filter()
           .nameMatches(exerciseName)
           .isNotEmpty();
       if (!exists) {
-        final newExercise = SavedExerciseModel(exerciseName);
+        final newExercise = SavedExerciseModel(
+          exerciseName,
+          newType.isBodyWeight,
+        );
         await db.savedExerciseModels.put(newExercise);
         return true;
       } else {
@@ -78,5 +102,16 @@ class SavedExerciseRepository {
       return true;
     }
     return false;
+  }
+
+  Future<Id?> findExerciseTypeIdFromName(String exerciseName) async {
+    SavedExerciseModel? foundModel = await db.savedExerciseModels.getByName(
+      exerciseName,
+    );
+    if (foundModel != null) {
+      return foundModel.id;
+    } else {
+      return null;
+    }
   }
 }

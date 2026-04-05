@@ -31,7 +31,7 @@ void main() {
     int numExercices = 5;
     List<Exercise> newExercises = [];
     for (var i = 0; i < numExercices; i++) {
-      Exercise e = Exercise(i.toString());
+      Exercise e = Exercise();
       newExercises.add(e);
     }
 

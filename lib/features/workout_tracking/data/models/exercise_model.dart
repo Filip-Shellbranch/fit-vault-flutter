@@ -1,4 +1,6 @@
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
 import 'package:isar_community/isar.dart';
 
@@ -9,24 +11,27 @@ part 'exercise_model.g.dart';
 class ExerciseModel {
   Id id = Isar.autoIncrement;
 
-  @Index()
-  String name;
+  final exerciseType = IsarLink<SavedExerciseModel>();
 
   @Backlink(to: 'exercises')
   final workout = IsarLink<WorkoutModel>();
 
   List<ExerciseSetModel> sets = [];
 
-  ExerciseModel(this.name);
+  ExerciseModel();
 
   factory ExerciseModel.fromExercise(Exercise exercise) {
-    final newModel = ExerciseModel(exercise.name);
+    final newModel = ExerciseModel();
     newModel.id = exercise.id ?? Isar.autoIncrement;
     for (ExerciseSet set in exercise.sets) {
       final newSet = ExerciseSetModel.fromSet(set);
       newModel.sets.add(newSet);
     }
     return newModel;
+  }
+
+  Future<void> setExerciseType(ExerciseType type) async {
+    exerciseType.value = SavedExerciseModel.fromExerciseType(type);
   }
 }
 

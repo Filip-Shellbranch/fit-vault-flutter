@@ -18,7 +18,12 @@ const SavedExerciseModelSchema = CollectionSchema(
   name: r'SavedExercise',
   id: -945901310980603662,
   properties: {
-    r'name': PropertySchema(id: 0, name: r'name', type: IsarType.string),
+    r'isBodyWeight': PropertySchema(
+      id: 0,
+      name: r'isBodyWeight',
+      type: IsarType.bool,
+    ),
+    r'name': PropertySchema(id: 1, name: r'name', type: IsarType.string),
   },
 
   estimateSize: _savedExerciseModelEstimateSize,
@@ -30,8 +35,8 @@ const SavedExerciseModelSchema = CollectionSchema(
     r'name': IndexSchema(
       id: 879695947855722453,
       name: r'name',
-      unique: false,
-      replace: false,
+      unique: true,
+      replace: true,
       properties: [
         IndexPropertySchema(
           name: r'name',
@@ -66,7 +71,8 @@ void _savedExerciseModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
+  writer.writeBool(offsets[0], object.isBodyWeight);
+  writer.writeString(offsets[1], object.name);
 }
 
 SavedExerciseModel _savedExerciseModelDeserialize(
@@ -75,7 +81,10 @@ SavedExerciseModel _savedExerciseModelDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = SavedExerciseModel(reader.readString(offsets[0]));
+  final object = SavedExerciseModel(
+    reader.readString(offsets[1]),
+    reader.readBool(offsets[0]),
+  );
   object.id = id;
   return object;
 }
@@ -88,6 +97,8 @@ P _savedExerciseModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -110,6 +121,63 @@ void _savedExerciseModelAttach(
   SavedExerciseModel object,
 ) {
   object.id = id;
+}
+
+extension SavedExerciseModelByIndex on IsarCollection<SavedExerciseModel> {
+  Future<SavedExerciseModel?> getByName(String name) {
+    return getByIndex(r'name', [name]);
+  }
+
+  SavedExerciseModel? getByNameSync(String name) {
+    return getByIndexSync(r'name', [name]);
+  }
+
+  Future<bool> deleteByName(String name) {
+    return deleteByIndex(r'name', [name]);
+  }
+
+  bool deleteByNameSync(String name) {
+    return deleteByIndexSync(r'name', [name]);
+  }
+
+  Future<List<SavedExerciseModel?>> getAllByName(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return getAllByIndex(r'name', values);
+  }
+
+  List<SavedExerciseModel?> getAllByNameSync(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'name', values);
+  }
+
+  Future<int> deleteAllByName(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'name', values);
+  }
+
+  int deleteAllByNameSync(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'name', values);
+  }
+
+  Future<Id> putByName(SavedExerciseModel object) {
+    return putByIndex(r'name', object);
+  }
+
+  Id putByNameSync(SavedExerciseModel object, {bool saveLinks = true}) {
+    return putByIndexSync(r'name', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByName(List<SavedExerciseModel> objects) {
+    return putAllByIndex(r'name', objects);
+  }
+
+  List<Id> putAllByNameSync(
+    List<SavedExerciseModel> objects, {
+    bool saveLinks = true,
+  }) {
+    return putAllByIndexSync(r'name', objects, saveLinks: saveLinks);
+  }
 }
 
 extension SavedExerciseModelQueryWhereSort
@@ -301,6 +369,15 @@ extension SavedExerciseModelQueryFilter
   }
 
   QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterFilterCondition>
+  isBodyWeightEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'isBodyWeight', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterFilterCondition>
   nameEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -451,6 +528,20 @@ extension SavedExerciseModelQueryLinks
 extension SavedExerciseModelQuerySortBy
     on QueryBuilder<SavedExerciseModel, SavedExerciseModel, QSortBy> {
   QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterSortBy>
+  sortByIsBodyWeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBodyWeight', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterSortBy>
+  sortByIsBodyWeightDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBodyWeight', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterSortBy>
   sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -482,6 +573,20 @@ extension SavedExerciseModelQuerySortThenBy
   }
 
   QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterSortBy>
+  thenByIsBodyWeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBodyWeight', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterSortBy>
+  thenByIsBodyWeightDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBodyWeight', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, SavedExerciseModel, QAfterSortBy>
   thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -499,6 +604,13 @@ extension SavedExerciseModelQuerySortThenBy
 extension SavedExerciseModelQueryWhereDistinct
     on QueryBuilder<SavedExerciseModel, SavedExerciseModel, QDistinct> {
   QueryBuilder<SavedExerciseModel, SavedExerciseModel, QDistinct>
+  distinctByIsBodyWeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isBodyWeight');
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, SavedExerciseModel, QDistinct>
   distinctByName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
@@ -511,6 +623,13 @@ extension SavedExerciseModelQueryProperty
   QueryBuilder<SavedExerciseModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SavedExerciseModel, bool, QQueryOperations>
+  isBodyWeightProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isBodyWeight');
     });
   }
 

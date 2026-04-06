@@ -2,7 +2,6 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/classes/default
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/workout_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:isar_community/isar.dart';
 
 String formatExerciseName(String originalName) {

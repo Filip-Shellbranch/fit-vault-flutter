@@ -172,4 +172,18 @@ void main() {
       expect(id2, 2);
     },
   );
+
+  group("Test formatting of exercise type names", () {
+    test("Format an empty string returns an empty string", () {
+      expect(formatExerciseName(""), matches(""));
+      expect(formatExerciseName("     "), matches(""));
+    });
+
+    test("Format a string capitalizes the first character", () {
+      expect(formatExerciseName("hejsan"), matches("Hejsan"));
+      expect(formatExerciseName("a"), matches("A"));
+      expect(formatExerciseName("exErciSe tYpe"), matches("Exercise type"));
+      expect(formatExerciseName("  biceps CURL    "), matches("Biceps curl"));
+    });
+  });
 }

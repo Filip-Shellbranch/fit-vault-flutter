@@ -5,7 +5,12 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/wo
 import 'package:isar_community/isar.dart';
 
 String formatExerciseName(String originalName) {
-  return originalName;
+  String formattedName = originalName.trim().toLowerCase();
+  if (formattedName.isNotEmpty) {
+    formattedName =
+        "${formattedName[0].toUpperCase()}${formattedName.substring(1)}";
+  }
+  return formattedName;
 }
 
 class ExerciseTypeRepository {

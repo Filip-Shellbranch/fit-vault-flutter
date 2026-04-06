@@ -81,34 +81,34 @@ void main() {
     test("Save a new exercise that does not yet exist", () async {
       String eName = "exercise1";
       expect(await isar.exerciseTypeModels.count(), 0);
-      bool success = await exerciseRepository.saveNewExerciseType(
-        ExerciseType(eName),
-      );
-      expect(success, isTrue);
+      ExerciseTypeSaveResult result = await exerciseRepository
+          .saveNewExerciseType(ExerciseType(eName));
+      expect(result.isSuccess(), isTrue);
+      expect(result.exerciseType, isNotNull);
       expect(await isar.exerciseTypeModels.count(), 1);
 
       String eName2 = "exercise2";
       expect(await isar.exerciseTypeModels.count(), 1);
-      bool success2 = await exerciseRepository.saveNewExerciseType(
-        ExerciseType(eName2),
-      );
-      expect(success2, isTrue);
+      ExerciseTypeSaveResult result2 = await exerciseRepository
+          .saveNewExerciseType(ExerciseType(eName2));
+      expect(result2.isSuccess(), isTrue);
+      expect(result2.exerciseType, isNotNull);
       expect(await isar.exerciseTypeModels.count(), 2);
     });
     test("Save an exercise that already exists", () async {
       String eName = "exercise1";
       expect(await isar.exerciseTypeModels.count(), 0);
-      bool success = await exerciseRepository.saveNewExerciseType(
-        ExerciseType(eName),
-      );
-      expect(success, isTrue);
+      ExerciseTypeSaveResult result = await exerciseRepository
+          .saveNewExerciseType(ExerciseType(eName));
+      expect(result.isSuccess(), isTrue);
+      expect(result.exerciseType, isNotNull);
       expect(await isar.exerciseTypeModels.count(), 1);
 
       expect(await isar.exerciseTypeModels.count(), 1);
-      bool success2 = await exerciseRepository.saveNewExerciseType(
-        ExerciseType(eName),
-      );
-      expect(success2, isFalse);
+      ExerciseTypeSaveResult result2 = await exerciseRepository
+          .saveNewExerciseType(ExerciseType(eName));
+      expect(result2.isSuccess(), isFalse);
+      expect(result2.exerciseType, isNull);
       expect(await isar.exerciseTypeModels.count(), 1);
     });
   });
@@ -121,10 +121,10 @@ void main() {
 
     test("Fetch exercises when there is a saved exercise", () async {
       String eName = "exercise1";
-      bool success = await exerciseRepository.saveNewExerciseType(
-        ExerciseType(eName),
-      );
-      expect(success, isTrue);
+      ExerciseTypeSaveResult result = await exerciseRepository
+          .saveNewExerciseType(ExerciseType(eName));
+      expect(result.isSuccess(), isTrue);
+      expect(result.exerciseType, isNotNull);
       List<ExerciseType> exercises = await exerciseRepository
           .getExerciseTypes();
       expect(exercises.isEmpty, isFalse);
@@ -135,10 +135,10 @@ void main() {
       expect(numExercises, greaterThan(2));
       for (var i = 0; i < numExercises; i++) {
         String eName = "exercise_${i.toString()}";
-        bool success = await exerciseRepository.saveNewExerciseType(
-          ExerciseType(eName),
-        );
-        expect(success, isTrue);
+        ExerciseTypeSaveResult result = await exerciseRepository
+            .saveNewExerciseType(ExerciseType(eName));
+        expect(result.isSuccess(), isTrue);
+        expect(result.exerciseType, isNotNull);
       }
 
       List<ExerciseType> exercises = await exerciseRepository

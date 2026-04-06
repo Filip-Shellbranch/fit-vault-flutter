@@ -4,6 +4,28 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/workout_repository.dart';
 import 'package:isar_community/isar.dart';
 
+class ExerciseTypeSaveResult {
+  final ExerciseType? exerciseType;
+  final bool success;
+
+  ExerciseTypeSaveResult(this.success, {this.exerciseType});
+
+  factory ExerciseTypeSaveResult.success(ExerciseType exerciseType) {
+    return ExerciseTypeSaveResult(true, exerciseType: exerciseType);
+  }
+  factory ExerciseTypeSaveResult.fail() {
+    return ExerciseTypeSaveResult(false);
+  }
+
+  bool isSuccess() {
+    return success;
+  }
+
+  ExerciseType getType() {
+    return exerciseType!;
+  }
+}
+
 String formatExerciseName(String originalName) {
   String formattedName = originalName.trim().toLowerCase();
   if (formattedName.isNotEmpty) {
@@ -38,7 +60,9 @@ class ExerciseTypeRepository {
     });
   }
 
-  Future<bool> saveNewExerciseType(ExerciseType newType) async {
+  Future<ExerciseTypeSaveResult> saveNewExerciseType(
+    ExerciseType newType,
+  ) async {
     String exerciseName = formatExerciseName(newType.exerciseName);
     bool success = await db.writeTxn(() async {
       bool exists = await db.exerciseTypeModels
@@ -52,11 +76,17 @@ class ExerciseTypeRepository {
         );
         await db.exerciseTypeModels.put(newExercise);
         return true;
-      } else {
-        return false;
       }
+      return false;
     });
-    return success;
+    if (success) {
+      final savedType = ExerciseType(
+        exerciseName,
+        isBodyWeight: newType.isBodyWeight,
+      );
+      return ExerciseTypeSaveResult.success(savedType);
+    }
+    return ExerciseTypeSaveResult.fail();
   }
 
   Future<List<ExerciseType>> getExerciseTypes() async {
@@ -72,7 +102,6 @@ class ExerciseTypeRepository {
   }
 
   Future<bool> tryDeleteExerciseType(String exerciseName) async {
-    exerciseName = formatExerciseName(exerciseName);
     bool exists = await db.exerciseTypeModels
         .filter()
         .nameEqualTo(exerciseName)

@@ -3,6 +3,7 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercis
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/saved_exercise_repository_provider.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/exercise_search_results.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,12 +69,14 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   Future<bool> createExerciseType(ExerciseType newType) async {
     final repository = ref.read(ExerciseTypeRepositoryProvider);
 
-    bool success = await repository.saveNewExerciseType(newType);
-    if (success) {
-      final newList = [...exerciseList, newType];
+    ExerciseTypeSaveResult result = await repository.saveNewExerciseType(
+      newType,
+    );
+    if (result.isSuccess()) {
+      final newList = [...exerciseList, result.getType()];
       updateExerciseList(newList);
     }
-    return success;
+    return result.isSuccess();
   }
 
   Future<bool> tryDeleteExerciseType(String exerciseName) async {

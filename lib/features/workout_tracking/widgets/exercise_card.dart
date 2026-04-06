@@ -104,6 +104,7 @@ class ExerciseCard extends ConsumerWidget {
               set: set,
               updateSetFunc: updateSet,
               removeSetFunc: removeSet,
+              isBodyWeight: exercise.exerciseType!.isBodyWeight,
             );
           }),
           AddSetButton(addSetFunc: addSet),

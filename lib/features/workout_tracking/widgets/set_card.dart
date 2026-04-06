@@ -7,12 +7,14 @@ class SetCard extends StatelessWidget {
   final ExerciseSet set;
   final UpdateSetCallback updateSetFunc;
   final RemoveSetCallback removeSetFunc;
+  final bool isBodyWeight;
   const SetCard({
     super.key,
     required this.index,
     required this.set,
     required this.updateSetFunc,
     required this.removeSetFunc,
+    required this.isBodyWeight,
   });
 
   void onRepsChanged(String newValueString) {
@@ -76,31 +78,41 @@ class SetCard extends StatelessWidget {
               Text("reps", style: TextStyle(fontSize: 16)),
             ],
           ),
-          Row(
-            spacing: 8,
-            children: [
-              Container(
-                width: 80,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Theme.of(context).highlightColor),
-                  ),
+          isBodyWeight
+              ? Text(
+                  "Body weight",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
+              : Row(
+                  spacing: 8,
+                  children: [
+                    Container(
+                      width: 80,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Theme.of(context).highlightColor,
+                          ),
+                        ),
+                      ),
+                      child: TextField(
+                        onSubmitted: onWeightChanged,
+                        controller: weightController,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        keyboardType: TextInputType.numberWithOptions(
+                          signed: false,
+                          decimal: true,
+                        ),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                    Text("kg", style: TextStyle(fontSize: 16)),
+                  ],
                 ),
-                child: TextField(
-                  onSubmitted: onWeightChanged,
-                  controller: weightController,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  keyboardType: TextInputType.numberWithOptions(
-                    signed: false,
-                    decimal: true,
-                  ),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(border: InputBorder.none),
-                ),
-              ),
-              Text("kg", style: TextStyle(fontSize: 16)),
-            ],
-          ),
           IconButton(
             onPressed: () => removeSetFunc(index),
             icon: Icon(Icons.remove, color: Colors.red),

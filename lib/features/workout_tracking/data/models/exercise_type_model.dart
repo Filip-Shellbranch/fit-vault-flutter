@@ -1,11 +1,11 @@
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:isar_community/isar.dart';
 
-part 'saved_exercise_model.g.dart';
+part 'exercise_type_model.g.dart';
 
 @collection
-@Name("SavedExercise")
-class SavedExerciseModel {
+@Name("ExerciseType")
+class ExerciseTypeModel {
   Id id = Isar.autoIncrement;
 
   @Index(unique: true, replace: true)
@@ -13,10 +13,10 @@ class SavedExerciseModel {
 
   bool isBodyWeight;
 
-  SavedExerciseModel(this.name, this.isBodyWeight);
+  ExerciseTypeModel(this.name, this.isBodyWeight);
 
-  factory SavedExerciseModel.fromExerciseType(ExerciseType exerciseType) {
-    return SavedExerciseModel(
+  factory ExerciseTypeModel.fromExerciseType(ExerciseType exerciseType) {
+    return ExerciseTypeModel(
       exerciseType.exerciseName,
       exerciseType.isBodyWeight,
     );

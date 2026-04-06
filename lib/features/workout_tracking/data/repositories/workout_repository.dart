@@ -1,10 +1,10 @@
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/exercise_repository.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/saved_exercise_repository.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:isar_community/isar.dart';
 
 class WorkoutRepository {
@@ -52,13 +52,13 @@ class WorkoutRepository {
         workout.exercises[i].id = exerciseIds[i];
       }
 
-      final typeRepo = SavedExerciseRepository(db);
+      final typeRepo = ExerciseTypeRepository(db);
       for (var i = 0; i < workout.exercises.length; i++) {
         Exercise exercise = workout.exercises.elementAt(i);
         ExerciseModel model = newExercises.elementAt(i);
         Id? id = await typeRepo.findExerciseTypeIdFromName(exercise.name);
         if (id != null) {
-          final typeModel = await db.savedExerciseModels.get(id);
+          final typeModel = await db.exerciseTypeModels.get(id);
           model.exerciseType.value = typeModel;
           model.exerciseType.save();
         }

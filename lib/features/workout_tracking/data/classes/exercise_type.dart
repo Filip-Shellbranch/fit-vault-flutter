@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 
 class ExerciseType {
   int? id;
@@ -12,7 +12,7 @@ class ExerciseType {
     this.isBodyWeight = false,
   });
 
-  factory ExerciseType.fromModel(SavedExerciseModel model) {
+  factory ExerciseType.fromModel(ExerciseTypeModel model) {
     final newType = ExerciseType(
       model.name,
       isCustom: true,

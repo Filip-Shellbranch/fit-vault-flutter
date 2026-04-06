@@ -1,7 +1,7 @@
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/saved_exercise_repository.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -14,10 +14,10 @@ class IsarService {
     List<CollectionSchema> schemas = [
       WorkoutModelSchema,
       ExerciseModelSchema,
-      SavedExerciseModelSchema,
+      ExerciseTypeModelSchema,
     ];
     db = await Isar.open(schemas, directory: dir.path, inspector: true);
 
-    await SavedExerciseRepository(db).ensurePopulated();
+    await ExerciseTypeRepository(db).ensurePopulated();
   }
 }

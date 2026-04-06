@@ -1,6 +1,6 @@
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
 import 'package:isar_community/isar.dart';
 
@@ -11,7 +11,7 @@ part 'exercise_model.g.dart';
 class ExerciseModel {
   Id id = Isar.autoIncrement;
 
-  final exerciseType = IsarLink<SavedExerciseModel>();
+  final exerciseType = IsarLink<ExerciseTypeModel>();
 
   @Backlink(to: 'exercises')
   final workout = IsarLink<WorkoutModel>();
@@ -31,7 +31,7 @@ class ExerciseModel {
   }
 
   Future<void> setExerciseType(ExerciseType type) async {
-    exerciseType.value = SavedExerciseModel.fromExerciseType(type);
+    exerciseType.value = ExerciseTypeModel.fromExerciseType(type);
   }
 }
 

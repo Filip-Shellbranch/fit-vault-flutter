@@ -4,9 +4,9 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercis
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/saved_exercise_model.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/saved_exercise_repository.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/workout_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
@@ -28,10 +28,10 @@ void main() {
     isar = await Isar.open([
       ExerciseModelSchema,
       WorkoutModelSchema,
-      SavedExerciseModelSchema,
+      ExerciseTypeModelSchema,
     ], directory: Directory.systemTemp.path);
     workoutRepository = WorkoutRepository(isar);
-    await SavedExerciseRepository(
+    await ExerciseTypeRepository(
       isar,
     ).ensurePopulated(defaultTypes: testDefaultList);
   });

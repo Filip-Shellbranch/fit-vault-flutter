@@ -36,7 +36,7 @@ const ExerciseModelSchema = CollectionSchema(
     r'exerciseType': LinkSchema(
       id: 7586781420917896036,
       name: r'exerciseType',
-      target: r'SavedExercise',
+      target: r'ExerciseType',
       single: true,
     ),
     r'workout': LinkSchema(
@@ -146,7 +146,7 @@ void _exerciseModelAttach(
   object.id = id;
   object.exerciseType.attach(
     col,
-    col.isar.collection<SavedExerciseModel>(),
+    col.isar.collection<ExerciseTypeModel>(),
     r'exerciseType',
     id,
   );
@@ -369,7 +369,7 @@ extension ExerciseModelQueryObject
 extension ExerciseModelQueryLinks
     on QueryBuilder<ExerciseModel, ExerciseModel, QFilterCondition> {
   QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
-  exerciseType(FilterQuery<SavedExerciseModel> q) {
+  exerciseType(FilterQuery<ExerciseTypeModel> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'exerciseType');
     });

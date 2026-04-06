@@ -66,7 +66,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   }
 
   Future<bool> createExerciseType(ExerciseType newType) async {
-    final repository = ref.read(savedExerciseRepositoryProvider);
+    final repository = ref.read(ExerciseTypeRepositoryProvider);
 
     bool success = await repository.saveNewExerciseType(newType);
     if (success) {
@@ -84,7 +84,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
       // The exercise is used in the current workout and should not be able to be deleted.
       return false;
     }
-    final repository = ref.read(savedExerciseRepositoryProvider);
+    final repository = ref.read(ExerciseTypeRepositoryProvider);
     bool success = await repository.tryDeleteExerciseType(exerciseName);
     if (success) {
       final newList = [...exerciseList];
@@ -96,7 +96,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
 
   @override
   void initState() {
-    final repository = ref.read(savedExerciseRepositoryProvider);
+    final repository = ref.read(ExerciseTypeRepositoryProvider);
     repository.getExerciseTypes().then((List<ExerciseType> savedExercises) {
       updateExerciseList(savedExercises);
     });

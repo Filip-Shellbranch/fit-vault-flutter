@@ -72,7 +72,6 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                 .toLowerCase();
             ExerciseType newType = ExerciseType(
               exerciseName,
-              isCustom: true,
               isBodyWeight: isBodyWeight,
             );
             bool success = await widget.createExerciseFunc(newType);

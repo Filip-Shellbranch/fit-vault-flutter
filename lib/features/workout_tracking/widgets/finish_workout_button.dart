@@ -36,7 +36,6 @@ class FinishWorkoutButton extends ConsumerWidget {
               onDiscardPressed(context, ref);
               break;
           }
-          debugPrint(value);
         },
         child: Ink(
           decoration: BoxDecoration(

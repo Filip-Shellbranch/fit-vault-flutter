@@ -76,24 +76,22 @@ class ExerciseSearchResults extends ConsumerWidget {
                       child: Text("Uses body weight"),
                     )
                   : Container(),
-              exerciseType.isCustom
-                  ? IconButton(
-                      onPressed: () async {
-                        bool success = await deleteExerciseFunc(exerciseName);
-                        if (!success && context.mounted) {
-                          final snackBar = SnackBar(
-                            content: Text(
-                              "Exercise '$exerciseName' can not be deleted as it is used in one or more workouts!",
-                            ),
-                          );
-                          final messenger = ScaffoldMessenger.of(context);
-                          messenger.clearSnackBars();
-                          messenger.showSnackBar(snackBar);
-                        }
-                      },
-                      icon: Icon(Icons.delete),
-                    )
-                  : Container(),
+              IconButton(
+                onPressed: () async {
+                  bool success = await deleteExerciseFunc(exerciseName);
+                  if (!success && context.mounted) {
+                    final snackBar = SnackBar(
+                      content: Text(
+                        "Exercise '$exerciseName' can not be deleted as it is used in one or more workouts!",
+                      ),
+                    );
+                    final messenger = ScaffoldMessenger.of(context);
+                    messenger.clearSnackBars();
+                    messenger.showSnackBar(snackBar);
+                  }
+                },
+                icon: Icon(Icons.delete),
+              ),
             ],
           ),
         );

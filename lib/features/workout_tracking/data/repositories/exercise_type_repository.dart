@@ -2,6 +2,7 @@ import 'package:fit_vault_flutter/features/workout_tracking/data/classes/default
 import 'package:fit_vault_flutter/features/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/workout_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:isar_community/isar.dart';
 
 String formatExerciseName(String originalName) {
@@ -54,36 +55,23 @@ class ExerciseTypeRepository {
     return success;
   }
 
-  Future<List<ExerciseType>> getSavedExercises() async {
+  Future<List<ExerciseType>> getExerciseTypes() async {
     List<ExerciseType> exerciseList = [];
     List<ExerciseTypeModel> savedExercises = await db.exerciseTypeModels
         .where()
         .findAll();
     for (var savedExercise in savedExercises) {
-      final newExercise = ExerciseType(savedExercise.name, isCustom: true);
+      final newExercise = ExerciseType.fromModel(savedExercise);
       exerciseList.add(newExercise);
     }
     return exerciseList;
-  }
-
-  Future<List<ExerciseType>> getExerciseTypes() async {
-    List<ExerciseType> savedExercises = await getSavedExercises();
-    for (ExerciseType defaultExercise in defaultExerciseList) {
-      if (!savedExercises.any(
-        (exerciseType) =>
-            exerciseType.exerciseName == defaultExercise.exerciseName,
-      )) {
-        savedExercises.add(defaultExercise);
-      }
-    }
-    return savedExercises;
   }
 
   Future<bool> tryDeleteExerciseType(String exerciseName) async {
     exerciseName = formatExerciseName(exerciseName);
     bool exists = await db.exerciseTypeModels
         .filter()
-        .nameMatches(exerciseName)
+        .nameEqualTo(exerciseName)
         .isNotEmpty();
     if (!exists) {
       return true;

@@ -4,20 +4,11 @@ class ExerciseType {
   int? id;
 
   final String exerciseName;
-  final bool isCustom;
   final bool isBodyWeight;
-  ExerciseType(
-    this.exerciseName, {
-    this.isCustom = false,
-    this.isBodyWeight = false,
-  });
+  ExerciseType(this.exerciseName, {this.isBodyWeight = false});
 
   factory ExerciseType.fromModel(ExerciseTypeModel model) {
-    final newType = ExerciseType(
-      model.name,
-      isCustom: true,
-      isBodyWeight: model.isBodyWeight,
-    );
+    final newType = ExerciseType(model.name, isBodyWeight: model.isBodyWeight);
     newType.id = model.id;
     return newType;
   }

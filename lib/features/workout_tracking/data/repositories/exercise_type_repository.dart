@@ -64,6 +64,9 @@ class ExerciseTypeRepository {
     ExerciseType newType,
   ) async {
     String exerciseName = formatExerciseName(newType.exerciseName);
+    if (exerciseName.isEmpty) {
+      return ExerciseTypeSaveResult.fail();
+    }
     bool success = await db.writeTxn(() async {
       bool exists = await db.exerciseTypeModels
           .filter()

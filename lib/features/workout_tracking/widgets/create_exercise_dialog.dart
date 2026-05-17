@@ -83,7 +83,7 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
             } else {
               final snackBar = SnackBar(
                 content: Text(
-                  "Exercise '$exerciseName' can not be created as it already exists!",
+                  "Exercise '$exerciseName' can not be created as it already exists or is an invalid name!",
                 ),
               );
               final messenger = ScaffoldMessenger.of(context);

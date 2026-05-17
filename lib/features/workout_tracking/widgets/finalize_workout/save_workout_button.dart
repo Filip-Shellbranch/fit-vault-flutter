@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SaveWorkoutButton extends StatelessWidget {
-  const SaveWorkoutButton({super.key});
+  final Color fgColor;
+  const SaveWorkoutButton({super.key, this.fgColor = Colors.white});
 
   final SnackBar infoMessage = const SnackBar(
     content: Text("Workout tracking has not yet been implemented."),
@@ -11,9 +12,9 @@ class SaveWorkoutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.save),
+        Icon(Icons.save, color: fgColor),
         SizedBox(width: 8),
-        Text("Save workout", style: TextStyle(fontSize: 26)),
+        Text("Save workout", style: TextStyle(fontSize: 26, color: fgColor)),
       ],
     );
   }

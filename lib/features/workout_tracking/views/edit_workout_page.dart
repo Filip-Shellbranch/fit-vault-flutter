@@ -1,6 +1,6 @@
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/add_exercise_button.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/exercise_list.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/widgets/finish_workout_button.dart';
+import 'package:fit_vault_flutter/features/workout_tracking/widgets/finalize_workout/finish_workout_button.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/widgets/workout_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

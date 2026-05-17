@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/home_page/widgets/continue_activity_button.dart';
+import 'package:fit_vault_flutter/features/home_page/widgets/menu_button.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/new_activity_button.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/title_widget.dart';
 import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_activity_provider.dart';
@@ -28,6 +29,20 @@ class HomePage extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 50),
+          Column(
+            children: [
+              HomePageMenuButton(
+                icon: Icons.history,
+                title: "Workout history",
+                targetPage: Placeholder(),
+              ),
+              HomePageMenuButton(
+                icon: Icons.analytics,
+                title: "Statistics",
+                targetPage: Placeholder(),
+              ),
+            ],
+          ),
 
           Expanded(child: Container()),
         ],

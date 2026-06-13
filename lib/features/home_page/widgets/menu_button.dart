@@ -26,7 +26,12 @@ class HomePageMenuButton extends StatelessWidget {
           ),
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => targetPage),
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

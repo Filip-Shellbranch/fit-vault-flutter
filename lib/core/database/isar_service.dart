@@ -1,7 +1,7 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/exercise_type_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/models/workout_model.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/data/repositories/exercise_type_repository.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/exercise_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/exercise_type_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 

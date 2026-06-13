@@ -1,5 +1,5 @@
-import 'package:fit_vault_flutter/features/workout_tracking/data/providers/current_activity_provider.dart';
-import 'package:fit_vault_flutter/features/workout_tracking/views/edit_workout_page.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/current_activity_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_workout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

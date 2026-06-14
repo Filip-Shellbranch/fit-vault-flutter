@@ -13,7 +13,7 @@ part of 'activity_list_provider.dart';
 final activityListProvider = ActivityListProvider._();
 
 final class ActivityListProvider
-    extends $AsyncNotifierProvider<ActivityList, List<Activity>> {
+    extends $AsyncNotifierProvider<ActivityList, List<GroupedActivity>> {
   ActivityListProvider._()
     : super(
         from: null,
@@ -33,19 +33,24 @@ final class ActivityListProvider
   ActivityList create() => ActivityList();
 }
 
-String _$activityListHash() => r'45ea85b9489e3f6243550b742673d28e75143557';
+String _$activityListHash() => r'a944da61786bfdf1ff49fee85f19a7b397bbb3af';
 
-abstract class _$ActivityList extends $AsyncNotifier<List<Activity>> {
-  FutureOr<List<Activity>> build();
+abstract class _$ActivityList extends $AsyncNotifier<List<GroupedActivity>> {
+  FutureOr<List<GroupedActivity>> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<List<Activity>>, List<Activity>>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<GroupedActivity>>, List<GroupedActivity>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Activity>>, List<Activity>>,
-              AsyncValue<List<Activity>>,
+              AnyNotifier<
+                AsyncValue<List<GroupedActivity>>,
+                List<GroupedActivity>
+              >,
+              AsyncValue<List<GroupedActivity>>,
               Object?,
               Object?
             >;

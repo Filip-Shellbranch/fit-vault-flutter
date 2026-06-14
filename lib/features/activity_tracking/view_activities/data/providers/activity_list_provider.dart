@@ -1,4 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/activity.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/grouped_activity.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/repositories/activity_group_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,11 +9,11 @@ part 'activity_list_provider.g.dart';
 @riverpod
 class ActivityList extends _$ActivityList {
   @override
-  Future<List<Activity>> build() async {
+  Future<List<GroupedActivity>> build() async {
     return _loadActivityList();
   }
 
-  Future<List<Activity>> _loadActivityList() async {
+  Future<List<GroupedActivity>> _loadActivityList() async {
     final activities = List<Activity>.empty(growable: true);
 
     final workoutsRepo = ref.read(workoutRepositoryProvider);
@@ -24,6 +26,9 @@ class ActivityList extends _$ActivityList {
 
     //TODO: Sort activites based on timestamp.
 
-    return activities;
+    final groupController = ActivityGroupController();
+    final groupedActivities = groupController.groupActivites(activities);
+
+    return groupedActivities;
   }
 }

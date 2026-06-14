@@ -14,7 +14,6 @@ class ActivityGroupController {
         timestamp.isAtSameMomentAs(lastWeekStart)) {
       return ActivityGroup.lastWeek;
     }
-    //if (timestamp.)
     return ActivityGroup.earlier;
   }
 

@@ -5,7 +5,10 @@ enum ActivityGroup { thisWeek, lastWeek, earlier }
 
 class ActivityGroupController {
   ActivityGroup calculateGroup(DateTime timestamp, DateTime today) {
-    final weekStart = today.subtract(Duration(days: today.weekday - 1));
+    final todayWithoutHM = DateTime(today.year, today.month, today.day);
+    final weekStart = todayWithoutHM.subtract(
+      Duration(days: today.weekday - 1),
+    );
     if (timestamp.isAfter(weekStart) || timestamp.isAtSameMomentAs(weekStart)) {
       return ActivityGroup.thisWeek;
     }

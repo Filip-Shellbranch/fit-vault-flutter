@@ -27,6 +27,15 @@ void main() {
       );
     });
 
+    test("test hours and minutes do not affect calculations", () {
+      final today = DateTime(2026, 6, 8, 23, 59);
+      final mondayThisWeek = DateTime(2026, 6, 8, 23, 58);
+      expect(
+        controller.calculateGroup(mondayThisWeek, today),
+        ActivityGroup.thisWeek,
+      );
+    });
+
     test("test calculate group 'Last week'", () {
       final today = DateTime(2026, 6, 13);
       final tuesdayLastWeek = DateTime(2026, 6, 2);

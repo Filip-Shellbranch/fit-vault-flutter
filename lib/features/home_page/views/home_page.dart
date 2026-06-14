@@ -2,7 +2,7 @@ import 'package:fit_vault_flutter/features/home_page/widgets/continue_activity_b
 import 'package:fit_vault_flutter/features/home_page/widgets/menu_button.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/new_activity_button.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/title_widget.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/views/view_activites_page.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/views/view_activities_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/current_activity_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

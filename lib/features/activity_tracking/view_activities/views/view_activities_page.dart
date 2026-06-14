@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/activity_list_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/widgets/activity_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +20,7 @@ class _ViewActivitesPageState extends State<ViewActivitesPage> {
         builder: (context, ref, child) {
           final activityList = ref.watch(activityListProvider);
           return activityList.when(
-            data: (activities) => Text(activities.length.toString()),
+            data: (activities) => ActivityListDisplay(activities: activities),
             error: (error, stackTrace) => Text("Error!"),
             loading: () => CircularProgressIndicator(),
           );

@@ -13,7 +13,7 @@ part of 'activity_list_provider.dart';
 final activityListProvider = ActivityListProvider._();
 
 final class ActivityListProvider
-    extends $NotifierProvider<ActivityList, List<Activity>> {
+    extends $AsyncNotifierProvider<ActivityList, List<Activity>> {
   ActivityListProvider._()
     : super(
         from: null,
@@ -31,29 +31,21 @@ final class ActivityListProvider
   @$internal
   @override
   ActivityList create() => ActivityList();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Activity> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<List<Activity>>(value),
-    );
-  }
 }
 
-String _$activityListHash() => r'98e1a1a280af1d60af2b34492ddb736bd058e33b';
+String _$activityListHash() => r'45ea85b9489e3f6243550b742673d28e75143557';
 
-abstract class _$ActivityList extends $Notifier<List<Activity>> {
-  List<Activity> build();
+abstract class _$ActivityList extends $AsyncNotifier<List<Activity>> {
+  FutureOr<List<Activity>> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<List<Activity>, List<Activity>>;
+    final ref = this.ref as $Ref<AsyncValue<List<Activity>>, List<Activity>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<Activity>, List<Activity>>,
-              List<Activity>,
+              AnyNotifier<AsyncValue<List<Activity>>, List<Activity>>,
+              AsyncValue<List<Activity>>,
               Object?,
               Object?
             >;

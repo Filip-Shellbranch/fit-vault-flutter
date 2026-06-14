@@ -1,20 +1,31 @@
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/grouped_activity.dart';
 
+enum ActivityGroup { thisWeek, lastWeek, earlier }
+
 class ActivityGroupController {
-  String _calculateGroup(Activity activity) {
-    final timestamp = activity.timestamp;
-    final today = DateTime.now();
-    final weekstart = today.subtract(Duration(days: today.weekday - 1));
+  ActivityGroup calculateGroup(DateTime timestamp, DateTime today) {
+    final weekStart = today.subtract(Duration(days: today.weekday - 1));
+    if (timestamp.isAfter(weekStart) || timestamp.isAtSameMomentAs(weekStart)) {
+      return ActivityGroup.thisWeek;
+    }
+    final lastWeekStart = weekStart.subtract(Duration(days: 7));
+    if (timestamp.isAfter(lastWeekStart) ||
+        timestamp.isAtSameMomentAs(lastWeekStart)) {
+      return ActivityGroup.lastWeek;
+    }
     //if (timestamp.)
-    return "lol";
+    return ActivityGroup.earlier;
   }
 
-  GroupedActivity _assignDisplayGroup(Activity activity) {
-    return GroupedActivity(_calculateGroup(activity), activity);
+  GroupedActivity assignDisplayGroup(Activity activity) {
+    return GroupedActivity(
+      calculateGroup(activity.timestamp, DateTime.now()),
+      activity,
+    );
   }
 
   List<GroupedActivity> groupActivites(List<Activity> activities) {
-    return activities.map((activity) => _assignDisplayGroup(activity)).toList();
+    return activities.map((activity) => assignDisplayGroup(activity)).toList();
   }
 }

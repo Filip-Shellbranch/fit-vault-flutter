@@ -8,8 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class EditWorkoutPage extends ConsumerWidget {
   const EditWorkoutPage({super.key});
 
-  void onFinishWorkout() {}
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

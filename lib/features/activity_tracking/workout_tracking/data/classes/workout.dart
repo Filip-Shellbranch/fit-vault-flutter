@@ -27,6 +27,28 @@ class Workout {
     exercises.addAll(newExercises);
   }
 
+  Duration calculateDuration() {
+    if (endTime == null) {
+      return DateTime.now().difference(startTime);
+    } else {
+      return endTime!.difference(startTime);
+    }
+  }
+
+  String formatDuration() {
+    Duration duration = calculateDuration();
+    int hours = (duration.inMinutes / 60).floor();
+    int minutes = (duration.inMinutes - 60 * hours);
+    if (hours == 0) {
+      if (minutes == 0) {
+        return "<1 min";
+      }
+      return "$minutes min";
+    } else {
+      return "$hours h $minutes min";
+    }
+  }
+
   Workout copy() {
     Workout newWorkout = Workout(startTime);
     newWorkout.endTime = endTime;

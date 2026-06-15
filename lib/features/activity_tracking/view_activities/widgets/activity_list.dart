@@ -17,7 +17,8 @@ class ActivityListDisplay extends StatelessWidget {
     return GroupedListView(
       elements: activities,
       groupBy: (activity) => activity.group,
-      groupComparator: (a, b) => a.index.compareTo(b.index),
+      groupComparator: (a, b) => b.index.compareTo(a.index),
+      order: GroupedListOrder.DESC,
       groupSeparatorBuilder: (ActivityGroup group) => Padding(
         padding: const EdgeInsets.all(16),
         child: Text(

@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_workout_page.dart';
 import 'package:flutter/material.dart';
 
 class ActivityInfoDisplay extends StatelessWidget {
@@ -27,11 +28,21 @@ class ActivityInfoDisplay extends StatelessWidget {
 
 class WorkoutActivityCard extends StatelessWidget {
   final WorkoutActivity activity;
+  Workout get workout => activity.workout;
+
   const WorkoutActivityCard({super.key, required this.activity});
+
+  void openWorkout(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditWorkoutPage(workoutToEdit: workout),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Workout workout = activity.workout;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       margin: EdgeInsets.only(bottom: 15),
@@ -86,7 +97,9 @@ class WorkoutActivityCard extends StatelessWidget {
           ),
           Center(
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                openWorkout(context);
+              },
               child: SizedBox(
                 height: 80,
                 child: Icon(Icons.arrow_forward_rounded, size: 40),

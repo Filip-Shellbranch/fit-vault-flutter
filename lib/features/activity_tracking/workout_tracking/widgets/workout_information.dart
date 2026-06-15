@@ -1,18 +1,23 @@
 import 'package:fit_vault_flutter/core/utils/second_ticker_provider.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BasicWorkoutInformation extends ConsumerWidget {
-  const BasicWorkoutInformation({super.key});
+  final Workout workout;
+  const BasicWorkoutInformation({super.key, required this.workout});
+
+  Duration calculateDuration() {
+    final endTime = workout.endTime ?? DateTime.now();
+    return endTime.difference(workout.startTime);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Workout workout = ref.watch(currentWorkoutProvider);
     ref.watch(secondTickerProvider);
-    final duration = DateTime.now().difference(workout.startTime);
+
+    final duration = calculateDuration();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Row(

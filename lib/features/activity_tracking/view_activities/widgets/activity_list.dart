@@ -20,10 +20,19 @@ class ActivityListDisplay extends StatelessWidget {
       groupComparator: (a, b) => b.index.compareTo(a.index),
       order: GroupedListOrder.DESC,
       groupSeparatorBuilder: (ActivityGroup group) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          labelFromGroup(group),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              labelFromGroup(group),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
       ),
       itemBuilder: (context, groupedActivity) {

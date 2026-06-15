@@ -85,9 +85,14 @@ class WorkoutActivityCard extends StatelessWidget {
               ],
             ),
           ),
-          TextButton(
-            onPressed: () {},
-            child: Icon(Icons.arrow_forward_rounded, size: 40),
+          Center(
+            child: TextButton(
+              onPressed: () {},
+              child: SizedBox(
+                height: 80,
+                child: Icon(Icons.arrow_forward_rounded, size: 40),
+              ),
+            ),
           ),
         ],
       ),

@@ -40,6 +40,8 @@ dependencies:
   isar_community_flutter_libs: ^3.3.0
   isar_community_generator: ^3.3.0
   riverpod_annotation: ^4.0.0
+  grouped_list: ^6.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,17 @@ import 'package:fit_vault_flutter/features/activity_tracking/view_activities/dat
 
 enum ActivityGroup { thisWeek, lastWeek, earlier }
 
+String labelFromGroup(ActivityGroup group) {
+  switch (group) {
+    case ActivityGroup.thisWeek:
+      return "This week";
+    case ActivityGroup.lastWeek:
+      return "Last week";
+    case ActivityGroup.earlier:
+      return "Earlier";
+  }
+}
+
 class ActivityGroupController {
   ActivityGroup calculateGroup(DateTime timestamp, DateTime today) {
     final todayWithoutHM = DateTime(today.year, today.month, today.day);

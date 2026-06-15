@@ -26,6 +26,13 @@ class ExerciseCard extends ConsumerStatefulWidget {
 }
 
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
+  bool isLocked = false;
+  void toggleLock() {
+    setState(() {
+      isLocked = !isLocked;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     void updateSet(int setIndex, int newReps, double newWeight) {
@@ -86,19 +93,27 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                       ),
                     ],
                   ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditExercisePage(
-                            exerciseIndex: widget.exerciseIndex,
-                            exercise: widget.exercise,
-                          ),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.edit),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: toggleLock,
+                        icon: Icon(isLocked ? Icons.lock : Icons.lock_open),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditExercisePage(
+                                exerciseIndex: widget.exerciseIndex,
+                                exercise: widget.exercise,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.edit),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -113,9 +128,10 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
               updateSetFunc: updateSet,
               removeSetFunc: removeSet,
               isBodyWeight: widget.exercise.exerciseType!.isBodyWeight,
+              isLocked: isLocked,
             );
           }),
-          AddSetButton(addSetFunc: addSet),
+          isLocked ? Container() : AddSetButton(addSetFunc: addSet),
         ],
       ),
     );

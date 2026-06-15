@@ -8,6 +8,7 @@ class SetCard extends StatelessWidget {
   final UpdateSetCallback updateSetFunc;
   final RemoveSetCallback removeSetFunc;
   final bool isBodyWeight;
+  final bool isLocked;
   const SetCard({
     super.key,
     required this.index,
@@ -15,6 +16,7 @@ class SetCard extends StatelessWidget {
     required this.updateSetFunc,
     required this.removeSetFunc,
     required this.isBodyWeight,
+    required this.isLocked,
   });
 
   void onRepsChanged(String newValueString) {
@@ -65,6 +67,7 @@ class SetCard extends StatelessWidget {
                 ),
                 child: TextField(
                   onSubmitted: onRepsChanged,
+                  readOnly: isLocked,
                   controller: repsController,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   keyboardType: TextInputType.numberWithOptions(
@@ -97,6 +100,7 @@ class SetCard extends StatelessWidget {
                       ),
                       child: TextField(
                         onSubmitted: onWeightChanged,
+                        readOnly: isLocked,
                         controller: weightController,
                         style: TextStyle(
                           fontSize: 20,
@@ -113,10 +117,12 @@ class SetCard extends StatelessWidget {
                     Text("kg", style: TextStyle(fontSize: 16)),
                   ],
                 ),
-          IconButton(
-            onPressed: () => removeSetFunc(index),
-            icon: Icon(Icons.remove, color: Colors.red),
-          ),
+          isLocked
+              ? Container()
+              : IconButton(
+                  onPressed: () => removeSetFunc(index),
+                  icon: Icon(Icons.remove, color: Colors.red),
+                ),
         ],
       ),
     );

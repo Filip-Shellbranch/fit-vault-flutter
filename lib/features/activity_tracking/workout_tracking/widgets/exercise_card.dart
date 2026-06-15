@@ -11,7 +11,7 @@ typedef UpdateSetCallback =
 typedef AddSetCallback = void Function();
 typedef RemoveSetCallback = void Function(int setIndex);
 
-class ExerciseCard extends ConsumerWidget {
+class ExerciseCard extends ConsumerStatefulWidget {
   const ExerciseCard({
     super.key,
     required this.exercise,
@@ -22,32 +22,37 @@ class ExerciseCard extends ConsumerWidget {
   final int exerciseIndex;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ExerciseCard> createState() => _ExerciseCardState();
+}
+
+class _ExerciseCardState extends ConsumerState<ExerciseCard> {
+  @override
+  Widget build(BuildContext context) {
     void updateSet(int setIndex, int newReps, double newWeight) {
-      exercise.updateSetAt(setIndex, newWeight, newReps);
+      widget.exercise.updateSetAt(setIndex, newWeight, newReps);
       ref
           .watch(currentWorkoutProvider.notifier)
-          .updateExercise(exerciseIndex, exercise);
+          .updateExercise(widget.exerciseIndex, widget.exercise);
     }
 
     void addSet() {
       int newReps = 10;
       double newWeight = 0;
-      if (exercise.sets.isNotEmpty) {
-        newReps = exercise.sets.last.reps;
-        newWeight = exercise.sets.last.weight;
+      if (widget.exercise.sets.isNotEmpty) {
+        newReps = widget.exercise.sets.last.reps;
+        newWeight = widget.exercise.sets.last.weight;
       }
-      exercise.addSet(newWeight, newReps);
+      widget.exercise.addSet(newWeight, newReps);
       ref
           .watch(currentWorkoutProvider.notifier)
-          .updateExercise(exerciseIndex, exercise);
+          .updateExercise(widget.exerciseIndex, widget.exercise);
     }
 
     void removeSet(int setIndex) {
-      exercise.removeSetAt(setIndex);
+      widget.exercise.removeSetAt(setIndex);
       ref
           .watch(currentWorkoutProvider.notifier)
-          .updateExercise(exerciseIndex, exercise);
+          .updateExercise(widget.exerciseIndex, widget.exercise);
     }
 
     return Padding(
@@ -73,9 +78,12 @@ class ExerciseCard extends ConsumerWidget {
                           fontSize: 34,
                           fontWeight: FontWeight.bold,
                         ),
-                        (exerciseIndex + 1).toString(),
+                        (widget.exerciseIndex + 1).toString(),
                       ),
-                      Text(exercise.name, style: TextStyle(fontSize: 20)),
+                      Text(
+                        widget.exercise.name,
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ],
                   ),
                   IconButton(
@@ -84,8 +92,8 @@ class ExerciseCard extends ConsumerWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditExercisePage(
-                            exerciseIndex: exerciseIndex,
-                            exercise: exercise,
+                            exerciseIndex: widget.exerciseIndex,
+                            exercise: widget.exercise,
                           ),
                         ),
                       );
@@ -96,7 +104,7 @@ class ExerciseCard extends ConsumerWidget {
               ),
             ),
           ),
-          ...exercise.sets.asMap().entries.map((entry) {
+          ...widget.exercise.sets.asMap().entries.map((entry) {
             int index = entry.key;
             ExerciseSet set = entry.value;
             return SetCard(
@@ -104,7 +112,7 @@ class ExerciseCard extends ConsumerWidget {
               set: set,
               updateSetFunc: updateSet,
               removeSetFunc: removeSet,
-              isBodyWeight: exercise.exerciseType!.isBodyWeight,
+              isBodyWeight: widget.exercise.exerciseType!.isBodyWeight,
             );
           }),
           AddSetButton(addSetFunc: addSet),

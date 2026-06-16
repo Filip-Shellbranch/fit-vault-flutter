@@ -30,11 +30,17 @@ class ExerciseCard extends ConsumerStatefulWidget {
 }
 
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
-  bool isLocked = false;
+  late bool isLocked;
   void toggleLock() {
     setState(() {
       isLocked = !isLocked;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isLocked = !widget.isCurrentWorkout;
   }
 
   @override

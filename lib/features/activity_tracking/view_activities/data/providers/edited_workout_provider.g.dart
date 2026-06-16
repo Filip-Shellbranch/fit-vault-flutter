@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'current_workout_provider.dart';
+part of 'edited_workout_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,28 +9,28 @@ part of 'current_workout_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(CurrentWorkout)
-final currentWorkoutProvider = CurrentWorkoutProvider._();
+@ProviderFor(EditedWorkout)
+final editedWorkoutProvider = EditedWorkoutProvider._();
 
-final class CurrentWorkoutProvider
-    extends $NotifierProvider<CurrentWorkout, Workout> {
-  CurrentWorkoutProvider._()
+final class EditedWorkoutProvider
+    extends $NotifierProvider<EditedWorkout, Workout> {
+  EditedWorkoutProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'currentWorkoutProvider',
+        name: r'editedWorkoutProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$currentWorkoutHash();
+  String debugGetCreateSourceHash() => _$editedWorkoutHash();
 
   @$internal
   @override
-  CurrentWorkout create() => CurrentWorkout();
+  EditedWorkout create() => EditedWorkout();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(Workout value) {
@@ -41,9 +41,9 @@ final class CurrentWorkoutProvider
   }
 }
 
-String _$currentWorkoutHash() => r'5a207d070feb76a9de0ba264e7d0627a07fcbe63';
+String _$editedWorkoutHash() => r'004eb4b679926b34363794f3a52526e408276dd3';
 
-abstract class _$CurrentWorkout extends $Notifier<Workout> {
+abstract class _$EditedWorkout extends $Notifier<Workout> {
   Workout build();
   @$mustCallSuper
   @override

@@ -3,17 +3,16 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/da
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'current_workout_provider.g.dart';
+part 'edited_workout_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
+class EditedWorkout extends _$EditedWorkout implements WorkoutNotifierBase {
   @override
   Workout build() {
     return Workout(DateTime.now());
   }
 
-  void startWorkout({Workout? workout}) {
-    workout ??= Workout(DateTime.now());
+  void editWorkout(Workout workout) {
     state = workout;
   }
 

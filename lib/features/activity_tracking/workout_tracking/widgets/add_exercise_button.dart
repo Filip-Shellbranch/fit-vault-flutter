@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddExerciseButton extends ConsumerWidget {
-  const AddExerciseButton({super.key});
+  final bool isCurrentWorkout;
+  const AddExerciseButton({super.key, required this.isCurrentWorkout});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -11,7 +12,10 @@ class AddExerciseButton extends ConsumerWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EditExercisePage()),
+          MaterialPageRoute(
+            builder: (context) =>
+                EditExercisePage(isCurrentWorkout: isCurrentWorkout),
+          ),
         );
       },
       backgroundColor: Theme.of(context).highlightColor,

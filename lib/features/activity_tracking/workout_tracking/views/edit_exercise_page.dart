@@ -1,3 +1,5 @@
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/workout_notifier_base.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/default_exercises.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
@@ -23,7 +25,13 @@ Exercise createDefaultExercise(ExerciseType exerciseType) {
 class EditExercisePage extends ConsumerStatefulWidget {
   final int? exerciseIndex;
   final Exercise? exercise;
-  const EditExercisePage({super.key, this.exerciseIndex, this.exercise});
+  final bool isCurrentWorkout;
+  const EditExercisePage({
+    super.key,
+    this.exerciseIndex,
+    this.exercise,
+    required this.isCurrentWorkout,
+  });
   @override
   ConsumerState<EditExercisePage> createState() => _EditExercisePageState();
 }
@@ -42,17 +50,18 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   }
 
   void selectExercise(ExerciseType exerciseType) {
+    final WorkoutNotifierBase workoutProvider = widget.isCurrentWorkout
+        ? ref.read(currentWorkoutProvider.notifier)
+        : ref.read(editedWorkoutProvider.notifier);
     bool isNewExercise =
         widget.exercise == null || widget.exerciseIndex == null;
     final newExercise = widget.exercise ?? createDefaultExercise(exerciseType);
 
     if (isNewExercise) {
-      ref.read(currentWorkoutProvider.notifier).addExercise(newExercise);
+      workoutProvider.addExercise(newExercise);
     } else {
       newExercise.exerciseType = exerciseType;
-      ref
-          .read(currentWorkoutProvider.notifier)
-          .updateExercise(widget.exerciseIndex!, newExercise);
+      workoutProvider.updateExercise(widget.exerciseIndex!, newExercise);
     }
     Navigator.pop(context);
   }

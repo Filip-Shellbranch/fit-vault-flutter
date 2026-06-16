@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/add_exercise_button.dart';
@@ -8,12 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EditWorkoutPage extends ConsumerWidget {
-  final Workout? workoutToEdit;
-  const EditWorkoutPage({super.key, this.workoutToEdit});
+  final bool isCurrentWorkout;
+  const EditWorkoutPage({super.key, this.isCurrentWorkout = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Workout workout = workoutToEdit ?? ref.read(currentWorkoutProvider);
+    Workout workout = isCurrentWorkout
+        ? ref.watch(currentWorkoutProvider)
+        : ref.watch(editedWorkoutProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -25,13 +28,23 @@ class EditWorkoutPage extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: AddExerciseButton(),
+      floatingActionButton: AddExerciseButton(
+        isCurrentWorkout: isCurrentWorkout,
+      ),
       body: Column(
         children: [
           BasicWorkoutInformation(workout: workout),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(children: [ExerciseList(), SizedBox(height: 200)]),
+              child: Column(
+                children: [
+                  ExerciseList(
+                    workout: workout,
+                    isCurrentWorkout: isCurrentWorkout,
+                  ),
+                  SizedBox(height: 200),
+                ],
+              ),
             ),
           ),
         ],

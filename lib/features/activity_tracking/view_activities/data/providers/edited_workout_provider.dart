@@ -16,12 +16,14 @@ class EditedWorkout extends _$EditedWorkout implements WorkoutNotifierBase {
     state = workout;
   }
 
+  @override
   void addExercise(Exercise newExercise) {
     final newState = state.copy();
     newState.addExercises([newExercise]);
     state = newState;
   }
 
+  @override
   void updateExercise(int exerciseIndex, Exercise newExercise) {
     final newState = state.copy();
     newState.exercises.removeAt(exerciseIndex);

@@ -1,3 +1,5 @@
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/workout_notifier_base.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_exercise_page.dart';
@@ -12,10 +14,12 @@ typedef AddSetCallback = void Function();
 typedef RemoveSetCallback = void Function(int setIndex);
 
 class ExerciseCard extends ConsumerStatefulWidget {
+  final bool isCurrentWorkout;
   const ExerciseCard({
     super.key,
     required this.exercise,
     required this.exerciseIndex,
+    required this.isCurrentWorkout,
   });
 
   final Exercise exercise;
@@ -35,11 +39,13 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
 
   @override
   Widget build(BuildContext context) {
+    final WorkoutNotifierBase workoutProvider = widget.isCurrentWorkout
+        ? ref.read(currentWorkoutProvider.notifier)
+        : ref.read(editedWorkoutProvider.notifier);
+
     void updateSet(int setIndex, int newReps, double newWeight) {
       widget.exercise.updateSetAt(setIndex, newWeight, newReps);
-      ref
-          .watch(currentWorkoutProvider.notifier)
-          .updateExercise(widget.exerciseIndex, widget.exercise);
+      workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
     }
 
     void addSet() {
@@ -50,16 +56,12 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
         newWeight = widget.exercise.sets.last.weight;
       }
       widget.exercise.addSet(newWeight, newReps);
-      ref
-          .watch(currentWorkoutProvider.notifier)
-          .updateExercise(widget.exerciseIndex, widget.exercise);
+      workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
     }
 
     void removeSet(int setIndex) {
       widget.exercise.removeSetAt(setIndex);
-      ref
-          .watch(currentWorkoutProvider.notifier)
-          .updateExercise(widget.exerciseIndex, widget.exercise);
+      workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
     }
 
     return Padding(
@@ -107,6 +109,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                               builder: (context) => EditExercisePage(
                                 exerciseIndex: widget.exerciseIndex,
                                 exercise: widget.exercise,
+                                isCurrentWorkout: widget.isCurrentWorkout,
                               ),
                             ),
                           );

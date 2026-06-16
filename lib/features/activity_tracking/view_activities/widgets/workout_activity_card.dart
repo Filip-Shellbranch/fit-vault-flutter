@@ -1,7 +1,9 @@
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/activity.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_workout_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ActivityInfoDisplay extends StatelessWidget {
   final String title;
@@ -26,23 +28,24 @@ class ActivityInfoDisplay extends StatelessWidget {
   }
 }
 
-class WorkoutActivityCard extends StatelessWidget {
+class WorkoutActivityCard extends ConsumerWidget {
   final WorkoutActivity activity;
   Workout get workout => activity.workout;
 
   const WorkoutActivityCard({super.key, required this.activity});
 
-  void openWorkout(BuildContext context) {
+  void openWorkout(BuildContext context, WidgetRef ref) {
+    ref.read(editedWorkoutProvider.notifier).editWorkout(workout);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditWorkoutPage(workoutToEdit: workout),
+        builder: (context) => EditWorkoutPage(isCurrentWorkout: false),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       margin: EdgeInsets.only(bottom: 15),
@@ -98,7 +101,7 @@ class WorkoutActivityCard extends StatelessWidget {
           Center(
             child: TextButton(
               onPressed: () {
-                openWorkout(context);
+                openWorkout(context, ref);
               },
               child: SizedBox(
                 height: 80,

@@ -52,7 +52,9 @@ class Workout {
   Workout copy() {
     Workout newWorkout = Workout(startTime);
     newWorkout.endTime = endTime;
-    newWorkout.exercises = exercises;
+    newWorkout.exercises = exercises
+        .map((exercise) => exercise.copy())
+        .toList();
     newWorkout.id = id;
     return newWorkout;
   }

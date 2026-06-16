@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
@@ -8,13 +9,18 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/wi
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+//TODO: If editing replace this button with a specific save changes button.
+
 class FinishWorkoutButton extends ConsumerWidget {
-  const FinishWorkoutButton({super.key});
+  final bool isCurrentWorkout;
+  const FinishWorkoutButton({super.key, required this.isCurrentWorkout});
 
   void onSavePressed(BuildContext context, WidgetRef ref) async {
-    Workout currentWorkout = ref.read(currentWorkoutProvider);
+    Workout workoutToSave = ref.read(
+      isCurrentWorkout ? currentWorkoutProvider : editedWorkoutProvider,
+    );
     ActivityController(ref).stop();
-    await ref.read(workoutRepositoryProvider).saveWorkout(currentWorkout);
+    await ref.read(workoutRepositoryProvider).saveWorkout(workoutToSave);
     if (context.mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }
@@ -53,8 +59,8 @@ class FinishWorkoutButton extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             alignment: Alignment.center,
-            child: const Text(
-              "Finish workout",
+            child: Text(
+              isCurrentWorkout ? "Finish workout" : "Finish editing",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -63,7 +69,13 @@ class FinishWorkoutButton extends ConsumerWidget {
           ),
         ),
         itemBuilder: (context) => [
-          PopupMenuItem(child: Text("What would you like to do?")),
+          PopupMenuItem(
+            child: Text(
+              isCurrentWorkout
+                  ? "What would you like to do?"
+                  : "Do you want to save your changes?",
+            ),
+          ),
           PopupMenuItem(
             value: "Save",
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),

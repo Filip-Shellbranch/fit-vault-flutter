@@ -72,6 +72,17 @@ class Exercise {
     }
     return true;
   }
+
+  Exercise copy() {
+    final Exercise newExercise = Exercise(exerciseType: exerciseType);
+    newExercise.id = id;
+    newExercise.exerciseType = exerciseType;
+
+    for (var set in _sets) {
+      newExercise.addSet(set.weight, set.reps);
+    }
+    return newExercise;
+  }
 }
 
 class ExerciseSet {

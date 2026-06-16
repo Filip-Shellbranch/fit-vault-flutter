@@ -13,7 +13,7 @@ class EditedWorkout extends _$EditedWorkout implements WorkoutNotifierBase {
   }
 
   void editWorkout(Workout workout) {
-    state = workout;
+    state = workout.copy();
   }
 
   @override

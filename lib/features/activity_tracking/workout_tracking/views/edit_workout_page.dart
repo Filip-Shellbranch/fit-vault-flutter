@@ -24,7 +24,7 @@ class EditWorkoutPage extends ConsumerWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FinishWorkoutButton(),
+            child: FinishWorkoutButton(isCurrentWorkout: isCurrentWorkout),
           ),
         ],
       ),

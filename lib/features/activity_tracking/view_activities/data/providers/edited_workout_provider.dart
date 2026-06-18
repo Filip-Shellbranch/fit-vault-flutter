@@ -17,6 +17,14 @@ class EditedWorkout extends _$EditedWorkout implements WorkoutNotifierBase {
   }
 
   @override
+  void updateExercise(int exerciseIndex, Exercise newExercise) {
+    final newState = state.copy();
+    newState.exercises.removeAt(exerciseIndex);
+    newState.exercises.insert(exerciseIndex, newExercise);
+    state = newState;
+  }
+
+  @override
   void addExercise(Exercise newExercise) {
     final newState = state.copy();
     newState.addExercises([newExercise]);
@@ -24,10 +32,9 @@ class EditedWorkout extends _$EditedWorkout implements WorkoutNotifierBase {
   }
 
   @override
-  void updateExercise(int exerciseIndex, Exercise newExercise) {
+  void deleteExercise(int exerciseIndex) {
     final newState = state.copy();
-    newState.exercises.removeAt(exerciseIndex);
-    newState.exercises.insert(exerciseIndex, newExercise);
+    newState.removeExercise(exerciseIndex);
     state = newState;
   }
 }

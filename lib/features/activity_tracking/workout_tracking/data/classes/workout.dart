@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
+import 'package:flutter/material.dart';
 
 class Workout {
   int? id;
@@ -25,6 +26,12 @@ class Workout {
 
   void addExercises(List<Exercise> newExercises) {
     exercises.addAll(newExercises);
+  }
+
+  void removeExercise(int exerciseIndex) {
+    if (exercises.length >= exerciseIndex + 1) {
+      exercises.removeAt(exerciseIndex);
+    }
   }
 
   Duration calculateDuration() {

@@ -41,7 +41,7 @@ final class EditedWorkoutProvider
   }
 }
 
-String _$editedWorkoutHash() => r'3f5e11662e907e27f68c0cac167c0584498cbf94';
+String _$editedWorkoutHash() => r'f250af07fc720a2499557d72a2e9636f49bb3f6c';
 
 abstract class _$EditedWorkout extends $Notifier<Workout> {
   Workout build();

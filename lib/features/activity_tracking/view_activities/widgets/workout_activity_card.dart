@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/activity.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/classes/activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_workout_page.dart';

@@ -1,8 +1,8 @@
 import 'package:fit_vault_flutter/core/widgets/confirm_dialog.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/workout_notifier_base.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_exercise_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/add_set_button.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/set_card.dart';

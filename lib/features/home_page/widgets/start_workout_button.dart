@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/repositories/activity_controller.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/repositories/activity_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_workout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/workout_notifier_base.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

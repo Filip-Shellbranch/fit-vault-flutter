@@ -1,5 +1,5 @@
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/current_activity_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_activity_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ActivityController {

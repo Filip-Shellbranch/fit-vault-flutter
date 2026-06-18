@@ -1,10 +1,10 @@
-import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/workout_notifier_base.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/default_exercises.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/saved_exercise_repository_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_type_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/exercise_search_results.dart';
 import 'package:flutter/material.dart';

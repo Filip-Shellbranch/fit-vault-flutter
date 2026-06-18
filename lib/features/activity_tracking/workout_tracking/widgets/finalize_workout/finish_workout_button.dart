@@ -1,9 +1,9 @@
+import 'package:fit_vault_flutter/core/widgets/confirm_dialog.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/repositories/activity_controller.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/deletion_confirm_dialog.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/finalize_workout/discard_workout_button.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/finalize_workout/save_workout_button.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,13 @@ class FinishWorkoutButton extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) {
-        return DeletionConfirmDialog();
+        return ConfirmDialog(
+          onConfirmFunc: () {
+            ActivityController(ref).stop();
+            Navigator.popUntil(context, ModalRoute.withName("/"));
+          },
+          prompt: "Are you sure you want to discard the workout?",
+        );
       },
     );
   }

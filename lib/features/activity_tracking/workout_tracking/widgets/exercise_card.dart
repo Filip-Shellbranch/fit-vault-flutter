@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/core/widgets/confirm_dialog.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
@@ -15,15 +16,15 @@ typedef RemoveSetCallback = void Function(int setIndex);
 
 class ExerciseCard extends ConsumerStatefulWidget {
   final bool isCurrentWorkout;
+  final Exercise exercise;
+  final int exerciseIndex;
+
   const ExerciseCard({
     super.key,
     required this.exercise,
     required this.exerciseIndex,
     required this.isCurrentWorkout,
   });
-
-  final Exercise exercise;
-  final int exerciseIndex;
 
   @override
   ConsumerState<ExerciseCard> createState() => _ExerciseCardState();
@@ -32,11 +33,6 @@ class ExerciseCard extends ConsumerStatefulWidget {
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   late bool isLocked;
   late WorkoutNotifierBase workoutProvider;
-  void toggleLock() {
-    setState(() {
-      isLocked = !isLocked;
-    });
-  }
 
   @override
   void initState() {
@@ -45,6 +41,16 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
     workoutProvider = widget.isCurrentWorkout
         ? ref.read(currentWorkoutProvider.notifier)
         : ref.read(editedWorkoutProvider.notifier);
+  }
+
+  void toggleLock() {
+    setState(() {
+      isLocked = !isLocked;
+    });
+  }
+
+  void deleteExercise() {
+    workoutProvider.deleteExercise(widget.exerciseIndex);
   }
 
   void updateSet(int setIndex, int newReps, double newWeight) {
@@ -103,24 +109,41 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                   Row(
                     children: [
+                      !isLocked
+                          ? IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return ConfirmDialog(
+                                      onConfirmFunc: deleteExercise,
+                                    );
+                                  },
+                                );
+                              },
+                              icon: Icon(Icons.delete),
+                            )
+                          : Container(),
+                      !isLocked
+                          ? IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditExercisePage(
+                                      exerciseIndex: widget.exerciseIndex,
+                                      exercise: widget.exercise,
+                                      isCurrentWorkout: widget.isCurrentWorkout,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.edit),
+                            )
+                          : Container(),
                       IconButton(
                         onPressed: toggleLock,
                         icon: Icon(isLocked ? Icons.lock : Icons.lock_open),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditExercisePage(
-                                exerciseIndex: widget.exerciseIndex,
-                                exercise: widget.exercise,
-                                isCurrentWorkout: widget.isCurrentWorkout,
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.edit),
                       ),
                     ],
                   ),

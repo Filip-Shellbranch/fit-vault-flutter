@@ -31,6 +31,7 @@ class ExerciseCard extends ConsumerStatefulWidget {
 
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   late bool isLocked;
+  late WorkoutNotifierBase workoutProvider;
   void toggleLock() {
     setState(() {
       isLocked = !isLocked;
@@ -41,35 +42,34 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   void initState() {
     super.initState();
     isLocked = !widget.isCurrentWorkout;
+    workoutProvider = widget.isCurrentWorkout
+        ? ref.read(currentWorkoutProvider.notifier)
+        : ref.read(editedWorkoutProvider.notifier);
+  }
+
+  void updateSet(int setIndex, int newReps, double newWeight) {
+    widget.exercise.updateSetAt(setIndex, newWeight, newReps);
+    workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
+  }
+
+  void addSet() {
+    int newReps = 10;
+    double newWeight = 0;
+    if (widget.exercise.sets.isNotEmpty) {
+      newReps = widget.exercise.sets.last.reps;
+      newWeight = widget.exercise.sets.last.weight;
+    }
+    widget.exercise.addSet(newWeight, newReps);
+    workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
+  }
+
+  void removeSet(int setIndex) {
+    widget.exercise.removeSetAt(setIndex);
+    workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
   }
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutNotifierBase workoutProvider = widget.isCurrentWorkout
-        ? ref.read(currentWorkoutProvider.notifier)
-        : ref.read(editedWorkoutProvider.notifier);
-
-    void updateSet(int setIndex, int newReps, double newWeight) {
-      widget.exercise.updateSetAt(setIndex, newWeight, newReps);
-      workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
-    }
-
-    void addSet() {
-      int newReps = 10;
-      double newWeight = 0;
-      if (widget.exercise.sets.isNotEmpty) {
-        newReps = widget.exercise.sets.last.reps;
-        newWeight = widget.exercise.sets.last.weight;
-      }
-      widget.exercise.addSet(newWeight, newReps);
-      workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
-    }
-
-    void removeSet(int setIndex) {
-      widget.exercise.removeSetAt(setIndex);
-      workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
-    }
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

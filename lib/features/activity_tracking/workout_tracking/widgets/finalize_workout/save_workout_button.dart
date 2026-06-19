@@ -4,10 +4,6 @@ class SaveWorkoutButton extends StatelessWidget {
   final Color fgColor;
   const SaveWorkoutButton({super.key, this.fgColor = Colors.white});
 
-  final SnackBar infoMessage = const SnackBar(
-    content: Text("Workout tracking has not yet been implemented."),
-  );
-
   @override
   Widget build(BuildContext context) {
     return Row(

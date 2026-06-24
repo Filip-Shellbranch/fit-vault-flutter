@@ -1,6 +1,9 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_workout_provider.g.dart';
@@ -8,34 +11,57 @@ part 'current_workout_provider.g.dart';
 @Riverpod(keepAlive: true)
 class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
   @override
-  Workout build() {
-    return Workout(DateTime.now());
+  Future<Workout?> build() async {
+    return ref.read(workoutRepositoryProvider).loadCurrentWorkout();
   }
 
-  void startWorkout({Workout? workout}) {
-    workout ??= Workout(DateTime.now());
-    state = workout;
-  }
+  Future<void> startWorkout({Workout? workout}) async {
+    workout ??= Workout(DateTime.now(), currentState: WorkoutState.active);
 
-  @override
-  void updateExercise(int exerciseIndex, Exercise newExercise) {
-    final newState = state.copy();
-    newState.exercises.removeAt(exerciseIndex);
-    newState.exercises.insert(exerciseIndex, newExercise);
-    state = newState;
+    final newSavedWorkout = await ref
+        .read(workoutRepositoryProvider)
+        .saveWorkout(workout);
+    newSavedWorkout.endTime = null;
+    state = AsyncValue.data(newSavedWorkout);
   }
 
   @override
-  void addExercise(Exercise newExercise) {
-    final newState = state.copy();
-    newState.addExercises([newExercise]);
-    state = newState;
+  void updateExercise(int exerciseIndex, Exercise newExercise) async {
+    if (!state.hasValue) {
+      return;
+    }
+    final workout = state.value!.copy();
+    workout.exercises.removeAt(exerciseIndex);
+    workout.exercises.insert(exerciseIndex, newExercise);
+    final savedWorkout = await ref
+        .read(workoutRepositoryProvider)
+        .saveWorkout(workout);
+    state = AsyncValue.data(savedWorkout);
   }
 
   @override
-  void deleteExercise(int exerciseIndex) {
-    final newState = state.copy();
-    newState.removeExercise(exerciseIndex);
-    state = newState;
+  void addExercise(Exercise newExercise) async {
+    if (!state.hasValue) {
+      return;
+    }
+    final workout = state.value!.copy();
+    workout.addExercises([newExercise]);
+    final savedWorkout = await ref
+        .read(workoutRepositoryProvider)
+        .saveWorkout(workout);
+    state = AsyncValue.data(savedWorkout);
+  }
+
+  @override
+  void deleteExercise(int exerciseIndex) async {
+    if (!state.hasValue) {
+      return;
+    }
+    final workout = state.value!.copy();
+    workout.removeExercise(exerciseIndex);
+    final savedWorkout = await ref
+        .read(workoutRepositoryProvider)
+        .saveWorkout(workout);
+    state = AsyncValue.data(savedWorkout);
   }
 }

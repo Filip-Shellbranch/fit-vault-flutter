@@ -38,9 +38,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   void initState() {
     super.initState();
     isLocked = !widget.isCurrentWorkout;
-    workoutProvider = widget.isCurrentWorkout
-        ? ref.read(currentWorkoutProvider.notifier)
-        : ref.read(editedWorkoutProvider.notifier);
   }
 
   void toggleLock() {
@@ -76,6 +73,12 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
 
   @override
   Widget build(BuildContext context) {
+    workoutProvider = widget.isCurrentWorkout
+        ? ref.read(currentWorkoutProvider.notifier)
+        : ref.read(editedWorkoutProvider.notifier);
+    widget.isCurrentWorkout
+        ? ref.watch(currentWorkoutProvider)
+        : ref.watch(editedWorkoutProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

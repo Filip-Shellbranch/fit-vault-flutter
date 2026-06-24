@@ -14,9 +14,16 @@ class EditWorkoutPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Workout workout = isCurrentWorkout
-        ? ref.watch(currentWorkoutProvider)
-        : ref.watch(editedWorkoutProvider);
+    late Workout workout;
+    if (isCurrentWorkout) {
+      Workout? loadedValue = ref.watch(currentWorkoutProvider).value;
+      if (loadedValue == null) {
+        return Text("Error no current workout.");
+      }
+      workout = loadedValue;
+    } else {
+      workout = ref.watch(editedWorkoutProvider);
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

@@ -8,8 +8,8 @@ class ActivityController {
   ActivityController(this.ref);
 
   /// This function is the one used in the UI to start a new workout.
-  void startWorkout() {
-    ref.watch(currentWorkoutProvider.notifier).startWorkout();
+  Future<void> startWorkout() async {
+    await ref.watch(currentWorkoutProvider.notifier).startWorkout();
     ref.watch(currentActivityProvider.notifier).startWorkout();
     // TODO: Remove currentRun if any
   }

@@ -1,6 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
-import 'package:flutter/material.dart';
 
 class Workout {
   int? id;
@@ -10,14 +9,19 @@ class Workout {
 
   List<Exercise> exercises = [];
 
-  Workout(this.startTime);
+  WorkoutState currentState;
+
+  Workout(this.startTime, {this.currentState = WorkoutState.completed});
 
   factory Workout.fromModel(WorkoutModel model) {
     /*
     Creates a new Workout from the WorkoutModel, since the exercise links are most likely not yet loaded
     the Workout does not have Exercises and must be loaded separately where appropriate in WorkoutRepository.
     */
-    final newWorkout = Workout(model.startTime);
+    final newWorkout = Workout(
+      model.startTime,
+      currentState: model.currentState,
+    );
     newWorkout.id = model.id;
     newWorkout.endTime = model.endTime;
 

@@ -13,7 +13,7 @@ part of 'current_workout_provider.dart';
 final currentWorkoutProvider = CurrentWorkoutProvider._();
 
 final class CurrentWorkoutProvider
-    extends $NotifierProvider<CurrentWorkout, Workout> {
+    extends $AsyncNotifierProvider<CurrentWorkout, Workout?> {
   CurrentWorkoutProvider._()
     : super(
         from: null,
@@ -31,29 +31,21 @@ final class CurrentWorkoutProvider
   @$internal
   @override
   CurrentWorkout create() => CurrentWorkout();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Workout value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Workout>(value),
-    );
-  }
 }
 
-String _$currentWorkoutHash() => r'a0e94c421cb0dcf64e54ec6745b8fe6dc7dac1eb';
+String _$currentWorkoutHash() => r'83153838e6294f1eab7a0693d4fc2652958e6a2a';
 
-abstract class _$CurrentWorkout extends $Notifier<Workout> {
-  Workout build();
+abstract class _$CurrentWorkout extends $AsyncNotifier<Workout?> {
+  FutureOr<Workout?> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<Workout, Workout>;
+    final ref = this.ref as $Ref<AsyncValue<Workout?>, Workout?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<Workout, Workout>,
-              Workout,
+              AnyNotifier<AsyncValue<Workout?>, Workout?>,
+              AsyncValue<Workout?>,
               Object?,
               Object?
             >;

@@ -72,6 +72,22 @@ class WorkoutRepository {
     return workout;
   }
 
+  Future<void> deleteWorkoutById(int id) async {
+    await db.writeTxn(() async {
+      final workoutModel = await db.workoutModels.get(id);
+      if (workoutModel == null) {
+        return;
+      }
+      await workoutModel.exercises.load();
+
+      final List<int> exerciseIds = workoutModel.exercises
+          .map((exerciseModel) => exerciseModel.id)
+          .toList();
+      await db.exerciseModels.deleteAll(exerciseIds);
+      await db.workoutModels.delete(id);
+    });
+  }
+
   Future<Workout> _loadWorkoutFromModel(WorkoutModel model) async {
     Workout workout = Workout.fromModel(model);
     final exerciseRepo = ExerciseRepository(db);
@@ -114,5 +130,21 @@ class WorkoutRepository {
         .filter()
         .exercises((e) => e.exerciseType((q) => q.nameEqualTo(exerciseName)))
         .count();
+  }
+
+  Future<Workout?> loadCurrentWorkout() async {
+    List<WorkoutModel> activeWorkouts = await db.workoutModels
+        .filter()
+        .currentStateEqualTo(WorkoutState.active)
+        .findAll();
+    if (activeWorkouts.isEmpty) {
+      return null;
+    }
+    if (activeWorkouts.length > 1) {
+      throw StateError("Multiple active workouts found!");
+    }
+    WorkoutModel currentModel = activeWorkouts.single;
+    currentModel.endTime = null;
+    return Workout.fromModel(currentModel);
   }
 }

@@ -17,13 +17,19 @@ const WorkoutModelSchema = CollectionSchema(
   name: r'Workout',
   id: 1535508263686820971,
   properties: {
-    r'endTime': PropertySchema(
+    r'currentState': PropertySchema(
       id: 0,
+      name: r'currentState',
+      type: IsarType.string,
+      enumMap: _WorkoutModelcurrentStateEnumValueMap,
+    ),
+    r'endTime': PropertySchema(
+      id: 1,
       name: r'endTime',
       type: IsarType.dateTime,
     ),
     r'startTime': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'startTime',
       type: IsarType.dateTime,
     ),
@@ -71,6 +77,7 @@ int _workoutModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.currentState.name.length * 3;
   return bytesCount;
 }
 
@@ -80,8 +87,9 @@ void _workoutModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.endTime);
-  writer.writeDateTime(offsets[1], object.startTime);
+  writer.writeString(offsets[0], object.currentState.name);
+  writer.writeDateTime(offsets[1], object.endTime);
+  writer.writeDateTime(offsets[2], object.startTime);
 }
 
 WorkoutModel _workoutModelDeserialize(
@@ -91,8 +99,13 @@ WorkoutModel _workoutModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = WorkoutModel(
-    reader.readDateTime(offsets[1]),
-    reader.readDateTimeOrNull(offsets[0]),
+    reader.readDateTime(offsets[2]),
+    reader.readDateTimeOrNull(offsets[1]),
+    currentState:
+        _WorkoutModelcurrentStateValueEnumMap[reader.readStringOrNull(
+          offsets[0],
+        )] ??
+        WorkoutState.completed,
   );
   object.id = id;
   return object;
@@ -106,13 +119,28 @@ P _workoutModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (_WorkoutModelcurrentStateValueEnumMap[reader.readStringOrNull(
+                offset,
+              )] ??
+              WorkoutState.completed)
+          as P;
     case 1:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 2:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _WorkoutModelcurrentStateEnumValueMap = {
+  r'active': r'active',
+  r'completed': r'completed',
+};
+const _WorkoutModelcurrentStateValueEnumMap = {
+  r'active': WorkoutState.active,
+  r'completed': WorkoutState.completed,
+};
 
 Id _workoutModelGetId(WorkoutModel object) {
   return object.id;
@@ -330,6 +358,147 @@ extension WorkoutModelQueryWhere
 
 extension WorkoutModelQueryFilter
     on QueryBuilder<WorkoutModel, WorkoutModel, QFilterCondition> {
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateEqualTo(WorkoutState value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'currentState',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateGreaterThan(
+    WorkoutState value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'currentState',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateLessThan(
+    WorkoutState value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'currentState',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateBetween(
+    WorkoutState lower,
+    WorkoutState upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'currentState',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'currentState',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateEndsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'currentState',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'currentState',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'currentState',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'currentState', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
+  currentStateIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'currentState', value: ''),
+      );
+    });
+  }
+
   QueryBuilder<WorkoutModel, WorkoutModel, QAfterFilterCondition>
   endTimeIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -587,6 +756,19 @@ extension WorkoutModelQueryLinks
 
 extension WorkoutModelQuerySortBy
     on QueryBuilder<WorkoutModel, WorkoutModel, QSortBy> {
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterSortBy> sortByCurrentState() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentState', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterSortBy>
+  sortByCurrentStateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentState', Sort.desc);
+    });
+  }
+
   QueryBuilder<WorkoutModel, WorkoutModel, QAfterSortBy> sortByEndTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'endTime', Sort.asc);
@@ -614,6 +796,19 @@ extension WorkoutModelQuerySortBy
 
 extension WorkoutModelQuerySortThenBy
     on QueryBuilder<WorkoutModel, WorkoutModel, QSortThenBy> {
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterSortBy> thenByCurrentState() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentState', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutModel, QAfterSortBy>
+  thenByCurrentStateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentState', Sort.desc);
+    });
+  }
+
   QueryBuilder<WorkoutModel, WorkoutModel, QAfterSortBy> thenByEndTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'endTime', Sort.asc);
@@ -653,6 +848,14 @@ extension WorkoutModelQuerySortThenBy
 
 extension WorkoutModelQueryWhereDistinct
     on QueryBuilder<WorkoutModel, WorkoutModel, QDistinct> {
+  QueryBuilder<WorkoutModel, WorkoutModel, QDistinct> distinctByCurrentState({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'currentState', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<WorkoutModel, WorkoutModel, QDistinct> distinctByEndTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'endTime');
@@ -671,6 +874,13 @@ extension WorkoutModelQueryProperty
   QueryBuilder<WorkoutModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<WorkoutModel, WorkoutState, QQueryOperations>
+  currentStateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'currentState');
     });
   }
 

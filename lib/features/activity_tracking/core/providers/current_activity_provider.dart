@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_activity_provider.g.dart';
@@ -21,7 +22,12 @@ extension ActivityTypeChecks on ActivityType {
 @riverpod
 class CurrentActivity extends _$CurrentActivity {
   @override
-  ActivityType build() => ActivityType.none;
+  ActivityType build() {
+    if (ref.watch(currentWorkoutProvider).value != null) {
+      return ActivityType.workout;
+    }
+    return ActivityType.none;
+  }
 
   void startWorkout() => state = ActivityType.workout;
   void startRun() => state = ActivityType.run;

@@ -4,10 +4,15 @@ import 'package:isar_community/isar.dart';
 
 part 'workout_model.g.dart';
 
+enum WorkoutState { active, completed }
+
 @collection
 @Name("Workout")
 class WorkoutModel {
   Id id = Isar.autoIncrement;
+
+  @Enumerated(EnumType.name)
+  WorkoutState currentState;
 
   @Index()
   final DateTime startTime;
@@ -15,10 +20,18 @@ class WorkoutModel {
 
   final exercises = IsarLinks<ExerciseModel>();
 
-  WorkoutModel(this.startTime, this.endTime);
+  WorkoutModel(
+    this.startTime,
+    this.endTime, {
+    this.currentState = WorkoutState.completed,
+  });
 
   factory WorkoutModel.fromWorkout(Workout workout) {
-    WorkoutModel newWorkout = WorkoutModel(workout.startTime, workout.endTime);
+    WorkoutModel newWorkout = WorkoutModel(
+      workout.startTime,
+      workout.endTime,
+      currentState: workout.currentState,
+    );
     newWorkout.id = workout.id ?? Isar.autoIncrement;
     return newWorkout;
   }

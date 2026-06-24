@@ -2,6 +2,7 @@ import 'package:fit_vault_flutter/core/widgets/confirm_dialog.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/repositories/activity_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/finalize_workout/discard_workout_button.dart';
@@ -9,17 +10,34 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/wi
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-//TODO: If editing replace this button with a specific save changes button.
+Future<void> deleteCurrentWorkout(WidgetRef ref) async {
+  Workout? currentWorkout = ref.read(currentWorkoutProvider).value;
+  if (currentWorkout == null) {
+    return;
+  }
+  int? id = currentWorkout.id;
+  if (id != null) {
+    await ref.read(workoutRepositoryProvider).deleteWorkoutById(id);
+  }
+}
 
 class FinishWorkoutButton extends ConsumerWidget {
   final bool isCurrentWorkout;
   const FinishWorkoutButton({super.key, required this.isCurrentWorkout});
 
   void onSavePressed(BuildContext context, WidgetRef ref) async {
-    Workout workoutToSave = ref.read(
-      isCurrentWorkout ? currentWorkoutProvider : editedWorkoutProvider,
-    );
+    late Workout workoutToSave;
+    if (isCurrentWorkout) {
+      Workout? loadedValue = ref.read(currentWorkoutProvider).value;
+      if (loadedValue == null) {
+        return;
+      }
+      workoutToSave = loadedValue;
+    } else {
+      workoutToSave = ref.read(editedWorkoutProvider);
+    }
     ActivityController(ref).stop();
+    workoutToSave.currentState = WorkoutState.completed;
     await ref.read(workoutRepositoryProvider).saveWorkout(workoutToSave);
     if (context.mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
@@ -31,7 +49,11 @@ class FinishWorkoutButton extends ConsumerWidget {
       context: context,
       builder: (context) {
         return ConfirmDialog(
-          onConfirmFunc: () {
+          onConfirmFunc: () async {
+            if (isCurrentWorkout) {
+              await deleteCurrentWorkout(ref);
+            }
+
             ActivityController(ref).stop();
             Navigator.popUntil(context, ModalRoute.withName("/"));
           },

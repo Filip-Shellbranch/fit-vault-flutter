@@ -89,10 +89,11 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   }
 
   Future<bool> tryDeleteExerciseType(String exerciseName) async {
-    final currentWorkout = ref.read(currentWorkoutProvider);
-    if (currentWorkout.exercises.any(
-      (Exercise exercise) => exercise.name == exerciseName,
-    )) {
+    final currentWorkout = ref.read(currentWorkoutProvider).value;
+    if (currentWorkout != null &&
+        currentWorkout.exercises.any(
+          (Exercise exercise) => exercise.name == exerciseName,
+        )) {
       // The exercise is used in the current workout and should not be able to be deleted.
       return false;
     }

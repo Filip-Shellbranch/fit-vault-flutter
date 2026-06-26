@@ -37,12 +37,15 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   @override
   void initState() {
     super.initState();
-    isLocked = !widget.isCurrentWorkout;
+    debugPrint(widget.exercise.isLocked.toString());
+    isLocked = widget.exercise.isLocked;
   }
 
   void toggleLock() {
+    bool newLockValue = !isLocked;
+    widget.exercise.setLock(newLockValue);
     setState(() {
-      isLocked = !isLocked;
+      isLocked = newLockValue;
     });
   }
 

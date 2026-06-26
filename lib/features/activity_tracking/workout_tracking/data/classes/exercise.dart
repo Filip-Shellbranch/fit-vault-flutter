@@ -8,6 +8,9 @@ class Exercise {
   final List<ExerciseSet> _sets = [];
   List<ExerciseSet> get sets => _sets;
 
+  bool _isLocked = false;
+  bool get isLocked => _isLocked;
+
   String get name =>
       exerciseType == null ? "Unknown" : exerciseType!.exerciseName;
 
@@ -57,6 +60,10 @@ class Exercise {
       }
     }
     return result;
+  }
+
+  void setLock(bool newValue) {
+    _isLocked = newValue;
   }
 
   bool isNumRepsConstant() {

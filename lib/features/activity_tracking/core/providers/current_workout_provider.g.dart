@@ -33,7 +33,7 @@ final class CurrentWorkoutProvider
   CurrentWorkout create() => CurrentWorkout();
 }
 
-String _$currentWorkoutHash() => r'83153838e6294f1eab7a0693d4fc2652958e6a2a';
+String _$currentWorkoutHash() => r'9e37b77919597ba173382e52589560f47c525bb9';
 
 abstract class _$CurrentWorkout extends $AsyncNotifier<Workout?> {
   FutureOr<Workout?> build();

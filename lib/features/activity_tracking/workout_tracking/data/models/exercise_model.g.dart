@@ -17,8 +17,9 @@ const ExerciseModelSchema = CollectionSchema(
   name: r'Exercise',
   id: 2972066467915231902,
   properties: {
+    r'isLocked': PropertySchema(id: 0, name: r'isLocked', type: IsarType.bool),
     r'sets': PropertySchema(
-      id: 0,
+      id: 1,
       name: r'sets',
       type: IsarType.objectList,
 
@@ -82,8 +83,9 @@ void _exerciseModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
+  writer.writeBool(offsets[0], object.isLocked);
   writer.writeObjectList<ExerciseSetModel>(
-    offsets[0],
+    offsets[1],
     allOffsets,
     ExerciseSetModelSchema.serialize,
     object.sets,
@@ -98,9 +100,10 @@ ExerciseModel _exerciseModelDeserialize(
 ) {
   final object = ExerciseModel();
   object.id = id;
+  object.isLocked = reader.readBool(offsets[0]);
   object.sets =
       reader.readObjectList<ExerciseSetModel>(
-        offsets[0],
+        offsets[1],
         ExerciseSetModelSchema.deserialize,
         allOffsets,
         ExerciseSetModel(),
@@ -117,6 +120,8 @@ P _exerciseModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
       return (reader.readObjectList<ExerciseSetModel>(
                 offset,
                 ExerciseSetModelSchema.deserialize,
@@ -302,6 +307,15 @@ extension ExerciseModelQueryFilter
   }
 
   QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
+  isLockedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'isLocked', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
   setsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(r'sets', length, true, length, true);
@@ -399,7 +413,20 @@ extension ExerciseModelQueryLinks
 }
 
 extension ExerciseModelQuerySortBy
-    on QueryBuilder<ExerciseModel, ExerciseModel, QSortBy> {}
+    on QueryBuilder<ExerciseModel, ExerciseModel, QSortBy> {
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> sortByIsLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLocked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy>
+  sortByIsLockedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLocked', Sort.desc);
+    });
+  }
+}
 
 extension ExerciseModelQuerySortThenBy
     on QueryBuilder<ExerciseModel, ExerciseModel, QSortThenBy> {
@@ -414,16 +441,41 @@ extension ExerciseModelQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> thenByIsLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLocked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy>
+  thenByIsLockedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLocked', Sort.desc);
+    });
+  }
 }
 
 extension ExerciseModelQueryWhereDistinct
-    on QueryBuilder<ExerciseModel, ExerciseModel, QDistinct> {}
+    on QueryBuilder<ExerciseModel, ExerciseModel, QDistinct> {
+  QueryBuilder<ExerciseModel, ExerciseModel, QDistinct> distinctByIsLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isLocked');
+    });
+  }
+}
 
 extension ExerciseModelQueryProperty
     on QueryBuilder<ExerciseModel, ExerciseModel, QQueryProperty> {
   QueryBuilder<ExerciseModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<ExerciseModel, bool, QQueryOperations> isLockedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isLocked');
     });
   }
 

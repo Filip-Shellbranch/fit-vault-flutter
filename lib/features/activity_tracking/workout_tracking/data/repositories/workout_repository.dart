@@ -11,17 +11,30 @@ class WorkoutRepository {
   Isar db;
   WorkoutRepository(this.db);
 
-  Future<Workout> saveWorkout(Workout workout) async {
+  Future<Workout> saveWorkout(
+    Workout workout, {
+    bool isCompleted = false,
+  }) async {
     /*
     Saves the WorkoutModel and ExerciseModels described by the Workout,
     returns a new Workout with the database ID:s for the workout and exercises.
     */
     workout.endTime = workout.endTime ?? DateTime.now();
     WorkoutModel newWorkout = WorkoutModel.fromWorkout(workout);
+    newWorkout.currentState = isCompleted
+        ? WorkoutState.completed
+        : WorkoutState.active;
 
-    final newExercises = workout.exercises
-        .map((exercise) => ExerciseModel.fromExercise(exercise))
-        .toList();
+    final newExercises = workout.exercises.map((exercise) {
+      final newModel = ExerciseModel.fromExercise(exercise);
+
+      if (newWorkout.currentState == WorkoutState.active) {
+        newModel.isLocked = exercise.isLocked;
+      } else {
+        newModel.isLocked = true;
+      }
+      return newModel;
+    }).toList();
 
     await db.writeTxn(() async {
       if (workout.id != null) {
@@ -43,7 +56,6 @@ class WorkoutRepository {
           await db.exerciseModels.deleteAll(orphanIds);
         }
       }
-
       final Id workoutId = await db.workoutModels.put(newWorkout);
       workout.id = workoutId;
 
@@ -68,6 +80,9 @@ class WorkoutRepository {
       newWorkout.exercises.addAll(newExercises);
       await newWorkout.exercises.save();
     });
+    if (!isCompleted) {
+      workout.endTime = null;
+    }
 
     return workout;
   }
@@ -93,11 +108,17 @@ class WorkoutRepository {
     final exerciseRepo = ExerciseRepository(db);
 
     await model.exercises.load();
-    List<Future<Exercise>> loadExerciseTasks = model.exercises
-        .map(
-          (exerciseModel) => exerciseRepo.loadExerciseFromModel(exerciseModel),
-        )
-        .toList();
+    List<Future<Exercise>> loadExerciseTasks = model.exercises.map(
+      (exerciseModel) async {
+        final exercise = await exerciseRepo.loadExerciseFromModel(
+          exerciseModel,
+        );
+        if (workout.currentState == WorkoutState.completed) {
+          exercise.setLock(true);
+        }
+        return exercise;
+      }, // exerciseRepo.loadExerciseFromModel(exerciseModel),
+    ).toList();
 
     List<Exercise> newExercises = await Future.wait(loadExerciseTasks);
     workout.addExercises(newExercises);
@@ -144,7 +165,8 @@ class WorkoutRepository {
       throw StateError("Multiple active workouts found!");
     }
     WorkoutModel currentModel = activeWorkouts.single;
-    currentModel.endTime = null;
-    return Workout.fromModel(currentModel);
+    Workout workout = await _loadWorkoutFromModel(currentModel);
+    workout.endTime = null;
+    return workout;
   }
 }

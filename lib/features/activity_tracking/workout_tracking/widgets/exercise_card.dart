@@ -31,22 +31,20 @@ class ExerciseCard extends ConsumerStatefulWidget {
 }
 
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
-  late bool isLocked;
   late WorkoutNotifierBase workoutProvider;
 
   @override
   void initState() {
     super.initState();
-    debugPrint(widget.exercise.isLocked.toString());
-    isLocked = widget.exercise.isLocked;
   }
 
   void toggleLock() {
-    bool newLockValue = !isLocked;
+    bool newLockValue = !widget.exercise.isLocked;
     widget.exercise.setLock(newLockValue);
-    setState(() {
+    workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
+    /*setState(() {
       isLocked = newLockValue;
-    });
+    });*/
   }
 
   void deleteExercise() {
@@ -115,7 +113,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                   ),
                   Row(
                     children: [
-                      !isLocked
+                      !widget.exercise.isLocked
                           ? IconButton(
                               onPressed: () {
                                 showDialog(
@@ -130,7 +128,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                               icon: Icon(Icons.delete),
                             )
                           : Container(),
-                      !isLocked
+                      !widget.exercise.isLocked
                           ? IconButton(
                               onPressed: () {
                                 Navigator.push(
@@ -149,7 +147,11 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                           : Container(),
                       IconButton(
                         onPressed: toggleLock,
-                        icon: Icon(isLocked ? Icons.lock : Icons.lock_open),
+                        icon: Icon(
+                          widget.exercise.isLocked
+                              ? Icons.lock
+                              : Icons.lock_open,
+                        ),
                       ),
                     ],
                   ),
@@ -166,10 +168,12 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
               updateSetFunc: updateSet,
               removeSetFunc: removeSet,
               isBodyWeight: widget.exercise.exerciseType!.isBodyWeight,
-              isLocked: isLocked,
+              isLocked: widget.exercise.isLocked,
             );
           }),
-          isLocked ? Container() : AddSetButton(addSetFunc: addSet),
+          widget.exercise.isLocked
+              ? Container()
+              : AddSetButton(addSetFunc: addSet),
         ],
       ),
     );

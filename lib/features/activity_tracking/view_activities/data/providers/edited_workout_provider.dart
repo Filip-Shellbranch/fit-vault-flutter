@@ -1,7 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'edited_workout_provider.g.dart';

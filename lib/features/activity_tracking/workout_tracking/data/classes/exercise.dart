@@ -19,6 +19,7 @@ class Exercise {
   factory Exercise.fromModel(ExerciseModel model) {
     Exercise newExercise = Exercise();
     newExercise.id = model.id;
+    newExercise.setLock(model.isLocked);
 
     for (ExerciseSetModel setModel in model.sets) {
       if (setModel.reps == null || setModel.weight == null) {
@@ -84,6 +85,7 @@ class Exercise {
     final Exercise newExercise = Exercise(exerciseType: exerciseType);
     newExercise.id = id;
     newExercise.exerciseType = exerciseType;
+    newExercise.setLock(isLocked);
 
     for (var set in _sets) {
       newExercise.addSet(set.weight, set.reps);

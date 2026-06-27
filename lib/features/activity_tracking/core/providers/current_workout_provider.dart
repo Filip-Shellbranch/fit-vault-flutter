@@ -3,7 +3,6 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/da
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_workout_provider.g.dart';
@@ -20,8 +19,7 @@ class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
 
     final newSavedWorkout = await ref
         .read(workoutRepositoryProvider)
-        .saveWorkout(workout);
-    newSavedWorkout.endTime = null;
+        .saveWorkout(workout, isCompleted: false);
     state = AsyncValue.data(newSavedWorkout);
   }
 
@@ -35,7 +33,7 @@ class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
     workout.exercises.insert(exerciseIndex, newExercise);
     final savedWorkout = await ref
         .read(workoutRepositoryProvider)
-        .saveWorkout(workout);
+        .saveWorkout(workout, isCompleted: false);
     state = AsyncValue.data(savedWorkout);
   }
 
@@ -48,7 +46,7 @@ class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
     workout.addExercises([newExercise]);
     final savedWorkout = await ref
         .read(workoutRepositoryProvider)
-        .saveWorkout(workout);
+        .saveWorkout(workout, isCompleted: false);
     state = AsyncValue.data(savedWorkout);
   }
 
@@ -61,7 +59,7 @@ class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
     workout.removeExercise(exerciseIndex);
     final savedWorkout = await ref
         .read(workoutRepositoryProvider)
-        .saveWorkout(workout);
+        .saveWorkout(workout, isCompleted: false);
     state = AsyncValue.data(savedWorkout);
   }
 }

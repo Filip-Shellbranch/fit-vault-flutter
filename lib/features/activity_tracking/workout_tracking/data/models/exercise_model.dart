@@ -10,6 +10,7 @@ part 'exercise_model.g.dart';
 @Name("Exercise")
 class ExerciseModel {
   Id id = Isar.autoIncrement;
+  bool isLocked = false;
 
   final exerciseType = IsarLink<ExerciseTypeModel>();
 
@@ -23,6 +24,7 @@ class ExerciseModel {
   factory ExerciseModel.fromExercise(Exercise exercise) {
     final newModel = ExerciseModel();
     newModel.id = exercise.id ?? Isar.autoIncrement;
+    newModel.isLocked = exercise.isLocked;
     for (ExerciseSet set in exercise.sets) {
       final newSet = ExerciseSetModel.fromSet(set);
       newModel.sets.add(newSet);

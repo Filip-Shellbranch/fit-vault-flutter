@@ -27,10 +27,10 @@ class ConfirmDialog extends StatelessWidget {
           builder: (context, ref, child) {
             return TextButton(
               onPressed: () {
-                onConfirmFunc();
                 if (context.mounted) {
                   Navigator.pop(context);
                 }
+                onConfirmFunc();
               },
               child: Text(confirmText),
             );
@@ -38,10 +38,10 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            onCancelFunc();
             if (context.mounted) {
               Navigator.pop(context);
             }
+            onCancelFunc();
           },
           child: Text(cancelText),
         ),

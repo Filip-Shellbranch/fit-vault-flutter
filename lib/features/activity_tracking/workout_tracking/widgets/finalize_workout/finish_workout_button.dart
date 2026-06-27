@@ -52,14 +52,16 @@ class FinishWorkoutButton extends ConsumerWidget {
           onConfirmFunc: () async {
             if (isCurrentWorkout) {
               await deleteCurrentWorkout(ref);
+              ActivityController(ref).stop();
             }
 
-            ActivityController(ref).stop();
             if (context.mounted) {
               Navigator.popUntil(context, ModalRoute.withName("/"));
             }
           },
-          prompt: "Are you sure you want to discard the workout?",
+          prompt: isCurrentWorkout
+              ? "Are you sure you want to discard the workout?"
+              : "Are you sure you want to discard your changes?",
         );
       },
     );
@@ -116,7 +118,10 @@ class FinishWorkoutButton extends ConsumerWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SaveWorkoutButton(fgColor: Colors.white),
+                child: SaveWorkoutButton(
+                  text: isCurrentWorkout ? "Save workout" : "Save changes",
+                  fgColor: Colors.white,
+                ),
               ),
             ),
           ),
@@ -130,7 +135,12 @@ class FinishWorkoutButton extends ConsumerWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: DiscardWorkoutButton(fgColor: Colors.white),
+                child: DiscardWorkoutButton(
+                  text: isCurrentWorkout
+                      ? "Discard workout"
+                      : "Discard changes",
+                  fgColor: Colors.white,
+                ),
               ),
             ),
           ),

@@ -55,7 +55,9 @@ class FinishWorkoutButton extends ConsumerWidget {
             }
 
             ActivityController(ref).stop();
-            Navigator.popUntil(context, ModalRoute.withName("/"));
+            if (context.mounted) {
+              Navigator.popUntil(context, ModalRoute.withName("/"));
+            }
           },
           prompt: "Are you sure you want to discard the workout?",
         );

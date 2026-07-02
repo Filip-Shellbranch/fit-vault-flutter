@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_activity_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/activity_list_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ActivityController {
@@ -18,5 +19,6 @@ class ActivityController {
   /// is no need to also remove the Workout/Run from the respective providers.
   void stop() {
     ref.watch(currentActivityProvider.notifier).stop();
+    ref.watch(activityListProvider.notifier).updateList();
   }
 }

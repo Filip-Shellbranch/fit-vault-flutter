@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/core/widgets/confirm_dialog.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/activity_list_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
@@ -39,6 +40,7 @@ class FinishWorkoutButton extends ConsumerWidget {
     await ref
         .read(workoutRepositoryProvider)
         .saveWorkout(workoutToSave, isCompleted: true);
+    ref.read(activityListProvider.notifier).updateList();
     if (context.mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }

@@ -24,11 +24,15 @@ class ActivityList extends _$ActivityList {
 
     //TODO: Add all runs to the activites list.
 
-    //TODO: Sort activites based on timestamp.
-
     final groupController = ActivityGroupController();
     final groupedActivities = groupController.groupActivites(activities);
 
     return groupedActivities;
+  }
+
+  Future<List<GroupedActivity>> updateList() async {
+    final newList = await _loadActivityList();
+    state = AsyncValue.data(newList);
+    return newList;
   }
 }

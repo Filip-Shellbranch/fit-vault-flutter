@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/widgets/recent_activity_widget.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/continue_activity_button.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/menu_button.dart';
 import 'package:fit_vault_flutter/features/home_page/widgets/new_activity_button.dart';
@@ -36,6 +37,7 @@ class HomePage extends ConsumerWidget {
                 icon: Icons.history,
                 title: "My activity",
                 targetPage: ViewActivitesPage(),
+                subWidget: RecentActivityWidget(),
               ),
               HomePageMenuButton(
                 icon: Icons.analytics,

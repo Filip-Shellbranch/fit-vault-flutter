@@ -13,22 +13,18 @@ class EditWorkoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: TextButton(
-        onPressed: callback,
-
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).highlightColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          alignment: Alignment.center,
-          child: Text(
-            "Start editing",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
+    return TextButton(
+      onPressed: callback,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).highlightColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        alignment: Alignment.center,
+        child: Text(
+          "Start editing",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );

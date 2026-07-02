@@ -1,6 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/add_exercise_button.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/exercise_list.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/finalize_workout/finish_workout_button.dart';
@@ -8,22 +7,54 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/wi
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditWorkoutPage extends ConsumerWidget {
-  final bool isCurrentWorkout;
-  const EditWorkoutPage({super.key, this.isCurrentWorkout = true});
+class EditWorkoutButton extends StatelessWidget {
+  final VoidCallback callback;
+  const EditWorkoutButton({super.key, required this.callback});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: TextButton(
+        onPressed: callback,
+
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          alignment: Alignment.center,
+          child: Text(
+            "Start editing",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class EditWorkoutPage extends ConsumerStatefulWidget {
+  final bool isCurrentWorkout = false;
+  const EditWorkoutPage({super.key});
+
+  @override
+  ConsumerState<EditWorkoutPage> createState() => _EditWorkoutPageState();
+}
+
+class _EditWorkoutPageState extends ConsumerState<EditWorkoutPage> {
+  void unlockWorkout() {
+    setState(() {
+      isUnlocked = true;
+    });
+  }
+
+  bool isUnlocked = false;
+  @override
+  Widget build(BuildContext context) {
     late Workout workout;
-    if (isCurrentWorkout) {
-      Workout? loadedValue = ref.watch(currentWorkoutProvider).value;
-      if (loadedValue == null) {
-        return Text("Error no current workout.");
-      }
-      workout = loadedValue;
-    } else {
-      workout = ref.watch(editedWorkoutProvider);
-    }
+    workout = ref.watch(editedWorkoutProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -31,13 +62,15 @@ class EditWorkoutPage extends ConsumerWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FinishWorkoutButton(isCurrentWorkout: isCurrentWorkout),
+            child: isUnlocked
+                ? FinishWorkoutButton(isCurrentWorkout: widget.isCurrentWorkout)
+                : EditWorkoutButton(callback: unlockWorkout),
           ),
         ],
       ),
-      floatingActionButton: AddExerciseButton(
-        isCurrentWorkout: isCurrentWorkout,
-      ),
+      floatingActionButton: isUnlocked
+          ? AddExerciseButton(isCurrentWorkout: false)
+          : SizedBox(),
       body: Column(
         children: [
           BasicWorkoutInformation(workout: workout),
@@ -47,7 +80,8 @@ class EditWorkoutPage extends ConsumerWidget {
                 children: [
                   ExerciseList(
                     workout: workout,
-                    isCurrentWorkout: isCurrentWorkout,
+                    isCurrentWorkout: widget.isCurrentWorkout,
+                    isEditing: isUnlocked,
                   ),
                   SizedBox(height: 200),
                 ],

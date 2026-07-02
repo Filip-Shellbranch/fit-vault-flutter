@@ -16,6 +16,7 @@ typedef RemoveSetCallback = void Function(int setIndex);
 
 class ExerciseCard extends ConsumerStatefulWidget {
   final bool isCurrentWorkout;
+  final bool isEditing;
   final Exercise exercise;
   final int exerciseIndex;
 
@@ -24,6 +25,7 @@ class ExerciseCard extends ConsumerStatefulWidget {
     required this.exercise,
     required this.exerciseIndex,
     required this.isCurrentWorkout,
+    required this.isEditing,
   });
 
   @override
@@ -42,9 +44,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
     bool newLockValue = !widget.exercise.isLocked;
     widget.exercise.setLock(newLockValue);
     workoutProvider.updateExercise(widget.exerciseIndex, widget.exercise);
-    /*setState(() {
-      isLocked = newLockValue;
-    });*/
   }
 
   void deleteExercise() {
@@ -111,50 +110,55 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      !widget.exercise.isLocked
-                          ? IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return ConfirmDialog(
-                                      onConfirmFunc: deleteExercise,
-                                    );
-                                  },
-                                );
-                              },
-                              icon: Icon(Icons.delete),
-                            )
-                          : Container(),
-                      !widget.exercise.isLocked
-                          ? IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditExercisePage(
-                                      exerciseIndex: widget.exerciseIndex,
-                                      exercise: widget.exercise,
-                                      isCurrentWorkout: widget.isCurrentWorkout,
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.edit),
-                            )
-                          : Container(),
-                      IconButton(
-                        onPressed: toggleLock,
-                        icon: Icon(
-                          widget.exercise.isLocked
-                              ? Icons.lock
-                              : Icons.lock_open,
+                  !widget.isEditing
+                      ? SizedBox()
+                      : Row(
+                          children: [
+                            !widget.exercise.isLocked
+                                ? IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return ConfirmDialog(
+                                            onConfirmFunc: deleteExercise,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: Icon(Icons.delete),
+                                  )
+                                : Container(),
+                            !widget.exercise.isLocked
+                                ? IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditExercisePage(
+                                                exerciseIndex:
+                                                    widget.exerciseIndex,
+                                                exercise: widget.exercise,
+                                                isCurrentWorkout:
+                                                    widget.isCurrentWorkout,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.edit),
+                                  )
+                                : Container(),
+                            IconButton(
+                              onPressed: toggleLock,
+                              icon: Icon(
+                                widget.exercise.isLocked
+                                    ? Icons.lock
+                                    : Icons.lock_open,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),

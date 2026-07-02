@@ -38,9 +38,7 @@ class WorkoutActivityCard extends ConsumerWidget {
     ref.read(editedWorkoutProvider.notifier).editWorkout(workout);
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => EditWorkoutPage(isCurrentWorkout: false),
-      ),
+      MaterialPageRoute(builder: (context) => EditWorkoutPage()),
     );
   }
 

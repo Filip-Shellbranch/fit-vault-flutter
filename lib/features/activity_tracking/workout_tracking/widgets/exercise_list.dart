@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 class ExerciseList extends StatelessWidget {
   final Workout workout;
+  final bool isEditing;
   final bool isCurrentWorkout;
   const ExerciseList({
     super.key,
     required this.workout,
+    required this.isEditing,
     required this.isCurrentWorkout,
   });
 
@@ -31,6 +33,7 @@ class ExerciseList extends StatelessWidget {
                   exercise: exercise,
                   exerciseIndex: i,
                   isCurrentWorkout: isCurrentWorkout,
+                  isEditing: isEditing,
                 ),
               );
             },

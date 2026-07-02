@@ -23,6 +23,10 @@ class ActivityCountWidget extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         Text(
+          count == 1 ? "Activity" : "Activities",
+          style: TextStyle(fontSize: 14),
+        ),
+        Text(
           text,
           style: TextStyle(
             color: Theme.of(context).highlightColor,
@@ -64,13 +68,20 @@ class RecentActivityWidget extends ConsumerWidget {
       ActivityGroup.thisWeek,
     );
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      padding: const EdgeInsets.only(bottom: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ActivityCountWidget(text: "Previous week", count: lastWeek),
-          ActivityCountWidget(text: "This week", count: thisWeek),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ActivityCountWidget(text: "Previous week", count: lastWeek),
+                ActivityCountWidget(text: "This week", count: thisWeek),
+              ],
+            ),
+          ),
         ],
       ),
     );

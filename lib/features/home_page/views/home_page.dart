@@ -33,11 +33,11 @@ class HomePage extends ConsumerWidget {
           SizedBox(height: 50),
           Column(
             children: [
+              RecentActivityWidget(),
               HomePageMenuButton(
                 icon: Icons.history,
                 title: "My activity",
                 targetPage: ViewActivitesPage(),
-                subWidget: RecentActivityWidget(),
               ),
               HomePageMenuButton(
                 icon: Icons.analytics,

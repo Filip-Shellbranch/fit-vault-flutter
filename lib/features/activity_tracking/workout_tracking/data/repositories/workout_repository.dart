@@ -125,10 +125,13 @@ class WorkoutRepository {
     return workout;
   }
 
-  Future<List<Workout>> getAllWorkouts() async {
+  Future<List<Workout>> getAllWorkouts({bool includeActive = false}) async {
     List<WorkoutModel> models = await db.workoutModels.where().findAll();
     List<Workout> workouts = [];
     for (WorkoutModel model in models) {
+      if (includeActive == false && model.currentState == WorkoutState.active) {
+        continue;
+      }
       Workout workout = await _loadWorkoutFromModel(model);
       workouts.add(workout);
     }

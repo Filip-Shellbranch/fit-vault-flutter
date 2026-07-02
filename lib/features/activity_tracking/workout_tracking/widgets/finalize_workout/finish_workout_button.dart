@@ -35,10 +35,10 @@ class FinishWorkoutButton extends ConsumerWidget {
     } else {
       workoutToSave = ref.read(editedWorkoutProvider);
     }
-    ActivityController(ref).stop();
     await ref
         .read(workoutRepositoryProvider)
         .saveWorkout(workoutToSave, isCompleted: true);
+    ActivityController(ref).stop();
     if (context.mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }

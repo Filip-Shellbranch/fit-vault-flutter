@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,9 @@ class RunSessionPage extends ConsumerWidget {
       return Text("Error no current run.");
     }
     run = loadedValue;
+
+    GeoLocationRepository();
+
     return Scaffold(
       appBar: AppBar(),
       body: Text("Run ${run.startTime.toString()}"),

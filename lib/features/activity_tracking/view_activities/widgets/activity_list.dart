@@ -59,6 +59,8 @@ class ActivityListDisplay extends StatelessWidget {
             return WorkoutActivityCard(
               activity: groupedActivity.activity as WorkoutActivity,
             );
+          case RunActivity():
+            return Text("RUN ACTIVITY PLACEHOLDER");
         }
       },
     );

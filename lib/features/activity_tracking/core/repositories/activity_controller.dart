@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_activity_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/activity_list_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,5 +21,11 @@ class ActivityController {
   void stop() {
     ref.watch(currentActivityProvider.notifier).stop();
     ref.watch(activityListProvider.notifier).updateList();
+  }
+
+  Future<void> startRun() async {
+    await ref.watch(currentRunProvider.notifier).startRun();
+    ref.watch(currentActivityProvider.notifier).startRun();
+    // TODO: Remove currentWorkout if any
   }
 }

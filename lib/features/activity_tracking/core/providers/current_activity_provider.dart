@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,6 +26,8 @@ class CurrentActivity extends _$CurrentActivity {
   ActivityType build() {
     if (ref.watch(currentWorkoutProvider).value != null) {
       return ActivityType.workout;
+    } else if (ref.watch(currentRunProvider).value != null) {
+      return ActivityType.run;
     }
     return ActivityType.none;
   }

@@ -1,19 +1,24 @@
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/repositories/activity_controller.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_session_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StartRunButton extends StatelessWidget {
+class StartRunButton extends ConsumerWidget {
   const StartRunButton({super.key});
 
-  final SnackBar infoMessage = const SnackBar(
-    content: Text("Run tracking has not yet been implemented."),
-  );
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FloatingActionButton.extended(
-      onPressed: () {
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        messenger.showSnackBar(infoMessage);
+      onPressed: () async {
+        await ActivityController(ref).startRun();
+        debugPrint(ref.read(currentRunProvider).toString());
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RunSessionPage()),
+          );
+        }
       },
       heroTag: null,
       backgroundColor: Theme.of(context).primaryColor,

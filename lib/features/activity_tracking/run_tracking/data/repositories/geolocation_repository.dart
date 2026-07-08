@@ -3,58 +3,54 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+enum LocationRequestResult {
+  granted,
+  serviceDisabled,
+  denied,
+  deniedForever,
+  notRequested,
+}
+
 class GeoLocationRepository {
-  late final Geolocator geo;
+  LocationRequestResult permission = LocationRequestResult.notRequested;
   StreamSubscription<Position>? stream;
 
-  GeoLocationRepository() {
-    geo = Geolocator();
-    requestPermission().then((bool isGranted) {
-      if (isGranted) {
-        startStream();
-      } else {
-        //TODO: Handle appropriately.
-      }
-    });
+  GeoLocationRepository();
+
+  Future<void> initialize() async {
+    LocationRequestResult result = await _requestPermission();
+    permission = result;
   }
 
-  Future<bool> requestPermission() async {
+  void dispose() {
+    if (stream != null) {
+      stream!.cancel();
+    }
+  }
+
+  Future<LocationRequestResult> _requestPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      return false;
-      return Future.error('Location services are disabled.');
+      return LocationRequestResult.serviceDisabled;
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return false;
-        return Future.error('Location permissions are denied');
+        return LocationRequestResult.denied;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return false;
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.',
-      );
+      return LocationRequestResult.deniedForever;
     }
 
-    return true;
+    return LocationRequestResult.granted;
   }
 
   StreamSubscription<Position> startStream() {

@@ -24,8 +24,10 @@ class ActivityController {
   }
 
   Future<void> startRun() async {
-    await ref.watch(currentRunProvider.notifier).startRun();
-    ref.watch(currentActivityProvider.notifier).startRun();
+    bool success = await ref.watch(currentRunProvider.notifier).startRun();
+    if (success) {
+      ref.watch(currentActivityProvider.notifier).startRun();
+    }
     // TODO: Remove currentWorkout if any
   }
 }

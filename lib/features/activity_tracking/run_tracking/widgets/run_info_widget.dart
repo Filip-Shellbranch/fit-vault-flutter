@@ -4,6 +4,33 @@ import 'package:fit_vault_flutter/features/activity_tracking/core/providers/curr
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class RunStatWidget extends StatelessWidget {
+  final String title;
+  final String value;
+  final String? unit;
+  const RunStatWidget(this.title, this.value, {super.key, this.unit});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text(title), Text(unit != null ? " ($unit)" : "")],
+          ),
+          Text(value),
+        ],
+      ),
+    );
+  }
+}
+
 class RunInfoWidget extends ConsumerWidget {
   const RunInfoWidget({super.key});
 
@@ -16,9 +43,31 @@ class RunInfoWidget extends ConsumerWidget {
     ref.watch(secondTickerProvider);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text("Active duration"),
-        Text(formatDurationMinutesSeconds(run.calculateDuration())),
+        RunStatWidget(
+          "Duration",
+          formatDurationMinutesSeconds(run.calculateDuration()),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: RunStatWidget(
+                "Distance",
+                run.distance.toString(),
+                unit: "km",
+              ),
+            ),
+            Expanded(
+              child: RunStatWidget(
+                "Pace",
+                run.calculatePace().asMinsPerKm(),
+                unit: "min/km",
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

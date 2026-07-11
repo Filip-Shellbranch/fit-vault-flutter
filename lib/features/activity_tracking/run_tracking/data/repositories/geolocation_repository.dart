@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 enum LocationRequestResult {
@@ -12,19 +11,32 @@ enum LocationRequestResult {
 }
 
 class GeoLocationRepository {
-  LocationRequestResult permission = LocationRequestResult.notRequested;
-  StreamSubscription<Position>? stream;
-
+  StreamSubscription<Position>? _stream;
   GeoLocationRepository();
 
-  Future<void> initialize() async {
+  Future<LocationRequestResult> initialize() async {
     LocationRequestResult result = await _requestPermission();
-    permission = result;
+    return result;
   }
 
-  void dispose() {
-    if (stream != null) {
-      stream!.cancel();
+  Future<LocationRequestResult> checkPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return LocationRequestResult.serviceDisabled;
+    }
+
+    permission = await Geolocator.checkPermission();
+    switch (permission) {
+      case LocationPermission.denied:
+        return LocationRequestResult.denied;
+      case LocationPermission.deniedForever:
+        return LocationRequestResult.deniedForever;
+      default:
+        return LocationRequestResult.granted;
     }
   }
 
@@ -53,18 +65,24 @@ class GeoLocationRepository {
     return LocationRequestResult.granted;
   }
 
-  StreamSubscription<Position> startStream() {
+  bool startStream(void Function(Position?) callback) {
     LocationSettings settings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 1,
     );
-    return Geolocator.getPositionStream(locationSettings: settings).listen((
-      Position? position,
-    ) {
-      debugPrint(
-        position == null
-            ? 'Unknown'
-            : '${position.latitude.toString()}, ${position.longitude.toString()}',
-      );
-    });
+    if (_stream != null) {
+      _stream!.cancel();
+    }
+    _stream = Geolocator.getPositionStream(
+      locationSettings: settings,
+    ).listen(callback);
+
+    return true;
+  }
+
+  void dispose() {
+    if (_stream != null) {
+      _stream!.cancel();
+    }
   }
 }

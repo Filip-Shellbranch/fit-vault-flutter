@@ -1,6 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:flutter/material.dart';
 
 enum RunState { active, paused, complete }
 
@@ -11,25 +11,33 @@ class Run {
   RunState state = RunState.active;
   List<RunPoint> positions = [];
 
-  double _distance = 0; // In kilometers.
+  double _distance; // In kilometers.
   double get distance {
     return _distance;
   }
 
   Duration pausedDuration = Duration.zero;
   DateTime? pausedAt;
-  Run(this.startTime);
+  Run(this.startTime, {double startingDistance = 0})
+    : _distance = startingDistance;
 
   void addPoint(RunPoint newPoint) {
+    debugPrint("newPoint");
     // TODO: If the new point is due to resuming a paused run then do not increase distance.
     if (positions.isEmpty) {
       _distance = 0;
     } else {
       RunPoint previousPoint = positions.last;
       double segmentLength = previousPoint.distanceTo(newPoint);
+      debugPrint("Segment length: $segmentLength");
       _distance += segmentLength;
     }
+    debugPrint("New distance: $_distance");
     positions.add(newPoint);
+  }
+
+  String formatDistance() {
+    return distance.toStringAsFixed(2);
   }
 
   Pace calculatePace() {
@@ -71,7 +79,7 @@ class Run {
   }
 
   Run copy() {
-    Run newRun = Run(startTime);
+    Run newRun = Run(startTime, startingDistance: _distance);
     newRun.pausedDuration = pausedDuration;
     newRun.pausedAt = pausedAt;
     newRun.endTime = endTime;

@@ -33,7 +33,7 @@ final class CurrentRunProvider
   CurrentRun create() => CurrentRun();
 }
 
-String _$currentRunHash() => r'c77464c231c073fa68e7534ba36b20a77b7a2119';
+String _$currentRunHash() => r'333a8e9702283b78b5a9b2cd311b6dd8594a44a6';
 
 abstract class _$CurrentRun extends $AsyncNotifier<Run?> {
   FutureOr<Run?> build();

@@ -55,7 +55,7 @@ class RunInfoWidget extends ConsumerWidget {
             Expanded(
               child: RunStatWidget(
                 "Distance",
-                run.distance.toString(),
+                run.formatDistance(),
                 unit: "km",
               ),
             ),

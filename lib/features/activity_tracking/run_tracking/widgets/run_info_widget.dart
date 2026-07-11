@@ -22,9 +22,15 @@ class RunStatWidget extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(title), Text(unit != null ? " ($unit)" : "")],
+            children: [
+              Text(title, style: TextStyle(fontSize: 20)),
+              Text(
+                unit != null ? " ($unit)" : "",
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
           ),
-          Text(value),
+          Text(value, style: TextStyle(fontSize: 40)),
         ],
       ),
     );
@@ -61,7 +67,7 @@ class RunInfoWidget extends ConsumerWidget {
             ),
             Expanded(
               child: RunStatWidget(
-                "Pace",
+                "Avg Pace",
                 run.calculatePace().asMinsPerKm(),
                 unit: "min/km",
               ),

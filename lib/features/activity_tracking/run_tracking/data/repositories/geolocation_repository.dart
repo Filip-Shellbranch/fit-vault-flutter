@@ -68,7 +68,7 @@ class GeoLocationRepository {
   bool startStream(void Function(Position?) callback) {
     LocationSettings settings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 1,
+      distanceFilter: 10,
     );
     if (_stream != null) {
       _stream!.cancel();

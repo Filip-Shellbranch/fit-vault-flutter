@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';

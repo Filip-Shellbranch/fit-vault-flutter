@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/home_page/views/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +18,7 @@ void main() async {
 
   FlutterForegroundTask.initCommunicationPort();
   if (kDebugMode) {
-    if (await FlutterForegroundTask.isRunningService) {
+    if (await ForegroundServiceController().isRunning()) {
       await FlutterForegroundTask.stopService();
     }
   }

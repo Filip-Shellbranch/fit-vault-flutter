@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
@@ -8,6 +10,13 @@ void startCallback() {
 
 class ForegroundServiceController {
   ForegroundServiceController();
+
+  Future<bool> isRunning() async {
+    if (!Platform.isAndroid) {
+      return false;
+    }
+    return await FlutterForegroundTask.isRunningService;
+  }
 
   Future<bool> requestPermissions() async {
     final isIgnoring =
@@ -21,7 +30,10 @@ class ForegroundServiceController {
   }
 
   Future<void> startService() async {
-    if (await FlutterForegroundTask.isRunningService) {
+    if (!Platform.isAndroid) {
+      return;
+    }
+    if (await isRunning()) {
       return;
     }
     await FlutterForegroundTask.startService(

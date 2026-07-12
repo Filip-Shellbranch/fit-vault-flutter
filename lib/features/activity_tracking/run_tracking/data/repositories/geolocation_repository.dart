@@ -80,6 +80,25 @@ class GeoLocationRepository {
     return true;
   }
 
+  Future<Position?> getCurrentPosition() async {
+    //TODO: Error handling and check permissions.
+    final current = await Geolocator.getCurrentPosition(
+      locationSettings: AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+      ),
+    );
+    return current;
+  }
+
+  Future<double> measureAccuracy() async {
+    Position? point = await getCurrentPosition();
+    if (point == null) {
+      return 0.0;
+    } else {
+      return point.accuracy;
+    }
+  }
+
   void dispose() {
     if (_stream != null) {
       _stream!.cancel();

@@ -1,6 +1,7 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/location_permission_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/gps_strength_widget.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/location_permission_widget.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_control_menu.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_info_widget.dart';
@@ -31,6 +32,7 @@ class RunSessionPage extends ConsumerWidget {
             children: [
               RunInfoWidget(),
               Expanded(child: SizedBox()),
+              GpsStrengthWidget(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 120),
                 child: RunControlMenu(),

@@ -63,6 +63,7 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
                   child: RunControlButton(
                     icon: Icons.stop,
                     onPressed: onFinishPressed,
+                    buttonColor: Colors.red.shade800,
                   ),
                 ),
               ),

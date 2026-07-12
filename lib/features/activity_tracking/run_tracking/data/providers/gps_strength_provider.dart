@@ -7,9 +7,9 @@ class GpsStrength {
   final double accuracy;
   final GpsSignalStrength strength;
   GpsStrength(this.accuracy)
-    : strength = accuracy < 1
+    : strength = accuracy < 10
           ? GpsSignalStrength.strong
-          : accuracy < 5
+          : accuracy < 20
           ? GpsSignalStrength.medium
           : GpsSignalStrength.weak;
 }

@@ -31,8 +31,15 @@ class RunSessionPage extends ConsumerWidget {
           body: Column(
             children: [
               RunInfoWidget(),
+
+              Align(
+                alignment: AlignmentGeometry.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GpsStrengthWidget(),
+                ),
+              ),
               Expanded(child: SizedBox()),
-              GpsStrengthWidget(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 120),
                 child: RunControlMenu(),

@@ -56,7 +56,7 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
               SlideTransition(
                 position: Tween<Offset>(
                   begin: Offset.zero,
-                  end: Offset(1.5, 0.0),
+                  end: Offset(1, 0.0),
                 ).animate(controller),
                 child: Opacity(
                   opacity: controller.value,
@@ -70,7 +70,7 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
               SlideTransition(
                 position: Tween<Offset>(
                   begin: Offset.zero,
-                  end: Offset(-1.5, 0.0),
+                  end: Offset(-1, 0.0),
                 ).animate(controller),
                 child: Opacity(
                   opacity: controller.value,

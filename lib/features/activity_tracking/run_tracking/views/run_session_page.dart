@@ -1,53 +1,40 @@
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/location_permission_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/gps_strength_widget.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/location_permission_widget.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_control_menu.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_info_widget.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_control_page.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_map_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/widgets.dart';
 
-class RunSessionPage extends ConsumerWidget {
+class RunSessionPage extends StatefulWidget {
   const RunSessionPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(runTrackingServiceProvider);
-    final permission = ref.watch(locationPermissionProviderProvider);
-    return permission.when(
-      error: (Object o, StackTrace _) {
-        return Text("Error getting permission");
-      },
-      loading: () {
-        return CircularProgressIndicator();
-      },
-      data: (permission) {
-        if (permission != LocationRequestResult.granted) {
-          return LocationPermissionWidget(permission);
-        }
-        return Scaffold(
-          appBar: AppBar(),
-          body: Column(
-            children: [
-              RunInfoWidget(),
+  State<RunSessionPage> createState() => _RunSessionPageState();
+}
 
-              Align(
-                alignment: AlignmentGeometry.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GpsStrengthWidget(),
-                ),
-              ),
-              Expanded(child: SizedBox()),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 120),
-                child: RunControlMenu(),
-              ),
-            ],
-          ),
-        );
-      },
+class _RunSessionPageState extends State<RunSessionPage>
+    with TickerProviderStateMixin {
+  late final PageController _pageController;
+  late final TabController _tabController;
+  final int _currentPageIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentPageIndex);
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+    _tabController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      controller: _pageController,
+      children: [RunMapPage(), RunControlPage()],
     );
   }
 }

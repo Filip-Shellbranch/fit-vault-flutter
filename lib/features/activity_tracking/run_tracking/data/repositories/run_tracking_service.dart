@@ -11,6 +11,10 @@ class RunTrackingService {
 
   void onDispose() {}
 
+  Future<RunPoint> fetchCurrentPosition() async {
+    return RunPoint(40, 40);
+  }
+
   void _onPositionReceived(Object data) {
     if (data is! Map<String, dynamic>) return;
 

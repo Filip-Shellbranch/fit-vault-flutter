@@ -1,15 +1,46 @@
-import 'package:flutter/widgets.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_map.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RunMapPage extends StatefulWidget {
+class RunMapPage extends ConsumerStatefulWidget {
   const RunMapPage({super.key});
 
   @override
-  State<RunMapPage> createState() => _RunMapPageState();
+  ConsumerState<RunMapPage> createState() => _RunMapPageState();
 }
 
-class _RunMapPageState extends State<RunMapPage> {
+class _RunMapPageState extends ConsumerState<RunMapPage> {
+  late final MapController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = MapController();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("hej"));
+    return ref
+        .watch(currentRunProvider)
+        .when(
+          loading: () {
+            return Center(child: CircularProgressIndicator());
+          },
+          error: (e, stackTrace) {
+            return Text(e.toString());
+          },
+          data: (run) {
+            if (run == null) {
+              return Text("No active run");
+            }
+            return Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: RunningMap(controller: _controller, run: run),
+              ),
+            );
+          },
+        );
   }
 }

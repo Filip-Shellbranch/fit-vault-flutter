@@ -1,22 +1,15 @@
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_marker.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/live_route_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 class RunningMap extends ConsumerWidget {
-  final Run run;
   final MapController controller;
-  const RunningMap({super.key, required this.controller, required this.run});
-
-  Marker _createMarker(RunPoint point) {
-    return Marker(
-      point: point.getLatLng(),
-      child: RunningMarker(icon: Icons.run_circle_outlined),
-    );
-  }
+  const RunningMap({super.key, required this.controller});
 
   List<LatLng> _getRoutePoints(List<RunPoint> runPoints) {
     return runPoints.map((point) => point.getLatLng()).toList();
@@ -24,36 +17,32 @@ class RunningMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Marker> markers = run.positions
-        .map((point) => _createMarker(point))
-        .toList();
+    bool isLoaded = ref.watch(
+      currentRunProvider.select(
+        (asyncRun) => asyncRun.hasValue && asyncRun.value!.positions.isNotEmpty,
+      ),
+    );
+    if (!isLoaded) {
+      return Center(child: Text("Map not loaded"));
+    }
+    Run run = ref.read(currentRunProvider).value!;
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
     return FlutterMap(
       mapController: controller,
-      options: MapOptions(
-        initialCenter: markers.first.point,
-        initialCameraFit: CameraFit.coordinates(
-          coordinates: boundPoints,
-          padding: EdgeInsets.all(120),
-        ),
-      ),
+      options: run.positions.length >= 2
+          ? MapOptions(
+              initialCameraFit: CameraFit.coordinates(
+                coordinates: boundPoints,
+                padding: EdgeInsets.all(120),
+              ),
+            )
+          : MapOptions(initialCenter: run.positions.first.getLatLng()),
       children: [
         TileLayer(
           urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-          userAgentPackageName: 'com.example.fit_vault_flutter',
+          userAgentPackageName: 'com.fit_vault.fit_vault_flutter',
         ),
-        PolylineLayer(
-          polylines: [
-            Polyline(
-              points: boundPoints,
-              color: Theme.of(context).highlightColor,
-              strokeWidth: 8.0,
-              strokeCap: StrokeCap.round,
-              strokeJoin: StrokeJoin.round,
-            ),
-          ],
-        ),
-        MarkerLayer(markers: markers),
+        LiveRouteOverlay(),
         RichAttributionWidget(
           showFlutterMapAttribution: false,
           attributions: [

@@ -1,4 +1,3 @@
-import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -21,26 +20,11 @@ class _RunMapPageState extends ConsumerState<RunMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ref
-        .watch(currentRunProvider)
-        .when(
-          loading: () {
-            return Center(child: CircularProgressIndicator());
-          },
-          error: (e, stackTrace) {
-            return Text(e.toString());
-          },
-          data: (run) {
-            if (run == null) {
-              return Text("No active run");
-            }
-            return Scaffold(
-              body: Padding(
-                padding: const EdgeInsets.only(bottom: 100),
-                child: RunningMap(controller: _controller, run: run),
-              ),
-            );
-          },
-        );
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: RunningMap(controller: _controller),
+      ),
+    );
   }
 }

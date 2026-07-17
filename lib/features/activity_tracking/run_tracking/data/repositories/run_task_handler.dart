@@ -23,7 +23,7 @@ class RunTaskHandler extends TaskHandler {
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     LocationRequestResult permission = await geo.initialize();
     if (permission == LocationRequestResult.granted) {
-      geo.startStream(onNewPosition);
+      await geo.startStream(onNewPosition);
     }
   }
 
@@ -32,6 +32,6 @@ class RunTaskHandler extends TaskHandler {
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
-    geo.dispose();
+    await geo.dispose();
   }
 }

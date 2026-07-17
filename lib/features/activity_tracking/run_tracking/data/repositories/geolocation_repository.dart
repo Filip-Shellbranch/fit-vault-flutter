@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 enum LocationRequestResult {
@@ -65,13 +66,13 @@ class GeoLocationRepository {
     return LocationRequestResult.granted;
   }
 
-  bool startStream(void Function(Position?) callback) {
+  Future<bool> startStream(void Function(Position?) callback) async {
     LocationSettings settings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
       distanceFilter: 10,
     );
     if (_stream != null) {
-      _stream!.cancel();
+      await _stream!.cancel();
     }
     _stream = Geolocator.getPositionStream(
       locationSettings: settings,
@@ -99,9 +100,10 @@ class GeoLocationRepository {
     }
   }
 
-  void dispose() {
+  Future<void> dispose() async {
     if (_stream != null) {
-      _stream!.cancel();
+      await _stream?.cancel();
+      _stream = null;
     }
   }
 }

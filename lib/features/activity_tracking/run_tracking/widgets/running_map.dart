@@ -23,7 +23,7 @@ class RunningMap extends ConsumerWidget {
       ),
     );
     if (!isLoaded) {
-      return Center(child: Text("Map not loaded"));
+      return Center(child: CircularProgressIndicator());
     }
     Run run = ref.read(currentRunProvider).value!;
     List<LatLng> boundPoints = _getRoutePoints(run.positions);

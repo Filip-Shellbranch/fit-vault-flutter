@@ -10,6 +10,12 @@ class Pace {
     int secPerKm = (time.inSeconds.toDouble() / distance).round();
     int wholeMins = (secPerKm / 60).floor();
     int seconds = secPerKm - 60 * wholeMins;
-    return "$wholeMins:$seconds";
+
+    return "$wholeMins:${seconds < 10 ? "0$seconds" : seconds}";
+  }
+
+  @override
+  String toString() {
+    return "$distance km : ${time.inSeconds} seconds";
   }
 }

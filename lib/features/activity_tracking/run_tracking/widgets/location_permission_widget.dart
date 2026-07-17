@@ -6,7 +6,6 @@ class LocationPermissionWidget extends StatelessWidget {
   const LocationPermissionWidget(this.permission, {super.key});
 
   String getInfoText() {
-    debugPrint(permission.name);
     switch (permission) {
       case LocationRequestResult.notRequested:
         return "Not yet requested.";

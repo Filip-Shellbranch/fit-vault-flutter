@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,7 +25,9 @@ class CurrentRun extends _$CurrentRun {
       return;
     }
     Run newRun = state.value!.copy();
-    newRun.addPoint(newPoint);
+    double segmentLength = newRun.addPoint(newPoint);
+    ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
+
     state = AsyncValue.data(newRun);
   }
 

@@ -21,19 +21,18 @@ class Run {
   Run(this.startTime, {double startingDistance = 0})
     : _distance = startingDistance;
 
-  void addPoint(RunPoint newPoint) {
-    debugPrint("newPoint");
+  double addPoint(RunPoint newPoint) {
+    double segmentLength = 0;
     // TODO: If the new point is due to resuming a paused run then do not increase distance.
     if (positions.isEmpty) {
       _distance = 0;
     } else {
       RunPoint previousPoint = positions.last;
-      double segmentLength = previousPoint.distanceTo(newPoint);
-      debugPrint("Segment length: $segmentLength");
+      segmentLength = previousPoint.distanceTo(newPoint);
       _distance += segmentLength;
     }
-    debugPrint("New distance: $_distance");
     positions.add(newPoint);
+    return segmentLength;
   }
 
   String formatDistance() {

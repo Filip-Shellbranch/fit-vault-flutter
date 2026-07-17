@@ -1,6 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
-import 'package:flutter/material.dart';
 
 enum RunState { active, paused, complete }
 

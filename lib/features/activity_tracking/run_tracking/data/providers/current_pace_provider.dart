@@ -1,5 +1,4 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_pace_provider.g.dart';

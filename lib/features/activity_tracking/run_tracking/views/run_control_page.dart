@@ -20,7 +20,7 @@ class RunControlPage extends ConsumerWidget {
         return Text("Error getting permission");
       },
       loading: () {
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
       data: (permission) {
         if (permission != LocationRequestResult.granted) {

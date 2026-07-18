@@ -45,6 +45,10 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Fix
+    if (ref.read(currentRunProvider).value!.isPaused()) {
+      controller.forward();
+    }
     return AnimatedBuilder(
       animation: controller,
       builder: (context, _) {

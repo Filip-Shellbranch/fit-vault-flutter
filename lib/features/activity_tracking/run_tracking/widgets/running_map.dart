@@ -29,7 +29,7 @@ class RunningMap extends ConsumerWidget {
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
     return FlutterMap(
       mapController: controller,
-      options: run.positions.length >= 2
+      options: boundPoints.length >= 2
           ? MapOptions(
               initialCameraFit: CameraFit.coordinates(
                 coordinates: boundPoints,

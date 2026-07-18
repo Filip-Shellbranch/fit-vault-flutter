@@ -1,6 +1,6 @@
 import 'package:latlong2/latlong.dart';
 
-enum PointType { pause, active }
+enum PointType { pause, resume, active }
 
 class RunPoint {
   final double lat;

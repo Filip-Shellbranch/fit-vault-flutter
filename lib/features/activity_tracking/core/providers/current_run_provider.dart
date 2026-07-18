@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_run_provider.g.dart';
@@ -43,22 +45,33 @@ class CurrentRun extends _$CurrentRun {
     return true;
   }
 
+  Future<void> _addPointAtCurrentPosition(PointType pointType) async {
+    final RunPoint? newPoint = await ref
+        .read(runTrackingServiceProvider)
+        .createPointAtCurrentLocation(pointType);
+    if (newPoint == null) {
+      debugPrint("Error creating point");
+      return;
+    }
+    state.value!.positions.add(newPoint);
+  }
+
   void pauseRun() async {
     if (state.value == null) {
       return;
     }
-    // TODO: Add a runpoint and set it to paused.
+    await _addPointAtCurrentPosition(PointType.pause);
     Run newRun = state.value!.copy();
     newRun.state = RunState.paused;
     newRun.pausedAt = DateTime.now();
     state = AsyncValue.data(newRun);
   }
 
-  void resumeRun() {
+  void resumeRun() async {
     if (state.value == null) {
       return;
     }
-    //TODO: Add a runpoint and set it to active.
+    await _addPointAtCurrentPosition(PointType.resume);
     Run newRun = state.value!.copy();
     newRun.state = RunState.active;
     Duration pauseLength = DateTime.now().difference(newRun.pausedAt!);

@@ -40,7 +40,7 @@ final class CurrentPaceProvider extends $NotifierProvider<CurrentPace, Pace> {
   }
 }
 
-String _$currentPaceHash() => r'019337e328cce60c7fbc137933326d1ba70c885b';
+String _$currentPaceHash() => r'3883539a446be210f1d0029f11e7a108838050ca';
 
 abstract class _$CurrentPace extends $Notifier<Pace> {
   Pace build();

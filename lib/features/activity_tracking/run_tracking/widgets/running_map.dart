@@ -1,6 +1,7 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/map_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/live_route_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -38,18 +39,13 @@ class RunningMap extends ConsumerWidget {
             )
           : MapOptions(initialCenter: run.positions.first.getLatLng()),
       children: [
-        TileLayer(
-          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-          userAgentPackageName: 'com.fit_vault.fit_vault_flutter',
-        ),
+        ref.watch(mapProvider),
         LiveRouteOverlay(),
         RichAttributionWidget(
           showFlutterMapAttribution: false,
           attributions: [
             TextSourceAttribution(
               'OpenStreetMap contributors',
-              // onTap: () =>
-              // launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
               textStyle: TextStyle(
                 fontSize: 20,
                 color: Theme.of(context).highlightColor,

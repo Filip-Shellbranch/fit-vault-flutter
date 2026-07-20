@@ -53,10 +53,7 @@ class RunInfoWidget extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        RunStatWidget(
-          "Duration",
-          formatDurationMinutesSeconds(run.calculateDuration()),
-        ),
+        RunStatWidget("Duration", formatDurationHMS(run.calculateDuration())),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

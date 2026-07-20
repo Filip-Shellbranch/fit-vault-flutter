@@ -1,31 +1,56 @@
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:flutter/material.dart';
 
 class RunningMarker extends StatelessWidget {
-  final IconData icon;
-  const RunningMarker({super.key, required this.icon});
+  final PointType type;
+  const RunningMarker({super.key, required this.type});
+
+  double getInnerRadius() {
+    if (!(type == PointType.start || type == PointType.end)) {
+      return 20;
+    }
+    return 28;
+  }
+
+  double getOuterRadius() {
+    if (!(type == PointType.start || type == PointType.end)) {
+      return 20;
+    }
+    return 36;
+  }
 
   @override
   Widget build(BuildContext context) {
+    Color getMarkerColor() {
+      switch (type) {
+        case PointType.start:
+          return Theme.of(context).primaryColor;
+        case PointType.end:
+          return Colors.red;
+        default:
+          return Colors.blueGrey;
+      }
+    }
+
     return Center(
       child: Stack(
         alignment: Alignment.center,
         children: [
           // Outer soft shadow / pulse effect
           Container(
-            width: 36,
-            height: 36,
+            width: getOuterRadius(),
+            height: getOuterRadius(),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Theme.of(context).highlightColor,
+              color: getMarkerColor(),
             ),
           ),
-          // Inner solid ring and background
           Container(
-            width: 28,
-            height: 28,
+            width: getInnerRadius(),
+            height: getInnerRadius(),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Theme.of(context).highlightColor,
+              color: getMarkerColor(),
               border: Border.all(color: Colors.white, width: 2.5),
               boxShadow: [
                 BoxShadow(
@@ -35,7 +60,16 @@ class RunningMarker extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(icon, size: 14, color: Colors.white),
+            child: Center(
+              child: Text(
+                type == PointType.start
+                    ? "S"
+                    : type == PointType.end
+                    ? "E"
+                    : "",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
         ],
       ),

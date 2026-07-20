@@ -13,7 +13,7 @@ class LiveRouteOverlay extends ConsumerWidget {
   Marker _createMarker(RunPoint point) {
     return Marker(
       point: point.getLatLng(),
-      child: RunningMarker(icon: Icons.run_circle_outlined),
+      child: RunningMarker(type: point.type),
     );
   }
 
@@ -49,6 +49,10 @@ class LiveRouteOverlay extends ConsumerWidget {
         case PointType.active:
           pointsInCurrent.add(point.getLatLng());
           break;
+        case PointType.start:
+          pointsInCurrent.clear();
+          pointsInCurrent.add(point.getLatLng());
+          break;
         case PointType.resume:
           pointsInCurrent.clear();
           pointsInCurrent.add(point.getLatLng());
@@ -61,7 +65,8 @@ class LiveRouteOverlay extends ConsumerWidget {
           }
           pointsInCurrent.clear();
           break;
-        default:
+        case PointType.end:
+          pointsInCurrent.add(point.getLatLng());
           break;
       }
     }

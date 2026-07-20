@@ -1,7 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_control_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_map_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class RunSessionPage extends StatefulWidget {
   const RunSessionPage({super.key});

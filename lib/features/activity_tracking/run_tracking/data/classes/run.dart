@@ -1,13 +1,13 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 
-enum RunState { active, paused, complete }
+enum RunState { notStarted, active, paused, completed }
 
 class Run {
   int? id;
-  final DateTime startTime;
+  DateTime startTime;
   DateTime? endTime;
-  RunState state = RunState.active;
+  RunState state;
   List<RunPoint> positions = [];
 
   double _distance; // In kilometers.
@@ -17,8 +17,16 @@ class Run {
 
   Duration pausedDuration = Duration.zero;
   DateTime? pausedAt;
-  Run(this.startTime, {double startingDistance = 0})
-    : _distance = startingDistance;
+  Run(
+    this.startTime, {
+    this.state = RunState.completed,
+    double startingDistance = 0,
+  }) : _distance = startingDistance;
+
+  factory Run.newRun() {
+    Run newRun = Run(DateTime.now(), state: RunState.notStarted);
+    return newRun;
+  }
 
   double addPoint(RunPoint newPoint) {
     double segmentLength = 0;
@@ -43,6 +51,9 @@ class Run {
   }
 
   Duration calculateDuration() {
+    if (isStarted() == false) {
+      return Duration.zero;
+    }
     if (endTime == null) {
       if (isPaused()) {
         return pausedAt!.subtract(pausedDuration).difference(startTime);
@@ -68,6 +79,10 @@ class Run {
     }
   }
 
+  bool isStarted() {
+    return state != RunState.notStarted;
+  }
+
   bool isActive() {
     return state == RunState.active;
   }
@@ -77,7 +92,7 @@ class Run {
   }
 
   Run copy() {
-    Run newRun = Run(startTime, startingDistance: _distance);
+    Run newRun = Run(startTime, startingDistance: _distance, state: state);
     newRun.pausedDuration = pausedDuration;
     newRun.pausedAt = pausedAt;
     newRun.endTime = endTime;

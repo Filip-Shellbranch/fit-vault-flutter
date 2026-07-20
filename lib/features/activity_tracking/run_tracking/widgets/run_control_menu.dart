@@ -4,6 +4,31 @@ import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widget
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class BeginRunButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const BeginRunButton(this.onPressed, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        child: TextButton(
+          onPressed: onPressed,
+          child: Text(
+            "Start",
+            style: TextStyle(fontSize: 40, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class RunControlMenu extends ConsumerStatefulWidget {
   const RunControlMenu({super.key});
 
@@ -14,6 +39,10 @@ class RunControlMenu extends ConsumerStatefulWidget {
 class _RunControlMenuState extends ConsumerState<RunControlMenu>
     with SingleTickerProviderStateMixin {
   late final AnimationController controller;
+
+  void onStartPressed() {
+    ref.read(currentRunProvider.notifier).beginRun();
+  }
 
   void onPausePressed() {
     ref.read(currentRunProvider.notifier).pauseRun();
@@ -45,63 +74,77 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Fix
-    if (ref.read(currentRunProvider).value!.isPaused()) {
-      controller.forward();
-    }
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, _) {
-        return SizedBox(
-          width: double.infinity,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SlideTransition(
-                position: Tween<Offset>(
-                  begin: Offset.zero,
-                  end: Offset(1, 0.0),
-                ).animate(controller),
-                child: Opacity(
-                  opacity: controller.value,
-                  child: RunControlButton(
-                    icon: Icons.stop,
-                    onPressed: onFinishPressed,
-                    buttonColor: Colors.red.shade800,
-                  ),
-                ),
-              ),
+    final runAsync = ref.watch(currentRunProvider);
+    return runAsync.maybeWhen(
+      data: (run) {
+        if (run == null) {
+          return Text("No run active.");
+        }
+        if (!run.isStarted()) {
+          return BeginRunButton(onStartPressed);
+        }
 
-              SlideTransition(
-                position: Tween<Offset>(
-                  begin: Offset.zero,
-                  end: Offset(-1, 0.0),
-                ).animate(controller),
-                child: Opacity(
-                  opacity: controller.value,
-                  child: RunControlButton(
-                    icon: Icons.play_arrow,
-                    onPressed: onResumePressed,
-                  ),
-                ),
-              ),
-
-              Visibility(
-                visible: controller.value < 1,
-                child: Transform.scale(
-                  scale: 1 - controller.value,
-                  child: Opacity(
-                    opacity: 1 - controller.value,
-                    child: RunControlButton(
-                      icon: Icons.pause,
-                      onPressed: onPausePressed,
+        if (run.isPaused()) {
+          controller.forward();
+        }
+        return AnimatedBuilder(
+          animation: controller,
+          builder: (context, _) {
+            return SizedBox(
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset.zero,
+                      end: Offset(1, 0.0),
+                    ).animate(controller),
+                    child: Opacity(
+                      opacity: controller.value,
+                      child: RunControlButton(
+                        icon: Icons.stop,
+                        onPressed: onFinishPressed,
+                        buttonColor: Colors.red.shade800,
+                      ),
                     ),
                   ),
-                ),
+
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset.zero,
+                      end: Offset(-1, 0.0),
+                    ).animate(controller),
+                    child: Opacity(
+                      opacity: controller.value,
+                      child: RunControlButton(
+                        icon: Icons.play_arrow,
+                        onPressed: onResumePressed,
+                      ),
+                    ),
+                  ),
+
+                  Visibility(
+                    visible: controller.value < 1,
+                    child: Transform.scale(
+                      scale: 1 - controller.value,
+                      child: Opacity(
+                        opacity: 1 - controller.value,
+                        child: RunControlButton(
+                          icon: Icons.pause,
+                          onPressed: onPausePressed,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
+      },
+      orElse: () {
+        return Text("Unable to get current run.");
       },
     );
   }

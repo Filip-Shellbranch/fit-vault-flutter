@@ -23,7 +23,7 @@ class CurrentRun extends _$CurrentRun {
     if (state.value == null) {
       return;
     }
-    if (newPoint.type == PointType.active && state.value!.isPaused()) {
+    if (newPoint.type == PointType.active && !state.value!.isActive()) {
       return;
     }
     Run newRun = state.value!.copy();
@@ -40,7 +40,7 @@ class CurrentRun extends _$CurrentRun {
     }
     await _runTracker.startService();
 
-    run ??= Run(DateTime.now());
+    run ??= Run.newRun();
     state = AsyncValue.data(run);
     return true;
   }
@@ -54,6 +54,18 @@ class CurrentRun extends _$CurrentRun {
       return;
     }
     state.value!.positions.add(newPoint);
+  }
+
+  void beginRun() async {
+    if (state.value == null) {
+      return;
+    }
+    await _addPointAtCurrentPosition(PointType.start);
+    Run newRun = state.value!.copy();
+    newRun.startTime = DateTime.now();
+    newRun.state = RunState.active;
+
+    state = AsyncValue.data(newRun);
   }
 
   void pauseRun() async {

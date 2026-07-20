@@ -61,9 +61,11 @@ class LiveRouteOverlay extends ConsumerWidget {
           }
           pointsInCurrent.clear();
           break;
+        default:
+          break;
       }
     }
-    if (pointsInCurrent.isNotEmpty) {
+    if (pointsInCurrent.length >= 2) {
       final newLine = _createPolyLineFromPoints(pointsInCurrent);
       if (newLine != null) {
         lines.add(newLine);

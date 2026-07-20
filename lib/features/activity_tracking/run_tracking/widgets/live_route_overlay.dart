@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_marker.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,35 @@ class LiveRouteOverlay extends ConsumerWidget {
         markers.add(newMarker);
       }
     }
+
+    List<MilestonePoint> milestones = _calculateMilestonePoints(points);
+    List<Marker> milestoneMarkers = milestones
+        .map(
+          (milestone) => Marker(
+            //TODO: Create MilestoneMarker Widget
+            point: LatLng(milestone.lat, milestone.lng),
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blue,
+              ),
+              child: Center(
+                child: Text(
+                  milestone.distance.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
+        .toList();
+    markers.addAll(milestoneMarkers);
     return markers;
   }
 
@@ -77,6 +107,42 @@ class LiveRouteOverlay extends ConsumerWidget {
       }
     }
     return lines;
+  }
+
+  List<MilestonePoint> _calculateMilestonePoints(List<RunPoint> points) {
+    final List<MilestonePoint> milestones = [];
+    if (points.length < 2) {
+      return milestones;
+    }
+    int nextMilestone = 1;
+    double dist = 0;
+    RunPoint previousPoint = points.first;
+    for (RunPoint point in points) {
+      if (point == previousPoint) {
+        continue;
+      }
+      if (point.type != PointType.active) {
+        previousPoint = point;
+        continue;
+      }
+      double segmentDist = point.distanceTo(previousPoint);
+      dist += segmentDist;
+      if (dist > nextMilestone) {
+        //TODO: Lerp
+        double lerpLat = (previousPoint.lat + point.lat) / 2;
+        double lerpLng = (previousPoint.lng + point.lng) / 2;
+
+        MilestonePoint milestone = MilestonePoint(
+          lat: lerpLat,
+          lng: lerpLng,
+          distance: nextMilestone,
+        );
+        milestones.add(milestone);
+        nextMilestone += 1;
+      }
+      previousPoint = point;
+    }
+    return milestones;
   }
 
   @override

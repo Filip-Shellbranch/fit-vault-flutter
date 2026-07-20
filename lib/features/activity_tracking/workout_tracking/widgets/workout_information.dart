@@ -54,7 +54,7 @@ class BasicWorkoutInformation extends ConsumerWidget {
                 child: Text(
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
-                  "Workout Duration: \n${formatDurationMinutesSeconds(duration)}",
+                  "Workout Duration: \n${formatDurationHMS(duration)}",
                 ),
               ),
             ),

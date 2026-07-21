@@ -1,6 +1,7 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/milestone_marker.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -31,26 +32,8 @@ class LiveRouteOverlay extends ConsumerWidget {
     List<Marker> milestoneMarkers = milestones
         .map(
           (milestone) => Marker(
-            //TODO: Create MilestoneMarker Widget
             point: LatLng(milestone.lat, milestone.lng),
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blue,
-              ),
-              child: Center(
-                child: Text(
-                  milestone.distance.toString(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
+            child: MilestoneMarker(milestone: milestone),
           ),
         )
         .toList();

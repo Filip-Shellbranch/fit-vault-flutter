@@ -34,6 +34,7 @@ class RunningMap extends ConsumerWidget {
           ? MapOptions(
               initialCameraFit: CameraFit.coordinates(
                 coordinates: boundPoints,
+                maxZoom: 14,
                 padding: EdgeInsets.all(120),
               ),
             )

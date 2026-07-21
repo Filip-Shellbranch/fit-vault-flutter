@@ -24,7 +24,7 @@ class RunningMap extends ConsumerWidget {
       ),
     );
     if (!isLoaded) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Text("Begin the run to view the map."));
     }
     Run run = ref.read(currentRunProvider).value!;
     List<LatLng> boundPoints = _getRoutePoints(run.positions);

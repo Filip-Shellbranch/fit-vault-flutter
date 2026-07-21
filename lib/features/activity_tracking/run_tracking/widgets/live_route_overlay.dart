@@ -109,11 +109,15 @@ class LiveRouteOverlay extends ConsumerWidget {
         continue;
       }
       double segmentDist = point.distanceTo(previousPoint);
+      double distBeforeSegment = dist;
       dist += segmentDist;
-      if (dist > nextMilestone) {
-        //TODO: Lerp
-        double lerpLat = (previousPoint.lat + point.lat) / 2;
-        double lerpLng = (previousPoint.lng + point.lng) / 2;
+      while (dist > nextMilestone) {
+        double c = (nextMilestone - distBeforeSegment) / segmentDist;
+
+        double lerpLat =
+            (previousPoint.lat - (previousPoint.lat - point.lat) * c);
+        double lerpLng =
+            (previousPoint.lng - (previousPoint.lng - point.lng) * c);
 
         MilestonePoint milestone = MilestonePoint(
           lat: lerpLat,

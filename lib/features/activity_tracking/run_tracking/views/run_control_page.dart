@@ -31,7 +31,6 @@ class RunControlPage extends ConsumerWidget {
           body: Column(
             children: [
               RunInfoWidget(),
-
               Align(
                 alignment: AlignmentGeometry.centerLeft,
                 child: Padding(
@@ -41,7 +40,7 @@ class RunControlPage extends ConsumerWidget {
               ),
               Expanded(child: SizedBox()),
               Padding(
-                padding: const EdgeInsets.only(bottom: 120),
+                padding: const EdgeInsets.only(bottom: 200),
                 child: RunControlMenu(),
               ),
             ],

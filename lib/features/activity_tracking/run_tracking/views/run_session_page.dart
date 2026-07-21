@@ -50,7 +50,7 @@ class _RunSessionPageState extends State<RunSessionPage>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+                padding: const EdgeInsets.only(bottom: 100),
                 child: BottomPageNavigator(
                   controller: _pageController,
                   numPages: pages.length,

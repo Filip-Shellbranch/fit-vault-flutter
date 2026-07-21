@@ -43,7 +43,7 @@ class BottomPageNavigator extends StatelessWidget {
   void _navigateToPage(int index) {
     controller.animateToPage(
       index,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 300),
       curve: Curves.linear,
     );
   }

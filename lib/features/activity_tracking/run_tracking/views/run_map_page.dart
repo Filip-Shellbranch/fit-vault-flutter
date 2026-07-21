@@ -20,11 +20,6 @@ class _RunMapPageState extends ConsumerState<RunMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 100),
-        child: RunningMap(controller: _controller),
-      ),
-    );
+    return Scaffold(body: RunningMap(controller: _controller));
   }
 }

@@ -24,7 +24,21 @@ class ForegroundServiceController {
     if (!isIgnoring) {
       bool granted =
           await FlutterForegroundTask.requestIgnoreBatteryOptimization();
-      return granted;
+      if (!granted) {
+        return false;
+      }
+    }
+
+    final NotificationPermission status =
+        await FlutterForegroundTask.checkNotificationPermission();
+
+    if (status != NotificationPermission.granted) {
+      bool granted =
+          await FlutterForegroundTask.requestNotificationPermission() ==
+          NotificationPermission.granted;
+      if (!granted) {
+        return false;
+      }
     }
     return true;
   }
@@ -37,6 +51,7 @@ class ForegroundServiceController {
       return;
     }
     await FlutterForegroundTask.startService(
+      serviceId: 9,
       notificationTitle: 'Tracking Location',
       notificationText: 'Waiting for location...',
       callback: startCallback,

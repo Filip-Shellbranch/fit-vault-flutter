@@ -18,7 +18,6 @@ class StartRunButton extends ConsumerWidget {
           );
         }
       },
-      heroTag: null,
       backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,
       icon: ImageIcon(AssetImage("assets/icons/icons8-running-100.png")),

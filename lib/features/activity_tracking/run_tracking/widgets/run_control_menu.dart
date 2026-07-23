@@ -10,20 +10,23 @@ class BeginRunButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        child: TextButton(
-          onPressed: onPressed,
-          child: Text(
-            "Start",
-            style: TextStyle(fontSize: 40, color: Colors.white),
+    return TextButton(
+      onPressed: onPressed,
+      style:
+          TextButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+          ).copyWith(
+            overlayColor: WidgetStateProperty.all(
+              Colors.white.withValues(alpha: 0.15),
+            ),
           ),
-        ),
+      child: const Text(
+        "Start",
+        style: TextStyle(fontSize: 40, color: Colors.white),
       ),
     );
   }

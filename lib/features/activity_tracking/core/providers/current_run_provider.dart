@@ -75,18 +75,19 @@ class CurrentRun extends _$CurrentRun {
     if (state.value == null) {
       return;
     }
+    FlutterForegroundTask.sendDataToTask(PauseCommand().toJSON());
     await _addPointAtCurrentPosition(PointType.pause);
     Run newRun = state.value!.copy();
     newRun.state = RunState.paused;
     newRun.pausedAt = DateTime.now();
     state = AsyncValue.data(newRun);
-    FlutterForegroundTask.sendDataToTask(PauseCommand().toJSON());
   }
 
   Future<void> resumeRun() async {
     if (state.value == null) {
       return;
     }
+    FlutterForegroundTask.sendDataToTask(PauseCommand().toJSON());
     await _addPointAtCurrentPosition(PointType.resume);
     Run newRun = state.value!.copy();
     newRun.state = RunState.active;
@@ -94,7 +95,6 @@ class CurrentRun extends _$CurrentRun {
     newRun.pausedDuration += pauseLength;
     newRun.pausedAt = null;
     state = AsyncValue.data(newRun);
-    FlutterForegroundTask.sendDataToTask(ResumeCommand().toJSON());
   }
 
   Future<void> stopRun() async {

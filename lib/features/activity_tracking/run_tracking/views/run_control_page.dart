@@ -14,7 +14,7 @@ class RunControlPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(runTrackingServiceProvider);
-    final permission = ref.watch(locationPermissionProviderProvider);
+    final permission = ref.watch(locationPermissionProvider);
     return permission.when(
       error: (Object o, StackTrace _) {
         return Text("Error getting permission");

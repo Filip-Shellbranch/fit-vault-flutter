@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'location_permission_provider.g.dart';
 
 @riverpod
-class LocationPermissionProvider extends _$LocationPermissionProvider {
+class LocationPermission extends _$LocationPermission {
   final _geo = GeoLocationRepository();
 
   @override

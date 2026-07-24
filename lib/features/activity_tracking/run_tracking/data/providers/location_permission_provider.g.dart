@@ -9,39 +9,34 @@ part of 'location_permission_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(LocationPermissionProvider)
-final locationPermissionProviderProvider =
-    LocationPermissionProviderProvider._();
+@ProviderFor(LocationPermission)
+final locationPermissionProvider = LocationPermissionProvider._();
 
-final class LocationPermissionProviderProvider
-    extends
-        $AsyncNotifierProvider<
-          LocationPermissionProvider,
-          LocationRequestResult
-        > {
-  LocationPermissionProviderProvider._()
+final class LocationPermissionProvider
+    extends $AsyncNotifierProvider<LocationPermission, LocationRequestResult> {
+  LocationPermissionProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'locationPermissionProviderProvider',
+        name: r'locationPermissionProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$locationPermissionProviderHash();
+  String debugGetCreateSourceHash() => _$locationPermissionHash();
 
   @$internal
   @override
-  LocationPermissionProvider create() => LocationPermissionProvider();
+  LocationPermission create() => LocationPermission();
 }
 
-String _$locationPermissionProviderHash() =>
-    r'0a4ebc1f90d4ed1fecc9556dd973c5a66b259835';
+String _$locationPermissionHash() =>
+    r'fc1f311723907ac8103aa45ecfc4bb407d0d0b1c';
 
-abstract class _$LocationPermissionProvider
+abstract class _$LocationPermission
     extends $AsyncNotifier<LocationRequestResult> {
   FutureOr<LocationRequestResult> build();
   @$mustCallSuper

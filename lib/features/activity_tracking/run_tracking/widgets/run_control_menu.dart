@@ -1,15 +1,19 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/repositories/activity_controller.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/gps_strength_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_control_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BeginRunButton extends StatelessWidget {
+class BeginRunButton extends ConsumerWidget {
   final VoidCallback onPressed;
   const BeginRunButton(this.onPressed, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(gpsStrengthProvider).isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
     return TextButton(
       onPressed: onPressed,
       style:

@@ -1,4 +1,7 @@
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/commands/command.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -29,6 +32,40 @@ class RunTaskHandler extends TaskHandler {
 
   @override
   void onRepeatEvent(DateTime timestamp) {}
+
+  @override
+  void onReceiveData(Object data) {
+    bool isJSON = data is Map<String, dynamic>;
+    if (!isJSON) {
+      debugPrint("Invalid JSON received!");
+      return;
+    }
+    try {
+      Command cmd = Command.fromJSON(data);
+      ForegroundServiceController().updateService(cmd);
+    } catch (e, _) {
+      debugPrint(e.toString());
+    }
+
+    super.onReceiveData(data);
+  }
+
+  @override
+  void onNotificationButtonPressed(String id) {
+    switch (id) {
+      case "resume":
+        FlutterForegroundTask.sendDataToMain(id);
+        break;
+      case "pause":
+        FlutterForegroundTask.sendDataToMain(id);
+        break;
+      case "stop":
+        FlutterForegroundTask.sendDataToMain(id);
+        break;
+      default:
+    }
+    super.onNotificationButtonPressed(id);
+  }
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {

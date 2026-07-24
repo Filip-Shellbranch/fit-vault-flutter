@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/commands/command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_run_provider.g.dart';
@@ -29,8 +31,10 @@ class CurrentRun extends _$CurrentRun {
     Run newRun = state.value!.copy();
     double segmentLength = newRun.addPoint(newPoint);
     ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
-
     state = AsyncValue.data(newRun);
+    FlutterForegroundTask.sendDataToTask(
+      UpdateDistanceCommand(newRun.formatDistance()).toJSON(),
+    );
   }
 
   Future<bool> startRun({Run? run}) async {
@@ -64,11 +68,10 @@ class CurrentRun extends _$CurrentRun {
     Run newRun = state.value!.copy();
     newRun.startTime = DateTime.now();
     newRun.state = RunState.active;
-
     state = AsyncValue.data(newRun);
   }
 
-  void pauseRun() async {
+  Future<void> pauseRun() async {
     if (state.value == null) {
       return;
     }
@@ -77,9 +80,10 @@ class CurrentRun extends _$CurrentRun {
     newRun.state = RunState.paused;
     newRun.pausedAt = DateTime.now();
     state = AsyncValue.data(newRun);
+    FlutterForegroundTask.sendDataToTask(PauseCommand().toJSON());
   }
 
-  void resumeRun() async {
+  Future<void> resumeRun() async {
     if (state.value == null) {
       return;
     }
@@ -89,8 +93,8 @@ class CurrentRun extends _$CurrentRun {
     Duration pauseLength = DateTime.now().difference(newRun.pausedAt!);
     newRun.pausedDuration += pauseLength;
     newRun.pausedAt = null;
-
     state = AsyncValue.data(newRun);
+    FlutterForegroundTask.sendDataToTask(ResumeCommand().toJSON());
   }
 
   Future<void> stopRun() async {

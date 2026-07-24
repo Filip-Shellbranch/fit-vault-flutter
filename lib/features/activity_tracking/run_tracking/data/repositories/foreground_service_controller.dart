@@ -1,7 +1,14 @@
 import 'dart:io';
 
+import 'package:fit_vault_flutter/core/utils/string_utils.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/commands/command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+
+NotificationButton createNotificationButton(String id) {
+  return NotificationButton(id: id, text: capitalize(id));
+}
 
 @pragma('vm:entry-point')
 void startCallback() {
@@ -52,9 +59,40 @@ class ForegroundServiceController {
     }
     await FlutterForegroundTask.startService(
       serviceId: 9,
-      notificationTitle: 'Tracking Location',
-      notificationText: 'Waiting for location...',
+      notificationTitle: "Tracking your run",
+      notificationText: "Distance: 0.00 km",
+      notificationButtons: [
+        createNotificationButton("pause"),
+        createNotificationButton("stop"),
+      ],
       callback: startCallback,
+    );
+  }
+
+  void updateService(Command command) {
+    String? newTitle;
+    String? newText;
+    List<NotificationButton>? buttons;
+    switch (command) {
+      case PauseCommand _:
+        newTitle = "Run paused";
+        buttons = [createNotificationButton("resume")];
+        break;
+      case ResumeCommand _:
+        newTitle = "Tracking your run";
+        buttons = [createNotificationButton("pause")];
+        break;
+      case UpdateDistanceCommand cmd:
+        debugPrint(cmd.info.toString());
+        newText = "Distance: ${cmd.info} km";
+    }
+    if (buttons != null) {
+      buttons.add(createNotificationButton("stop"));
+    }
+    FlutterForegroundTask.updateService(
+      notificationTitle: newTitle,
+      notificationText: newText,
+      notificationButtons: buttons,
     );
   }
 

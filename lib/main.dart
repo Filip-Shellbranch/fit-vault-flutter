@@ -24,7 +24,7 @@ void main() async {
     androidNotificationOptions: AndroidNotificationOptions(
       channelId: "run_tracking",
       channelName: "run_tracking",
-      priority: NotificationPriority.DEFAULT,
+      priority: NotificationPriority.MAX,
     ),
     iosNotificationOptions: IOSNotificationOptions(),
     foregroundTaskOptions: ForegroundTaskOptions(

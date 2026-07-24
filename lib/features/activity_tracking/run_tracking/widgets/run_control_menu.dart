@@ -83,12 +83,15 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
         if (run == null) {
           return Text("No run active.");
         }
+
         if (!run.isStarted()) {
           return BeginRunButton(onStartPressed);
         }
 
         if (run.isPaused()) {
           controller.forward();
+        } else {
+          controller.reverse();
         }
         return AnimatedBuilder(
           animation: controller,

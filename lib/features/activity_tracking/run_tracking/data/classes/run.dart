@@ -30,7 +30,6 @@ class Run {
 
   double addPoint(RunPoint newPoint) {
     double segmentLength = 0;
-    // TODO: If the new point is due to resuming a paused run then do not increase distance.
     if (positions.isEmpty) {
       _distance = 0;
     } else {

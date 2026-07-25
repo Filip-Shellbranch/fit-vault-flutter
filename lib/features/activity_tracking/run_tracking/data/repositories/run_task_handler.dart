@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes//command.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:flutter/widgets.dart';
@@ -41,7 +41,7 @@ class RunTaskHandler extends TaskHandler {
       return;
     }
     try {
-      Command cmd = Command.fromJSON(data);
+      TaskCommand cmd = TaskCommand.fromJSON(data);
       ForegroundServiceController().updateService(cmd);
     } catch (e, _) {
       debugPrint(e.toString());

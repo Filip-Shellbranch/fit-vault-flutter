@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/activity.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/grouped_activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/repositories/activity_group_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
@@ -22,7 +23,9 @@ class ActivityList extends _$ActivityList {
       workouts.map((workout) => WorkoutActivity.fromWorkout(workout)),
     );
 
-    //TODO: Add all runs to the activites list.
+    final runsRepo = ref.read(runRepositoryProvider);
+    final runs = await runsRepo.getAllRuns();
+    activities.addAll(runs.map((run) => RunActivity.fromRun(run)));
 
     final groupController = ActivityGroupController();
     final groupedActivities = groupController.groupActivites(activities);

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/command.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -69,7 +69,7 @@ class ForegroundServiceController {
     );
   }
 
-  void updateService(Command command) {
+  void updateService(TaskCommand command) {
     String? newTitle;
     String? newText;
     List<NotificationButton>? buttons;

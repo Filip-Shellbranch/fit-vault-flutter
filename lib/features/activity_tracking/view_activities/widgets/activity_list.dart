@@ -1,6 +1,7 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/grouped_activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/repositories/activity_group_controller.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/widgets/run_activity_card.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/widgets/workout_activity_card.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -60,7 +61,9 @@ class ActivityListDisplay extends StatelessWidget {
               activity: groupedActivity.activity as WorkoutActivity,
             );
           case RunActivity():
-            return Text("RUN ACTIVITY PLACEHOLDER");
+            return RunActivityCard(
+              activity: groupedActivity.activity as RunActivity,
+            );
         }
       },
     );

@@ -1,10 +1,10 @@
-sealed class Command {
+sealed class TaskCommand {
   final String command;
   final String? info;
 
-  Command(this.command, {this.info});
+  TaskCommand(this.command, {this.info});
 
-  factory Command.fromJSON(Map<String, dynamic> json) {
+  factory TaskCommand.fromJSON(Map<String, dynamic> json) {
     String command = json["cmd"].toString();
     switch (command) {
       case "resume":
@@ -21,7 +21,7 @@ sealed class Command {
   Map<String, dynamic> toJSON();
 }
 
-class PauseCommand extends Command {
+class PauseCommand extends TaskCommand {
   PauseCommand() : super("pause");
 
   factory PauseCommand.fromJSON(Map<String, dynamic> json) {
@@ -32,7 +32,7 @@ class PauseCommand extends Command {
   Map<String, dynamic> toJSON() => {"cmd": command};
 }
 
-class ResumeCommand extends Command {
+class ResumeCommand extends TaskCommand {
   ResumeCommand() : super("resume");
 
   factory ResumeCommand.fromJSON(Map<String, dynamic> json) {
@@ -43,7 +43,7 @@ class ResumeCommand extends Command {
   Map<String, dynamic> toJSON() => {"cmd": command};
 }
 
-class UpdateDistanceCommand extends Command {
+class UpdateDistanceCommand extends TaskCommand {
   UpdateDistanceCommand(String distanceString)
     : super("updateDist", info: distanceString);
 

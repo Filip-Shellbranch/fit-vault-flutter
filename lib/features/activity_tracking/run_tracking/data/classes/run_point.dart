@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
 import 'package:latlong2/latlong.dart';
 
 enum PointType { start, pause, resume, active, end }
@@ -15,6 +16,16 @@ class RunPoint {
     this.type = PointType.active,
     this.altitude = 0.0,
   });
+
+  factory RunPoint.fromModel(RunPointModel model) {
+    final point = RunPoint(
+      model.lat ?? 0,
+      model.lng ?? 0,
+      altitude: model.altitude ?? 0,
+      type: model.type,
+    );
+    return point;
+  }
 
   double distanceTo(RunPoint otherPoint) {
     LatLng p1 = getLatLng();

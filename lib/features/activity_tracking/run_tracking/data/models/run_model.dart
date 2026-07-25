@@ -43,6 +43,8 @@ class RunPointModel {
   double? lat;
   double? lng;
   double? altitude;
+
+  @Enumerated(EnumType.name)
   PointType type;
 
   RunPointModel({

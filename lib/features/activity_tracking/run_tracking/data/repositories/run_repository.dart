@@ -17,4 +17,9 @@ class RunRepository {
     });
     return run;
   }
+
+  Future<List<Run>> getAllRuns() async {
+    final models = await db.runModels.where().findAll();
+    return models.map((model) => Run.fromModel(model)).toList();
+  }
 }

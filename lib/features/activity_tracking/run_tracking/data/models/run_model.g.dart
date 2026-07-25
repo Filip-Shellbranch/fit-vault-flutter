@@ -151,11 +151,15 @@ P _runModelDeserializeProp<P>(
 }
 
 const _RunModelstateEnumValueMap = {
+  r'notStarted': r'notStarted',
   r'active': r'active',
+  r'paused': r'paused',
   r'completed': r'completed',
 };
 const _RunModelstateValueEnumMap = {
+  r'notStarted': RunState.notStarted,
   r'active': RunState.active,
+  r'paused': RunState.paused,
   r'completed': RunState.completed,
 };
 
@@ -819,6 +823,12 @@ const RunPointModelSchema = Schema(
     ),
     r'lat': PropertySchema(id: 1, name: r'lat', type: IsarType.double),
     r'lng': PropertySchema(id: 2, name: r'lng', type: IsarType.double),
+    r'type': PropertySchema(
+      id: 3,
+      name: r'type',
+      type: IsarType.string,
+      enumMap: _RunPointModeltypeEnumValueMap,
+    ),
   },
 
   estimateSize: _runPointModelEstimateSize,
@@ -833,6 +843,7 @@ int _runPointModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.type.name.length * 3;
   return bytesCount;
 }
 
@@ -845,6 +856,7 @@ void _runPointModelSerialize(
   writer.writeDouble(offsets[0], object.altitude);
   writer.writeDouble(offsets[1], object.lat);
   writer.writeDouble(offsets[2], object.lng);
+  writer.writeString(offsets[3], object.type.name);
 }
 
 RunPointModel _runPointModelDeserialize(
@@ -857,6 +869,9 @@ RunPointModel _runPointModelDeserialize(
     altitude: reader.readDoubleOrNull(offsets[0]),
     lat: reader.readDoubleOrNull(offsets[1]),
     lng: reader.readDoubleOrNull(offsets[2]),
+    type:
+        _RunPointModeltypeValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+        PointType.active,
   );
   return object;
 }
@@ -874,10 +889,29 @@ P _runPointModelDeserializeProp<P>(
       return (reader.readDoubleOrNull(offset)) as P;
     case 2:
       return (reader.readDoubleOrNull(offset)) as P;
+    case 3:
+      return (_RunPointModeltypeValueEnumMap[reader.readStringOrNull(offset)] ??
+              PointType.active)
+          as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _RunPointModeltypeEnumValueMap = {
+  r'start': r'start',
+  r'pause': r'pause',
+  r'resume': r'resume',
+  r'active': r'active',
+  r'end': r'end',
+};
+const _RunPointModeltypeValueEnumMap = {
+  r'start': PointType.start,
+  r'pause': PointType.pause,
+  r'resume': PointType.resume,
+  r'active': PointType.active,
+  r'end': PointType.end,
+};
 
 extension RunPointModelQueryFilter
     on QueryBuilder<RunPointModel, RunPointModel, QFilterCondition> {
@@ -1156,6 +1190,150 @@ extension RunPointModelQueryFilter
 
           epsilon: epsilon,
         ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition> typeEqualTo(
+    PointType value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeGreaterThan(
+    PointType value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeLessThan(
+    PointType value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition> typeBetween(
+    PointType lower,
+    PointType upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'type',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeEndsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition> typeMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'type',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'type', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  typeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'type', value: ''),
       );
     });
   }

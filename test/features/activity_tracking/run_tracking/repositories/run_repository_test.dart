@@ -70,4 +70,55 @@ void main() {
       await expectLater(await isar.runModels.count(), 1);
     });
   });
+
+  group("test getting all runs", () {
+    test("get all runs when there are none", () async {
+      final runs = await repo.getAllRuns();
+      expect(runs.isEmpty, true);
+    });
+
+    test("get all runs when there is one", () async {
+      final run = Run(DateTime(1, 5, 3, 3));
+      await repo.saveRun(run);
+      final runs = await repo.getAllRuns();
+      expect(runs.isEmpty, false);
+      expect(runs.length, 1);
+    });
+
+    group("test data intact when saving and getting", () {
+      test("single run data intact", () async {
+        final run = Run(DateTime(5, 3, 3, 5, 5));
+
+        final points = [
+          RunPoint(1, 4, altitude: 5, type: PointType.pause),
+          RunPoint(4, 24, altitude: 1, type: PointType.end),
+          RunPoint(7, 224, altitude: 111, type: PointType.resume),
+        ];
+        for (var point in points) {
+          run.addPoint(point);
+        }
+        final savedRun = await repo.saveRun(run);
+        final runs = await repo.getAllRuns();
+        expect(runs.length, 1);
+
+        final loadedRun = runs.first;
+
+        expect(loadedRun.distance, run.distance);
+        expect(loadedRun.positions.length, run.positions.length);
+        expect(loadedRun.positions.length, points.length);
+        expect(loadedRun.id, savedRun.id);
+        expect(loadedRun.state, run.state);
+        expect(loadedRun.startTime, run.startTime);
+
+        for (var i = 0; i < points.length; i++) {
+          final p1 = points[i];
+          final p2 = loadedRun.positions[i];
+          expect(p1.lat, p2.lat);
+          expect(p1.lng, p2.lng);
+          expect(p1.altitude, p2.altitude);
+          expect(p1.type, p2.type);
+        }
+      });
+    });
+  });
 }

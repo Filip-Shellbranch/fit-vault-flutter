@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
 
 enum RunState { notStarted, active, paused, completed }
 
@@ -26,6 +27,18 @@ class Run {
   factory Run.newRun() {
     Run newRun = Run(DateTime.now(), state: RunState.notStarted);
     return newRun;
+  }
+
+  factory Run.fromModel(RunModel model) {
+    final run = Run(model.startTime);
+    run.startTime = model.startTime;
+    run.id = model.id;
+    run.state = model.state;
+
+    for (RunPointModel pModel in model.points) {
+      run.addPoint(RunPoint.fromModel(pModel));
+    }
+    return run;
   }
 
   double addPoint(RunPoint newPoint) {

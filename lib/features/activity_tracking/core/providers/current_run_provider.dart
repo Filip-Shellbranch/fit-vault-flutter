@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/commands/command.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';

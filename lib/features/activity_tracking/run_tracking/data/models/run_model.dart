@@ -1,0 +1,64 @@
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:isar_community/isar.dart';
+
+part 'run_model.g.dart';
+
+@collection
+@Name("Run")
+class RunModel {
+  Id id = Isar.autoIncrement;
+
+  @Enumerated(EnumType.name)
+  RunState state;
+
+  DateTime startTime;
+  double distance;
+
+  List<RunPointModel> points = [];
+
+  RunModel(
+    this.startTime, {
+    this.distance = 0.0,
+    this.state = RunState.completed,
+  });
+
+  factory RunModel.fromRun(Run run) {
+    final model = RunModel(
+      run.startTime,
+      distance: run.distance,
+      state: run.state,
+    );
+    model.id = run.id ?? Isar.autoIncrement;
+
+    model.points = run.positions
+        .map((point) => RunPointModel.fromRunPoint(point))
+        .toList();
+    return model;
+  }
+}
+
+@embedded
+class RunPointModel {
+  double? lat;
+  double? lng;
+  double? altitude;
+  PointType type;
+
+  RunPointModel({
+    this.lat = 0,
+    this.lng = 0,
+    this.altitude = 0,
+    this.type = PointType.active,
+  });
+
+  factory RunPointModel.fromRunPoint(RunPoint point) {
+    final model = RunPointModel(
+      lat: point.lat,
+      lng: point.lng,
+      altitude: point.altitude,
+      type: point.type,
+    );
+    return model;
+  }
+}

@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/milestone_marker.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_marker.dart';
@@ -9,8 +10,39 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 class LiveRouteOverlay extends ConsumerWidget {
+  final Run? targetRun;
   final Color lineColor;
-  const LiveRouteOverlay({super.key, this.lineColor = Colors.red});
+  const LiveRouteOverlay({
+    super.key,
+    this.lineColor = Colors.red,
+    this.targetRun,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (targetRun != null) {
+      return RouteOverlay(targetRun!, lineColor: lineColor);
+    }
+    final runAsync = ref.watch(currentRunProvider);
+    debugPrint("rebuild live overlay");
+
+    return runAsync.maybeWhen(
+      data: (run) {
+        if (run == null) {
+          return const SizedBox.shrink();
+        }
+        return RouteOverlay(run, lineColor: lineColor);
+      },
+      orElse: () => const SizedBox.shrink(),
+    );
+  }
+}
+
+class RouteOverlay extends StatelessWidget {
+  final Run run;
+  final Color lineColor;
+
+  const RouteOverlay(this.run, {super.key, required this.lineColor});
 
   Marker _createMarker(RunPoint point) {
     return Marker(
@@ -133,25 +165,14 @@ class LiveRouteOverlay extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final runAsync = ref.watch(currentRunProvider);
-    debugPrint("rebuild live overlay");
+  Widget build(BuildContext context) {
+    final polyLines = _createRouteLines(run.positions);
 
-    return runAsync.maybeWhen(
-      data: (run) {
-        if (run == null) {
-          return const SizedBox.shrink();
-        }
-        final polyLines = _createRouteLines(run.positions);
-
-        return Stack(
-          children: [
-            PolylineLayer(polylines: polyLines),
-            MarkerLayer(markers: _loadMarkers(run.positions)),
-          ],
-        );
-      },
-      orElse: () => const SizedBox.shrink(),
+    return Stack(
+      children: [
+        PolylineLayer(polylines: polyLines),
+        MarkerLayer(markers: _loadMarkers(run.positions)),
+      ],
     );
   }
 }

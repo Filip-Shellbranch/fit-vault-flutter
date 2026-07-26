@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 String format24h(DateTime time) {
   final hours = time.hour.toString().padLeft(2, '0');
   final minutes = time.minute.toString().padLeft(2, '0');
@@ -17,4 +19,9 @@ String formatDurationHMS(Duration duration) {
   } else {
     return "$minuteSegment:${pad(secondSegment)}";
   }
+}
+
+String formatDate(DateTime date) {
+  final formatted = DateFormat('dd MMM yyyy HH:mm').format(date);
+  return formatted;
 }

@@ -10,7 +10,8 @@ import 'package:latlong2/latlong.dart';
 
 class RunningMap extends ConsumerWidget {
   final MapController controller;
-  const RunningMap({super.key, required this.controller});
+  final Run? targetRun;
+  const RunningMap({super.key, required this.controller, this.targetRun});
 
   List<LatLng> _getRoutePoints(List<RunPoint> runPoints) {
     return runPoints.map((point) => point.getLatLng()).toList();
@@ -18,15 +19,23 @@ class RunningMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool isLoaded = ref.watch(
-      currentRunProvider.select(
-        (asyncRun) => asyncRun.hasValue && asyncRun.value!.positions.isNotEmpty,
-      ),
-    );
-    if (!isLoaded) {
-      return Center(child: Text("Begin the run to view the map."));
+    Run run;
+    //TODO: Load the run using another provider that decides between current run or viewed run.
+    if (targetRun == null) {
+      bool isLoaded = ref.watch(
+        currentRunProvider.select(
+          (asyncRun) =>
+              asyncRun.hasValue && asyncRun.value!.positions.isNotEmpty,
+        ),
+      );
+      if (!isLoaded) {
+        return Center(child: Text("Begin the run to view the map."));
+      }
+      run = ref.read(currentRunProvider).value!;
+    } else {
+      run = targetRun!;
     }
-    Run run = ref.read(currentRunProvider).value!;
+
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
     return FlutterMap(
       mapController: controller,
@@ -41,7 +50,7 @@ class RunningMap extends ConsumerWidget {
           : MapOptions(initialCenter: run.positions.first.getLatLng()),
       children: [
         ref.watch(mapProvider),
-        LiveRouteOverlay(),
+        LiveRouteOverlay(targetRun: run),
         RichAttributionWidget(
           showFlutterMapAttribution: false,
           attributions: [

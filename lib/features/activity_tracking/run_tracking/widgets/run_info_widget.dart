@@ -48,6 +48,15 @@ class RunInfoWidget extends ConsumerWidget {
       return Text("Error: No run found");
     }
     ref.watch(secondTickerProvider);
+    ref.watch(
+      currentRunProvider.select((asyncVal) {
+        ref.watch(
+          currentRunProvider.select(
+            (asyncVal) => asyncVal.asData?.value?.pausedAt,
+          ),
+        );
+      }),
+    );
     Pace currentPace = ref.watch(currentPaceProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

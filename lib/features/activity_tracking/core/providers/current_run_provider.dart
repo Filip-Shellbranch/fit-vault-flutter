@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
@@ -71,6 +70,7 @@ class CurrentRun extends _$CurrentRun {
       return;
     }
     await _addPointAtCurrentPosition(PointType.start);
+
     Run newRun = state.value!.copy();
     newRun.startTime = DateTime.now();
     newRun.pausedAt = null;
@@ -84,6 +84,7 @@ class CurrentRun extends _$CurrentRun {
     }
     sendMessageToTask(PauseCommand());
     await _addPointAtCurrentPosition(PointType.pause);
+
     Run newRun = state.value!.copy();
     newRun.state = RunState.paused;
     newRun.pausedAt = DateTime.now();
@@ -96,6 +97,7 @@ class CurrentRun extends _$CurrentRun {
     }
     sendMessageToTask(ResumeCommand());
     await _addPointAtCurrentPosition(PointType.resume);
+
     Run newRun = state.value!.copy();
     newRun.state = RunState.active;
     Duration pauseLength = DateTime.now().difference(newRun.pausedAt!);
@@ -109,6 +111,7 @@ class CurrentRun extends _$CurrentRun {
       final run = state.value!;
       Duration pauseLength = DateTime.now().difference(run.pausedAt!);
       run.pausedDuration += pauseLength;
+
       await ref.read(runRepositoryProvider).saveRun(run, isCompleted: true);
     }
     await _runTracker.stopService();

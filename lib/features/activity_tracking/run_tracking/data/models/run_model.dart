@@ -1,6 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
-import 'package:flutter/material.dart';
 import 'package:isar_community/isar.dart';
 
 part 'run_model.g.dart';

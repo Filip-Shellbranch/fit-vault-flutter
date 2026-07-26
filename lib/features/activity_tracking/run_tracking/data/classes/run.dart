@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
@@ -34,6 +35,8 @@ class Run {
     run.startTime = model.startTime;
     run.id = model.id;
     run.state = model.state;
+    run.endTime = model.endTime;
+    run.pausedDuration = model.pausedDuration;
 
     for (RunPointModel pModel in model.points) {
       run.addPoint(RunPoint.fromModel(pModel));
@@ -62,6 +65,10 @@ class Run {
     return Pace(distance, calculateDuration());
   }
 
+  String formatPace() {
+    return calculatePace().asMinsPerKm();
+  }
+
   Duration calculateDuration() {
     if (isStarted() == false) {
       return Duration.zero;
@@ -79,16 +86,7 @@ class Run {
 
   String formatDuration() {
     Duration duration = calculateDuration();
-    int hours = (duration.inMinutes / 60).floor();
-    int minutes = (duration.inMinutes - 60 * hours);
-    if (hours == 0) {
-      if (minutes == 0) {
-        return "<1 min";
-      }
-      return "$minutes min";
-    } else {
-      return "$hours h $minutes min";
-    }
+    return formatDurationHMS(duration);
   }
 
   bool isStarted() {

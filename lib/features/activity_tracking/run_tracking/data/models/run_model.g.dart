@@ -22,20 +22,30 @@ const RunModelSchema = CollectionSchema(
       name: r'distance',
       type: IsarType.double,
     ),
-    r'points': PropertySchema(
+    r'endTime': PropertySchema(
       id: 1,
+      name: r'endTime',
+      type: IsarType.dateTime,
+    ),
+    r'pausedDurationMillis': PropertySchema(
+      id: 2,
+      name: r'pausedDurationMillis',
+      type: IsarType.long,
+    ),
+    r'points': PropertySchema(
+      id: 3,
       name: r'points',
       type: IsarType.objectList,
 
       target: r'RunPointModel',
     ),
     r'startTime': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'startTime',
       type: IsarType.dateTime,
     ),
     r'state': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'state',
       type: IsarType.string,
       enumMap: _RunModelstateEnumValueMap,
@@ -86,14 +96,16 @@ void _runModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.distance);
+  writer.writeDateTime(offsets[1], object.endTime);
+  writer.writeLong(offsets[2], object.pausedDurationMillis);
   writer.writeObjectList<RunPointModel>(
-    offsets[1],
+    offsets[3],
     allOffsets,
     RunPointModelSchema.serialize,
     object.points,
   );
-  writer.writeDateTime(offsets[2], object.startTime);
-  writer.writeString(offsets[3], object.state.name);
+  writer.writeDateTime(offsets[4], object.startTime);
+  writer.writeString(offsets[5], object.state.name);
 }
 
 RunModel _runModelDeserialize(
@@ -103,16 +115,18 @@ RunModel _runModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = RunModel(
-    reader.readDateTime(offsets[2]),
+    reader.readDateTime(offsets[4]),
     distance: reader.readDoubleOrNull(offsets[0]) ?? 0.0,
+    endTime: reader.readDateTimeOrNull(offsets[1]),
     state:
-        _RunModelstateValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+        _RunModelstateValueEnumMap[reader.readStringOrNull(offsets[5])] ??
         RunState.completed,
   );
   object.id = id;
+  object.pausedDurationMillis = reader.readLong(offsets[2]);
   object.points =
       reader.readObjectList<RunPointModel>(
-        offsets[1],
+        offsets[3],
         RunPointModelSchema.deserialize,
         allOffsets,
         RunPointModel(),
@@ -131,6 +145,10 @@ P _runModelDeserializeProp<P>(
     case 0:
       return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
     case 1:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
       return (reader.readObjectList<RunPointModel>(
                 offset,
                 RunPointModelSchema.deserialize,
@@ -139,9 +157,9 @@ P _runModelDeserializeProp<P>(
               ) ??
               [])
           as P;
-    case 2:
+    case 4:
       return (reader.readDateTime(offset)) as P;
-    case 3:
+    case 5:
       return (_RunModelstateValueEnumMap[reader.readStringOrNull(offset)] ??
               RunState.completed)
           as P;
@@ -329,6 +347,81 @@ extension RunModelQueryFilter
     });
   }
 
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition> endTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'endTime'),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition> endTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'endTime'),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition> endTimeEqualTo(
+    DateTime? value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'endTime', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition> endTimeGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'endTime',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition> endTimeLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'endTime',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition> endTimeBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'endTime',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
   QueryBuilder<RunModel, RunModel, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -377,6 +470,64 @@ extension RunModelQueryFilter
       return query.addFilterCondition(
         FilterCondition.between(
           property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition>
+  pausedDurationMillisEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'pausedDurationMillis',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition>
+  pausedDurationMillisGreaterThan(int value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'pausedDurationMillis',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition>
+  pausedDurationMillisLessThan(int value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'pausedDurationMillis',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterFilterCondition>
+  pausedDurationMillisBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'pausedDurationMillis',
           lower: lower,
           includeLower: includeLower,
           upper: upper,
@@ -672,6 +823,31 @@ extension RunModelQuerySortBy on QueryBuilder<RunModel, RunModel, QSortBy> {
     });
   }
 
+  QueryBuilder<RunModel, RunModel, QAfterSortBy> sortByEndTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterSortBy> sortByEndTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endTime', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterSortBy> sortByPausedDurationMillis() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pausedDurationMillis', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterSortBy>
+  sortByPausedDurationMillisDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pausedDurationMillis', Sort.desc);
+    });
+  }
+
   QueryBuilder<RunModel, RunModel, QAfterSortBy> sortByStartTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'startTime', Sort.asc);
@@ -711,6 +887,18 @@ extension RunModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<RunModel, RunModel, QAfterSortBy> thenByEndTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterSortBy> thenByEndTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<RunModel, RunModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -720,6 +908,19 @@ extension RunModelQuerySortThenBy
   QueryBuilder<RunModel, RunModel, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterSortBy> thenByPausedDurationMillis() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pausedDurationMillis', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QAfterSortBy>
+  thenByPausedDurationMillisDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pausedDurationMillis', Sort.desc);
     });
   }
 
@@ -756,6 +957,18 @@ extension RunModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<RunModel, RunModel, QDistinct> distinctByEndTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'endTime');
+    });
+  }
+
+  QueryBuilder<RunModel, RunModel, QDistinct> distinctByPausedDurationMillis() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'pausedDurationMillis');
+    });
+  }
+
   QueryBuilder<RunModel, RunModel, QDistinct> distinctByStartTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'startTime');
@@ -782,6 +995,18 @@ extension RunModelQueryProperty
   QueryBuilder<RunModel, double, QQueryOperations> distanceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'distance');
+    });
+  }
+
+  QueryBuilder<RunModel, DateTime?, QQueryOperations> endTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'endTime');
+    });
+  }
+
+  QueryBuilder<RunModel, int, QQueryOperations> pausedDurationMillisProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'pausedDurationMillis');
     });
   }
 

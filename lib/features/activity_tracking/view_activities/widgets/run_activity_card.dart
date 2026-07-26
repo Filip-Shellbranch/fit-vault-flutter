@@ -91,6 +91,15 @@ class RunActivityCard extends ConsumerWidget {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ActivityInfoDisplay(
+                      title: "Pace",
+                      displayedInfo: "${run.formatPace()} min/km",
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

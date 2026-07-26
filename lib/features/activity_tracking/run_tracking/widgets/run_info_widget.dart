@@ -1,5 +1,4 @@
 import 'package:fit_vault_flutter/core/utils/second_ticker_provider.dart';
-import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';
@@ -53,7 +52,7 @@ class RunInfoWidget extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        RunStatWidget("Duration", formatDurationHMS(run.calculateDuration())),
+        RunStatWidget("Duration", run.formatDuration()),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -67,7 +66,7 @@ class RunInfoWidget extends ConsumerWidget {
             Expanded(
               child: RunStatWidget(
                 "Avg Pace",
-                run.calculatePace().asMinsPerKm(),
+                run.formatPace(),
                 unit: "min/km",
               ),
             ),

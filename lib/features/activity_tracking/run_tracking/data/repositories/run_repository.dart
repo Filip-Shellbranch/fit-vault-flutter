@@ -7,6 +7,9 @@ class RunRepository {
   RunRepository(this.db);
 
   Future<Run> saveRun(Run run, {bool isCompleted = false}) async {
+    if (isCompleted) {
+      run.endTime = DateTime.now();
+    }
     RunModel newModel = RunModel.fromRun(run);
     if (isCompleted) {
       newModel.state = RunState.completed;

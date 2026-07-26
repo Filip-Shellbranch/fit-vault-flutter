@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
@@ -14,9 +15,16 @@ part 'current_run_provider.g.dart';
 
 final oneSecond = Duration(seconds: 1);
 
+void sendMessageToTask(TaskCommand command) {
+  if (Platform.isAndroid) {
+    FlutterForegroundTask.sendDataToTask(command.toJSON());
+  }
+}
+
 @Riverpod(keepAlive: true)
 class CurrentRun extends _$CurrentRun {
   final ForegroundServiceController _runTracker = ForegroundServiceController();
+
   @override
   Future<Run?> build() async {
     return null;
@@ -33,20 +41,17 @@ class CurrentRun extends _$CurrentRun {
     double segmentLength = newRun.addPoint(newPoint);
     ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
     state = AsyncValue.data(newRun);
-    FlutterForegroundTask.sendDataToTask(
-      UpdateDistanceCommand(newRun.formatDistance()).toJSON(),
-    );
+    sendMessageToTask(UpdateDistanceCommand(newRun.formatDistance()));
   }
 
   Future<bool> startRun({Run? run}) async {
+    run ??= Run.newRun();
+    state = AsyncValue.data(run);
     bool granted = await _runTracker.requestPermissions();
     if (!granted) {
       return false;
     }
     await _runTracker.startService();
-
-    run ??= Run.newRun();
-    state = AsyncValue.data(run);
     return true;
   }
 
@@ -68,6 +73,7 @@ class CurrentRun extends _$CurrentRun {
     await _addPointAtCurrentPosition(PointType.start);
     Run newRun = state.value!.copy();
     newRun.startTime = DateTime.now();
+    newRun.pausedAt = null;
     newRun.state = RunState.active;
     state = AsyncValue.data(newRun);
   }
@@ -76,7 +82,7 @@ class CurrentRun extends _$CurrentRun {
     if (state.value == null) {
       return;
     }
-    FlutterForegroundTask.sendDataToTask(PauseCommand().toJSON());
+    sendMessageToTask(PauseCommand());
     await _addPointAtCurrentPosition(PointType.pause);
     Run newRun = state.value!.copy();
     newRun.state = RunState.paused;
@@ -88,7 +94,7 @@ class CurrentRun extends _$CurrentRun {
     if (state.value == null) {
       return;
     }
-    FlutterForegroundTask.sendDataToTask(PauseCommand().toJSON());
+    sendMessageToTask(ResumeCommand());
     await _addPointAtCurrentPosition(PointType.resume);
     Run newRun = state.value!.copy();
     newRun.state = RunState.active;
@@ -101,6 +107,8 @@ class CurrentRun extends _$CurrentRun {
   Future<void> stopRun() async {
     if (state.value != null) {
       final run = state.value!;
+      Duration pauseLength = DateTime.now().difference(run.pausedAt!);
+      run.pausedDuration += pauseLength;
       await ref.read(runRepositoryProvider).saveRun(run, isCompleted: true);
     }
     await _runTracker.stopService();

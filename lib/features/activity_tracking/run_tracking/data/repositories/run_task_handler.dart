@@ -15,9 +15,13 @@ Map<String, dynamic> serializePosition(Position position) {
 }
 
 void onNewPosition(Position? position) {
-  if (position != null) {
-    FlutterForegroundTask.sendDataToMain(serializePosition(position));
+  if (position == null) {
+    return;
   }
+  if (position.accuracy > 20) {
+    debugPrint("Low accuracy, discarding point");
+  }
+  FlutterForegroundTask.sendDataToMain(serializePosition(position));
 }
 
 class RunTaskHandler extends TaskHandler {

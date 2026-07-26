@@ -26,6 +26,9 @@ class ForegroundServiceController {
   }
 
   Future<bool> requestPermissions() async {
+    if (!Platform.isAndroid) {
+      return false;
+    }
     final isIgnoring =
         await FlutterForegroundTask.isIgnoringBatteryOptimizations;
     if (!isIgnoring) {
@@ -70,6 +73,9 @@ class ForegroundServiceController {
   }
 
   void updateService(TaskCommand command) {
+    if (!Platform.isAndroid) {
+      return;
+    }
     String? newTitle;
     String? newText;
     List<NotificationButton>? buttons;
@@ -97,6 +103,9 @@ class ForegroundServiceController {
   }
 
   Future<void> stopService() async {
+    if (!Platform.isAndroid) {
+      return;
+    }
     await FlutterForegroundTask.stopService();
   }
 }

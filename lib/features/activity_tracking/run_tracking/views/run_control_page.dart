@@ -4,7 +4,7 @@ import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/r
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/gps_strength_widget.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/location_permission_widget.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_control_menu.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_info_widget.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/active_run_info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'edited_run_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class EditedRun extends _$EditedRun {
   @override
   Run? build() {

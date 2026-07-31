@@ -9,11 +9,10 @@ part of 'displayed_run_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(displayedRun)
+@ProviderFor(DisplayedRun)
 final displayedRunProvider = DisplayedRunProvider._();
 
-final class DisplayedRunProvider extends $FunctionalProvider<Run?, Run?, Run?>
-    with $Provider<Run?> {
+final class DisplayedRunProvider extends $NotifierProvider<DisplayedRun, Run?> {
   DisplayedRunProvider._()
     : super(
         from: null,
@@ -30,13 +29,7 @@ final class DisplayedRunProvider extends $FunctionalProvider<Run?, Run?, Run?>
 
   @$internal
   @override
-  $ProviderElement<Run?> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  Run? create(Ref ref) {
-    return displayedRun(ref);
-  }
+  DisplayedRun create() => DisplayedRun();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(Run? value) {
@@ -47,4 +40,22 @@ final class DisplayedRunProvider extends $FunctionalProvider<Run?, Run?, Run?>
   }
 }
 
-String _$displayedRunHash() => r'e46419c1d9c048e5387259eb1f90c053f09b3057';
+String _$displayedRunHash() => r'13512f3f24293d67af5764f7dbf70445c9067ac7';
+
+abstract class _$DisplayedRun extends $Notifier<Run?> {
+  Run? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Run?, Run?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Run?, Run?>,
+              Run?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

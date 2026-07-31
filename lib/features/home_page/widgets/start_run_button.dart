@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/activity_tracking/core/repositories/activity_controller.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/activity_controller_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,14 +9,13 @@ class StartRunButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FloatingActionButton.extended(
-      onPressed: () async {
-        await ActivityController(ref).startRun();
-        if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RunSessionPage()),
-          );
-        }
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RunSessionPage()),
+        );
+
+        ref.read(activityControllerProvider).startRun();
       },
       backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,

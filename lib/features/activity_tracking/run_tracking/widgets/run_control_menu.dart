@@ -1,5 +1,5 @@
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/activity_controller_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/core/repositories/activity_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/gps_strength_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_control_button.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
 
   void onFinishPressed() async {
     await ref.read(currentRunProvider.notifier).stopRun();
-    ActivityController(ref).stop();
+    ref.read(activityControllerProvider).stop();
     if (mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }

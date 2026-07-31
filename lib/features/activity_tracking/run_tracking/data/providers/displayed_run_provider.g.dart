@@ -40,7 +40,7 @@ final class DisplayedRunProvider extends $NotifierProvider<DisplayedRun, Run?> {
   }
 }
 
-String _$displayedRunHash() => r'13512f3f24293d67af5764f7dbf70445c9067ac7';
+String _$displayedRunHash() => r'83fcaa1ef3d01f4da67081d01b751001f0b18744';
 
 abstract class _$DisplayedRun extends $Notifier<Run?> {
   Run? build();

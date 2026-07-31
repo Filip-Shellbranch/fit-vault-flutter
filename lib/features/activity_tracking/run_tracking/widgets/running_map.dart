@@ -1,6 +1,6 @@
-import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/displayed_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/map_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/live_route_overlay.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,7 @@ import 'package:latlong2/latlong.dart';
 
 class RunningMap extends ConsumerWidget {
   final MapController controller;
-  final Run? targetRun;
-  const RunningMap({super.key, required this.controller, this.targetRun});
+  const RunningMap({super.key, required this.controller});
 
   List<LatLng> _getRoutePoints(List<RunPoint> runPoints) {
     return runPoints.map((point) => point.getLatLng()).toList();
@@ -19,21 +18,9 @@ class RunningMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Run run;
-    //TODO: Load the run using another provider that decides between current run or viewed run.
-    if (targetRun == null) {
-      bool isLoaded = ref.watch(
-        currentRunProvider.select(
-          (asyncRun) =>
-              asyncRun.hasValue && asyncRun.value!.positions.isNotEmpty,
-        ),
-      );
-      if (!isLoaded) {
-        return Center(child: Text("Begin the run to view the map."));
-      }
-      run = ref.read(currentRunProvider).value!;
-    } else {
-      run = targetRun!;
+    Run? run = ref.watch(displayedRunProvider);
+    if (run == null) {
+      return Center(child: Text("Begin the run to view the map."));
     }
 
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
@@ -50,7 +37,7 @@ class RunningMap extends ConsumerWidget {
           : MapOptions(initialCenter: run.positions.first.getLatLng()),
       children: [
         ref.watch(mapProvider),
-        LiveRouteOverlay(targetRun: targetRun),
+        LiveRouteOverlay(),
         RichAttributionWidget(
           showFlutterMapAttribution: false,
           attributions: [

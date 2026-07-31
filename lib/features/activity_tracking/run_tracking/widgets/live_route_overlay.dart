@@ -1,7 +1,7 @@
-import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/displayed_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/milestone_marker.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_marker.dart';
 import 'package:flutter/material.dart';
@@ -10,31 +10,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 class LiveRouteOverlay extends ConsumerWidget {
-  final Run? targetRun;
   final Color lineColor;
-  const LiveRouteOverlay({
-    super.key,
-    this.lineColor = Colors.red,
-    this.targetRun,
-  });
+  const LiveRouteOverlay({super.key, this.lineColor = Colors.red});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (targetRun != null) {
-      return RouteOverlay(targetRun!, lineColor: lineColor);
+    Run? run = ref.watch(displayedRunProvider);
+    if (run == null) {
+      return const SizedBox.shrink();
     }
-    final runAsync = ref.watch(currentRunProvider);
-    debugPrint("rebuild live overlay");
+    debugPrint("Rebuild live route overlay");
 
-    return runAsync.maybeWhen(
-      data: (run) {
-        if (run == null) {
-          return const SizedBox.shrink();
-        }
-        return RouteOverlay(run, lineColor: lineColor);
-      },
-      orElse: () => const SizedBox.shrink(),
-    );
+    return RouteOverlay(run, lineColor: lineColor);
   }
 }
 

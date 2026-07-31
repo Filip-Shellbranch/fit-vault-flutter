@@ -1,6 +1,7 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/view_run_page.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_run_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,6 +35,7 @@ class RunActivityCard extends ConsumerWidget {
   const RunActivityCard({super.key, required this.activity});
 
   void openRun(BuildContext context, WidgetRef ref) {
+    ref.read(editedRunProvider.notifier).beginEdit(run);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ViewRunPage(run: run)),

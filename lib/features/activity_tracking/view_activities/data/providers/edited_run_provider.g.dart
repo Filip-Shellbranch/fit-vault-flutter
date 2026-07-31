@@ -40,7 +40,7 @@ final class EditedRunProvider extends $NotifierProvider<EditedRun, Run?> {
   }
 }
 
-String _$editedRunHash() => r'a2d2a7414cb7bcc548be839386e1039950ed2ffc';
+String _$editedRunHash() => r'dea8f04fed442412538c0a662e928dea66fb05c4';
 
 abstract class _$EditedRun extends $Notifier<Run?> {
   Run? build();

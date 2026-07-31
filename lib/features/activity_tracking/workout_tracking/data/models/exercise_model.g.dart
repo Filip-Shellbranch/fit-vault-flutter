@@ -53,7 +53,7 @@ const ExerciseModelSchema = CollectionSchema(
   getId: _exerciseModelGetId,
   getLinks: _exerciseModelGetLinks,
   attach: _exerciseModelAttach,
-  version: '3.3.0',
+  version: '3.3.2',
 );
 
 int _exerciseModelEstimateSize(

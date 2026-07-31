@@ -64,7 +64,7 @@ const RunModelSchema = CollectionSchema(
   getId: _runModelGetId,
   getLinks: _runModelGetLinks,
   attach: _runModelAttach,
-  version: '3.3.0',
+  version: '3.3.2',
 );
 
 int _runModelEstimateSize(

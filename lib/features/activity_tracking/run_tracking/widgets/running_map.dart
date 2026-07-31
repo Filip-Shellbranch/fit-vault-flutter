@@ -50,7 +50,7 @@ class RunningMap extends ConsumerWidget {
           : MapOptions(initialCenter: run.positions.first.getLatLng()),
       children: [
         ref.watch(mapProvider),
-        LiveRouteOverlay(targetRun: run),
+        LiveRouteOverlay(targetRun: targetRun),
         RichAttributionWidget(
           showFlutterMapAttribution: false,
           attributions: [

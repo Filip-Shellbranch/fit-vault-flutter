@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_details.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -27,7 +28,17 @@ class _RunMapPageState extends ConsumerState<ViewRunPage> {
       appBar: AppBar(
         title: Text("Run on: ${formatDate(widget.run.startTime)}"),
       ),
-      body: RunningMap(controller: _controller, targetRun: widget.run),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            RunningMap(controller: _controller, targetRun: widget.run),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [RunDetails(run: widget.run)],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

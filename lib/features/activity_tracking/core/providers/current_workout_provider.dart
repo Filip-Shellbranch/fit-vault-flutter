@@ -62,4 +62,11 @@ class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
         .saveWorkout(workout, isCompleted: false);
     state = AsyncValue.data(savedWorkout);
   }
+
+  void stopWorkout() {
+    if (!state.hasValue) {
+      return;
+    }
+    state = AsyncValue.data(null);
+  }
 }

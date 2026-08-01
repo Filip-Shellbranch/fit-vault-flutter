@@ -14,7 +14,7 @@ class ActivityController {
   Future<void> startWorkout() async {
     await ref.read(currentWorkoutProvider.notifier).startWorkout();
     ref.read(currentActivityProvider.notifier).startWorkout();
-    // TODO: Remove currentRun if any
+    ref.read(currentRunProvider.notifier).stopRun();
   }
 
   /// The stop function only marks the current activity as none because there
@@ -31,6 +31,6 @@ class ActivityController {
     if (success) {
       ref.read(currentActivityProvider.notifier).startRun();
     }
-    // TODO: Remove currentWorkout if any
+    ref.read(currentWorkoutProvider.notifier).stopWorkout();
   }
 }

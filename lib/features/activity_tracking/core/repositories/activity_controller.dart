@@ -17,11 +17,11 @@ class ActivityController {
     ref.read(currentRunProvider.notifier).stopRun();
   }
 
-  /// The stop function only marks the current activity as none because there
-  /// is no need to also remove the Workout/Run from the respective providers.
   void stop() {
     ref.read(currentActivityProvider.notifier).stop();
     ref.read(activityListProvider.notifier).updateList();
+    ref.read(currentRunProvider.notifier).stopRun();
+    ref.read(currentWorkoutProvider.notifier).stopWorkout();
   }
 
   Future<void> startRun() async {

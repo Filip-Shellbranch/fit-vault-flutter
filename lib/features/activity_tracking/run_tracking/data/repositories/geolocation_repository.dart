@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:geolocator/geolocator.dart';
 
 enum LocationRequestResult {
@@ -73,21 +74,31 @@ class GeoLocationRepository {
     if (_stream != null) {
       await _stream!.cancel();
     }
-    _stream = Geolocator.getPositionStream(
-      locationSettings: settings,
-    ).listen(callback);
+
+    try {
+      _stream = Geolocator.getPositionStream(
+        locationSettings: settings,
+      ).listen(callback);
+    } catch (e) {
+      dPrint("Error starting position stream: $e");
+      return false;
+    }
 
     return true;
   }
 
   Future<Position?> getCurrentPosition() async {
-    //TODO: Error handling and check permissions.
-    final current = await Geolocator.getCurrentPosition(
-      locationSettings: AndroidSettings(
-        accuracy: LocationAccuracy.bestForNavigation,
-      ),
-    );
-    return current;
+    try {
+      final current = await Geolocator.getCurrentPosition(
+        locationSettings: AndroidSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+        ),
+      );
+      return current;
+    } catch (e) {
+      dPrint("Error fetching current position: $e");
+      return null;
+    }
   }
 
   Future<double> measureAccuracy() async {

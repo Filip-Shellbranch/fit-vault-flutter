@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 NotificationButton createNotificationButton(String id) {
@@ -89,7 +89,7 @@ class ForegroundServiceController {
         buttons = [createNotificationButton("pause")];
         break;
       case UpdateDistanceCommand cmd:
-        debugPrint(cmd.info.toString());
+        dPrint(cmd.info.toString());
         newText = "Distance: ${cmd.info} km";
     }
     if (buttons != null) {

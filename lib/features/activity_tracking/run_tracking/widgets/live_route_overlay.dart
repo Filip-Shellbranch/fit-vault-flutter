@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
@@ -19,7 +20,7 @@ class LiveRouteOverlay extends ConsumerWidget {
     if (run == null) {
       return const SizedBox.shrink();
     }
-    debugPrint("Rebuild live route overlay");
+    dPrint("Rebuild live route overlay");
 
     return RouteOverlay(run, lineColor: lineColor);
   }

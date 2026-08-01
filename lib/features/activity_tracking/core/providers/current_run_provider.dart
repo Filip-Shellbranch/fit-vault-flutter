@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
@@ -6,7 +7,6 @@ import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/p
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -59,7 +59,7 @@ class CurrentRun extends _$CurrentRun {
         .read(runTrackingServiceProvider)
         .createPointAtCurrentLocation(pointType);
     if (newPoint == null) {
-      debugPrint("Error creating point");
+      dPrint("Error creating point");
       return;
     }
     state.value!.positions.add(newPoint);

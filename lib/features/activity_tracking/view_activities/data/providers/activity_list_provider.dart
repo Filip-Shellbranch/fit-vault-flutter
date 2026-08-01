@@ -30,6 +30,14 @@ class ActivityList extends _$ActivityList {
     final groupController = ActivityGroupController();
     final groupedActivities = groupController.groupActivites(activities);
 
+    groupedActivities.sort((a, b) {
+      bool isEarlier = a.activity.timestamp.isBefore(b.activity.timestamp);
+      if (isEarlier) {
+        return -1;
+      }
+      return 1;
+    });
+
     return groupedActivities;
   }
 

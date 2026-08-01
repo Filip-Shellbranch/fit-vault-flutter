@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+
 import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
@@ -12,21 +14,49 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_run_provider.g.dart';
 
-final oneSecond = Duration(seconds: 1);
-
 void sendMessageToTask(TaskCommand command) {
   if (Platform.isAndroid) {
     FlutterForegroundTask.sendDataToTask(command.toJSON());
   }
 }
 
+void updateRunNotification(Run run) {
+  sendMessageToTask(
+    UpdateTextCommand(
+      formatNotificationText(run.calculateDuration(), run.distance),
+    ),
+  );
+}
+
+final oneSecond = Duration(seconds: 1);
+
 @Riverpod(keepAlive: true)
 class CurrentRun extends _$CurrentRun {
   final ForegroundServiceController _runTracker = ForegroundServiceController();
+  Timer? _notificationUpdateTimer;
 
   @override
   Future<Run?> build() async {
+    ref.onDispose(stopTimer);
     return null;
+  }
+
+  void beginTimer() {
+    if (_notificationUpdateTimer != null) {
+      return;
+    }
+    _notificationUpdateTimer = Timer.periodic(oneSecond, (timer) {
+      final run = state.value;
+      if (run == null) {
+        return;
+      }
+      updateRunNotification(run);
+    });
+  }
+
+  void stopTimer() {
+    _notificationUpdateTimer?.cancel();
+    _notificationUpdateTimer = null;
   }
 
   void addNewPoint(RunPoint newPoint) {
@@ -40,7 +70,7 @@ class CurrentRun extends _$CurrentRun {
     double segmentLength = newRun.addPoint(newPoint);
     ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
     state = AsyncValue.data(newRun);
-    sendMessageToTask(UpdateDistanceCommand(newRun.formatDistance()));
+    updateRunNotification(newRun);
   }
 
   Future<bool> startRun({Run? run}) async {
@@ -75,6 +105,8 @@ class CurrentRun extends _$CurrentRun {
     newRun.startTime = DateTime.now();
     newRun.pausedAt = null;
     newRun.state = RunState.active;
+    beginTimer();
+
     state = AsyncValue.data(newRun);
   }
 
@@ -89,6 +121,8 @@ class CurrentRun extends _$CurrentRun {
     newRun.state = RunState.paused;
     newRun.pausedAt = DateTime.now();
     state = AsyncValue.data(newRun);
+    updateRunNotification(newRun);
+    stopTimer();
   }
 
   Future<void> resumeRun() async {
@@ -104,6 +138,7 @@ class CurrentRun extends _$CurrentRun {
     newRun.pausedDuration += pauseLength;
     newRun.pausedAt = null;
     state = AsyncValue.data(newRun);
+    beginTimer();
   }
 
   Future<void> stopRun() async {

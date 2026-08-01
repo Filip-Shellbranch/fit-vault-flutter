@@ -1,13 +1,16 @@
 import 'dart:io';
-
-import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
+import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 NotificationButton createNotificationButton(String id) {
   return NotificationButton(id: id, text: capitalize(id));
+}
+
+String formatNotificationText(Duration duration, double dist) {
+  return "${formatDurationHMS(duration)} ● Distance: ${dist.toStringAsFixed(2)} km";
 }
 
 @pragma('vm:entry-point')
@@ -63,7 +66,7 @@ class ForegroundServiceController {
     await FlutterForegroundTask.startService(
       serviceId: 9,
       notificationTitle: "Tracking your run",
-      notificationText: "Distance: 0.00 km",
+      notificationText: formatNotificationText(Duration.zero, 0),
       notificationButtons: [
         createNotificationButton("pause"),
         createNotificationButton("stop"),
@@ -88,9 +91,9 @@ class ForegroundServiceController {
         newTitle = "Tracking your run";
         buttons = [createNotificationButton("pause")];
         break;
-      case UpdateDistanceCommand cmd:
-        dPrint(cmd.info.toString());
-        newText = "Distance: ${cmd.info} km";
+      case UpdateTextCommand cmd:
+        newText = cmd.text;
+        break;
     }
     if (buttons != null) {
       buttons.add(createNotificationButton("stop"));

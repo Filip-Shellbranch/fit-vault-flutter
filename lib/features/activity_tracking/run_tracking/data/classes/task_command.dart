@@ -1,8 +1,8 @@
 sealed class TaskCommand {
   final String command;
-  final String? info;
+  final String? text;
 
-  TaskCommand(this.command, {this.info});
+  TaskCommand(this.command, {this.text});
 
   factory TaskCommand.fromJSON(Map<String, dynamic> json) {
     String command = json["cmd"].toString();
@@ -12,7 +12,7 @@ sealed class TaskCommand {
       case "pause":
         return PauseCommand.fromJSON(json);
       case "updateDist":
-        return UpdateDistanceCommand.fromJSON(json);
+        return UpdateTextCommand.fromJSON(json);
       default:
         throw ArgumentError("Unknown command type '$command'");
     }
@@ -43,15 +43,15 @@ class ResumeCommand extends TaskCommand {
   Map<String, dynamic> toJSON() => {"cmd": command};
 }
 
-class UpdateDistanceCommand extends TaskCommand {
-  UpdateDistanceCommand(String distanceString)
-    : super("updateDist", info: distanceString);
+class UpdateTextCommand extends TaskCommand {
+  UpdateTextCommand(String distanceString)
+    : super("updateDist", text: distanceString);
 
-  factory UpdateDistanceCommand.fromJSON(Map<String, dynamic> json) {
-    final distance = json["info"].toString();
-    return UpdateDistanceCommand(distance);
+  factory UpdateTextCommand.fromJSON(Map<String, dynamic> json) {
+    final text = json["text"].toString();
+    return UpdateTextCommand(text);
   }
 
   @override
-  Map<String, dynamic> toJSON() => {"cmd": command, "info": info};
+  Map<String, dynamic> toJSON() => {"cmd": command, "text": text};
 }

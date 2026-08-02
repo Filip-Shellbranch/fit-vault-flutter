@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
@@ -19,7 +20,7 @@ void onNewPosition(Position? position) {
     return;
   }
   if (position.accuracy > 20) {
-    dPrint("Low accuracy, discarding point");
+    AppLogger().info("Low accuracy, discarding point");
   }
   FlutterForegroundTask.sendDataToMain(serializePosition(position));
 }
@@ -41,14 +42,18 @@ class RunTaskHandler extends TaskHandler {
   void onReceiveData(Object data) {
     bool isJSON = data is Map<String, dynamic>;
     if (!isJSON) {
-      dPrint("Invalid JSON received!");
+      AppLogger().warning("Invalid JSON received: ${data.toString()}");
       return;
     }
     try {
       TaskCommand cmd = TaskCommand.fromJSON(data);
       ForegroundServiceController().updateService(cmd);
-    } catch (e, _) {
-      dPrint(e.toString());
+    } catch (e, trace) {
+      AppLogger().error(
+        "Error parsing command or updating notification",
+        error: e,
+        stackTrace: trace,
+      );
     }
 
     super.onReceiveData(data);

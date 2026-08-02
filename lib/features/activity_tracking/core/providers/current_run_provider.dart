@@ -89,7 +89,6 @@ class CurrentRun extends _$CurrentRun {
         .read(runTrackingServiceProvider)
         .createPointAtCurrentLocation(pointType);
     if (newPoint == null) {
-      dPrint("Error creating point");
       return;
     }
     state.value!.positions.add(newPoint);

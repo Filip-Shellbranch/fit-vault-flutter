@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
+import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/home_page/views/home_page.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final logger = AppLogger();
+  await logger.init(); // Initializes app-wide singleton used to log to a file.
 
   final isarService = IsarService();
   await isarService.init();

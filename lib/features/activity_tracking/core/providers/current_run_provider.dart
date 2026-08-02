@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';

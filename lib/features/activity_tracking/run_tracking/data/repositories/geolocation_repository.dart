@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:geolocator/geolocator.dart';
 

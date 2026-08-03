@@ -3,6 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final runTrackingServiceProvider = Provider((ref) {
   final service = RunTrackingService(ref);
-  ref.onDispose(service.onDispose);
+  ref.onDispose(service.dispose);
   return service;
 });

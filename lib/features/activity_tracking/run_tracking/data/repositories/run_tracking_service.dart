@@ -14,7 +14,9 @@ class RunTrackingService {
     FlutterForegroundTask.addTaskDataCallback(_onTaskDataReceived);
   }
 
-  void onDispose() {}
+  Future<void> dispose() async {
+    geo.dispose();
+  }
 
   Future<RunPoint?> createPointAtCurrentLocation(PointType pointType) async {
     Position? pos = await geo.getCurrentPosition();

@@ -18,6 +18,22 @@ void main() async {
   final isarService = IsarService();
   await isarService.init();
 
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    logger.error(
+      "Flutter error occured",
+      error: details.exception,
+      stackTrace: details.stack,
+    );
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: error, stack: stack),
+    );
+    return true;
+  };
+
   FlutterForegroundTask.initCommunicationPort();
   if (kDebugMode) {
     if (await ForegroundServiceController().isRunning()) {

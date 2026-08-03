@@ -140,7 +140,7 @@ class CurrentRun extends _$CurrentRun {
   }
 
   Future<void> stopRun() async {
-    if (state.value != null) {
+    if (state.value != null && state.value!.pausedAt != null) {
       final run = state.value!;
       Duration pauseLength = DateTime.now().difference(run.pausedAt!);
       run.pausedDuration += pauseLength;

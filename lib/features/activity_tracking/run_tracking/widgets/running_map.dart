@@ -22,19 +22,24 @@ class RunningMap extends ConsumerWidget {
     if (run == null) {
       return Center(child: Text("Begin the run to view the map."));
     }
+    if (run.positions.isEmpty) {
+      return Center(child: Text("The run does not contain any points."));
+    }
 
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
     return FlutterMap(
       mapController: controller,
-      options: boundPoints.length >= 2
-          ? MapOptions(
+      options: boundPoints.isEmpty
+          ? MapOptions()
+          : boundPoints.length == 1
+          ? MapOptions(initialCenter: run.positions.first.getLatLng())
+          : MapOptions(
               initialCameraFit: CameraFit.coordinates(
                 coordinates: boundPoints,
                 maxZoom: 14,
                 padding: EdgeInsets.all(120),
               ),
-            )
-          : MapOptions(initialCenter: run.positions.first.getLatLng()),
+            ),
       children: [
         ref.watch(mapProvider),
         LiveRouteOverlay(),

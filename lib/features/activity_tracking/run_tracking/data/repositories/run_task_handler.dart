@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
@@ -16,21 +18,32 @@ Map<String, dynamic> serializePosition(Position position) {
 }
 
 void onNewPosition(Position? position) {
-  if (position == null) {
-    return;
+  try {
+    if (position == null) {
+      return;
+    }
+    if (position.accuracy > 15) {
+      dInfo("Low accuracy, discarding point");
+    }
+    FlutterForegroundTask.sendDataToMain(serializePosition(position));
+  } catch (e, stack) {
+    dError(
+      "Error sending new position to main isolate",
+      error: e,
+      stack: stack,
+    );
   }
-  if (position.accuracy > 15) {
-    dInfo("Low accuracy, discarding point");
-  }
-  FlutterForegroundTask.sendDataToMain(serializePosition(position));
 }
 
 class RunTaskHandler extends TaskHandler {
+  late ReceivePort errorPort;
   GeoLocationRepository geo = GeoLocationRepository();
+
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     await AppLogger().init(fileName: "foreground.log");
     try {
+      _addErrorHandling();
       LocationRequestResult permission = await geo.initialize();
       if (permission == LocationRequestResult.granted) {
         await geo.startStream(onNewPosition);
@@ -38,6 +51,27 @@ class RunTaskHandler extends TaskHandler {
     } catch (e) {
       dError("Error starting RunTaskHandler", error: e);
     }
+  }
+
+  void _addErrorHandling() {
+    errorPort = ReceivePort();
+
+    Isolate.current.addErrorListener(errorPort.sendPort);
+
+    errorPort.listen((dynamic error) {
+      if (error is List && error.length >= 2) {
+        final exception = error[0];
+        final String stackTraceString = error[1];
+
+        dError(
+          "Uncaught error in foreground isolate",
+          error: exception,
+          stack: StackTrace.fromString(stackTraceString),
+        );
+      } else {
+        dError("Uncaught error in foreground isolate", error: error);
+      }
+    });
   }
 
   @override
@@ -66,23 +100,32 @@ class RunTaskHandler extends TaskHandler {
 
   @override
   void onNotificationButtonPressed(String id) {
-    switch (id) {
-      case "resume":
-        FlutterForegroundTask.sendDataToMain(id);
-        break;
-      case "pause":
-        FlutterForegroundTask.sendDataToMain(id);
-        break;
-      case "stop":
-        FlutterForegroundTask.sendDataToMain(id);
-        break;
-      default:
+    try {
+      switch (id) {
+        case "resume":
+          FlutterForegroundTask.sendDataToMain(id);
+          break;
+        case "pause":
+          FlutterForegroundTask.sendDataToMain(id);
+          break;
+        case "stop":
+          FlutterForegroundTask.sendDataToMain(id);
+          break;
+        default:
+      }
+    } catch (e, stack) {
+      dError("Error when pressing notification button", error: e, stack: stack);
     }
     super.onNotificationButtonPressed(id);
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
-    await geo.dispose();
+    try {
+      await geo.dispose();
+      errorPort.close();
+    } catch (e, stack) {
+      dError("Error destroying task handler", error: e, stack: stack);
+    }
   }
 }

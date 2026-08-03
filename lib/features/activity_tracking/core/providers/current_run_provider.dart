@@ -68,13 +68,11 @@ class CurrentRun extends _$CurrentRun {
   }
 
   void addNewPoint(RunPoint newPoint) {
-    if (state.value == null) {
+    final run = state.value;
+    if (run == null) {
       return;
     }
-    if (newPoint.type == PointType.active && !state.value!.isActive()) {
-      return;
-    }
-    Run newRun = state.value!.copy();
+    Run newRun = run.copy();
     double segmentLength = newRun.addPoint(newPoint);
     ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
     state = AsyncValue.data(newRun);
@@ -92,23 +90,24 @@ class CurrentRun extends _$CurrentRun {
     return true;
   }
 
-  Future<void> _addPointAtCurrentPosition(PointType pointType) async {
+  Future<void> _addPointAtCurrentPosition(Run run, PointType pointType) async {
     final RunPoint? newPoint = await ref
         .read(runTrackingServiceProvider)
         .createPointAtCurrentLocation(pointType);
     if (newPoint == null) {
       return;
     }
-    state.value!.positions.add(newPoint);
+    run.positions.add(newPoint);
   }
 
   void beginRun() async {
-    if (state.value == null) {
+    final run = state.value;
+    if (run == null || run.isStarted()) {
       return;
     }
-    await _addPointAtCurrentPosition(PointType.start);
+    await _addPointAtCurrentPosition(run, PointType.start);
 
-    Run newRun = state.value!.copy();
+    Run newRun = run.copy();
     newRun.startTime = DateTime.now();
     newRun.pausedAt = null;
     newRun.state = RunState.active;
@@ -118,13 +117,14 @@ class CurrentRun extends _$CurrentRun {
   }
 
   Future<void> pauseRun() async {
-    if (state.value == null) {
+    final run = state.value;
+    if (run == null || run.isPaused()) {
       return;
     }
     sendMessageToTask(PauseCommand());
-    await _addPointAtCurrentPosition(PointType.pause);
+    await _addPointAtCurrentPosition(run, PointType.pause);
 
-    Run newRun = state.value!.copy();
+    Run newRun = run.copy();
     newRun.state = RunState.paused;
     newRun.pausedAt = DateTime.now();
     state = AsyncValue.data(newRun);
@@ -133,15 +133,18 @@ class CurrentRun extends _$CurrentRun {
   }
 
   Future<void> resumeRun() async {
-    if (state.value == null) {
+    final run = state.value;
+    final timePaused = run?.pausedAt;
+    if (run == null || timePaused == null || run.isPaused()) {
       return;
     }
-    sendMessageToTask(ResumeCommand());
-    await _addPointAtCurrentPosition(PointType.resume);
 
-    Run newRun = state.value!.copy();
+    sendMessageToTask(ResumeCommand());
+    await _addPointAtCurrentPosition(run, PointType.resume);
+
+    Run newRun = run.copy();
     newRun.state = RunState.active;
-    Duration pauseLength = DateTime.now().difference(newRun.pausedAt!);
+    Duration pauseLength = DateTime.now().difference(timePaused);
     newRun.pausedDuration += pauseLength;
     newRun.pausedAt = null;
     state = AsyncValue.data(newRun);
@@ -149,9 +152,10 @@ class CurrentRun extends _$CurrentRun {
   }
 
   Future<void> stopRun() async {
-    if (state.value != null && state.value!.pausedAt != null) {
-      final run = state.value!;
-      Duration pauseLength = DateTime.now().difference(run.pausedAt!);
+    final run = state.value;
+    final timePaused = run?.pausedAt;
+    if (run != null && timePaused != null && run.isPaused()) {
+      Duration pauseLength = DateTime.now().difference(timePaused);
       run.pausedDuration += pauseLength;
 
       await ref.read(runRepositoryProvider).saveRun(run, isCompleted: true);

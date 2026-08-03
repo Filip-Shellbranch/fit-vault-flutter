@@ -14,6 +14,8 @@ void main() async {
 
   final logger = AppLogger();
   await logger.init(); // Initializes app-wide singleton used to log to a file.
+  // NOTE: Foreground isolate (run_task_handler uses a different AppLogger singleton)
+  // and writes logs to a separate log file.
 
   final isarService = IsarService();
   await isarService.init();

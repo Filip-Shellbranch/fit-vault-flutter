@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
@@ -18,7 +19,7 @@ void onNewPosition(Position? position) {
   if (position == null) {
     return;
   }
-  if (position.accuracy > 20) {
+  if (position.accuracy > 15) {
     dInfo("Low accuracy, discarding point");
   }
   FlutterForegroundTask.sendDataToMain(serializePosition(position));
@@ -28,6 +29,7 @@ class RunTaskHandler extends TaskHandler {
   GeoLocationRepository geo = GeoLocationRepository();
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
+    await AppLogger().init(fileName: "foreground.log");
     try {
       LocationRequestResult permission = await geo.initialize();
       if (permission == LocationRequestResult.granted) {

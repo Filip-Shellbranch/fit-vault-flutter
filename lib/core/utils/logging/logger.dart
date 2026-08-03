@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
-const String fileName = "app.log";
-const int batchSize = 10;
 const int maxLogs = 3;
 const int maxLogFileSize = 3 * 1024 * 1024; // 3 MB
 
 void _print(String string) {
-  debugPrint("AppLogger: $string");
+  dPrint("AppLogger: $string");
 }
 
 Future<String> get _localPath async {
@@ -20,7 +18,7 @@ Future<String> get _localPath async {
   return directory.path;
 }
 
-Future<String> _getCurrentFileName() async {
+Future<String> _getCurrentFileName(String fileName) async {
   final dir = await _localPath;
   return "$dir/$fileName";
 }
@@ -30,19 +28,23 @@ String _getFileNameByIndex(String path, int? i) {
 }
 
 class FileOutput extends LogOutput {
+  String fileName;
   late File _logFile;
   late IOSink _sink;
-  int _count = 0;
   bool _rotating = false;
   Future<void> _queue = Future.value();
+
+  FileOutput(this.fileName);
+
   @override
   Future<void> init() async {
-    _logFile = File(await _getCurrentFileName());
+    _logFile = File(await _getCurrentFileName(fileName));
     _openSink();
   }
 
   @override
   void output(OutputEvent event) {
+    _print("Output arrived: ${event.lines.toString()}");
     _queue = _queue.then((value) => _write(event));
   }
 
@@ -54,14 +56,11 @@ class FileOutput extends LogOutput {
   }
 
   Future<void> _write(OutputEvent event) async {
-    _count += 1;
     for (String line in event.lines) {
       _sink.writeln('${DateTime.now().toIso8601String()} $line');
     }
-    if (_count >= batchSize) {
-      _count = 0;
-      await _sink.flush();
-    }
+    _print("Flush IOSink");
+    await _sink.flush();
     await rotateIfNeeded();
   }
 
@@ -109,7 +108,7 @@ class FileOutput extends LogOutput {
       }
 
       // Create new log file.
-      _logFile = File(await _getCurrentFileName());
+      _logFile = File(await _getCurrentFileName(fileName));
       _sink = _logFile.openWrite(mode: FileMode.append);
     } catch (e) {
       _print("Error rotating log file: ${e.toString()}");

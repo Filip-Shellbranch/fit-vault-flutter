@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:geolocator/geolocator.dart';
 
 enum LocationRequestResult {
@@ -81,11 +81,7 @@ class GeoLocationRepository {
         locationSettings: settings,
       ).listen(callback);
     } catch (e, trace) {
-      AppLogger().error(
-        "Error starting position stream",
-        error: e,
-        stackTrace: trace,
-      );
+      dError("Error starting position stream", error: e, stack: trace);
       return false;
     }
 
@@ -101,11 +97,7 @@ class GeoLocationRepository {
       );
       return current;
     } catch (e, trace) {
-      AppLogger().error(
-        "Error fetching current position",
-        error: e,
-        stackTrace: trace,
-      );
+      dError("Error fetching current position", error: e, stack: trace);
       return null;
     }
   }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
@@ -28,30 +29,53 @@ class ForegroundServiceController {
     return await FlutterForegroundTask.isRunningService;
   }
 
+  Future<bool> _requestIgnoreBatteryOptimization() async {
+    try {
+      final isIgnoring =
+          await FlutterForegroundTask.isIgnoringBatteryOptimizations;
+      if (!isIgnoring) {
+        bool granted =
+            await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+        if (!granted) {
+          return false;
+        }
+      }
+    } catch (e) {
+      dError("Error requesting ignore battery optimization", error: e);
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> _requestNotificationPermission() async {
+    try {
+      final NotificationPermission status =
+          await FlutterForegroundTask.checkNotificationPermission();
+
+      if (status != NotificationPermission.granted) {
+        bool granted =
+            await FlutterForegroundTask.requestNotificationPermission() ==
+            NotificationPermission.granted;
+        if (!granted) {
+          return false;
+        }
+      }
+    } catch (e) {
+      dError("Error checking or requesting notification permission", error: e);
+      return false;
+    }
+    return true;
+  }
+
   Future<bool> requestPermissions() async {
     if (!Platform.isAndroid) {
       return false;
     }
-    final isIgnoring =
-        await FlutterForegroundTask.isIgnoringBatteryOptimizations;
-    if (!isIgnoring) {
-      bool granted =
-          await FlutterForegroundTask.requestIgnoreBatteryOptimization();
-      if (!granted) {
-        return false;
-      }
+    if (!await _requestIgnoreBatteryOptimization()) {
+      return false;
     }
-
-    final NotificationPermission status =
-        await FlutterForegroundTask.checkNotificationPermission();
-
-    if (status != NotificationPermission.granted) {
-      bool granted =
-          await FlutterForegroundTask.requestNotificationPermission() ==
-          NotificationPermission.granted;
-      if (!granted) {
-        return false;
-      }
+    if (!await _requestNotificationPermission()) {
+      return false;
     }
     return true;
   }
@@ -63,16 +87,21 @@ class ForegroundServiceController {
     if (await isRunning()) {
       return;
     }
-    await FlutterForegroundTask.startService(
-      serviceId: 9,
-      notificationTitle: "Tracking your run",
-      notificationText: formatNotificationText(Duration.zero, 0),
-      notificationButtons: [
-        createNotificationButton("pause"),
-        createNotificationButton("stop"),
-      ],
-      callback: startCallback,
-    );
+    try {
+      await FlutterForegroundTask.startService(
+        serviceId: 9,
+        notificationTitle: "Tracking your run",
+        notificationText: formatNotificationText(Duration.zero, 0),
+        notificationButtons: [
+          createNotificationButton("pause"),
+          createNotificationButton("stop"),
+        ],
+        callback: startCallback,
+      );
+    } catch (e) {
+      dError("Error starting foreground task", error: e);
+      rethrow;
+    }
   }
 
   void updateService(TaskCommand command) {
@@ -98,17 +127,25 @@ class ForegroundServiceController {
     if (buttons != null) {
       buttons.add(createNotificationButton("stop"));
     }
-    FlutterForegroundTask.updateService(
-      notificationTitle: newTitle,
-      notificationText: newText,
-      notificationButtons: buttons,
-    );
+    try {
+      FlutterForegroundTask.updateService(
+        notificationTitle: newTitle,
+        notificationText: newText,
+        notificationButtons: buttons,
+      );
+    } catch (e) {
+      dError("Error updating foreground service/notification", error: e);
+    }
   }
 
   Future<void> stopService() async {
     if (!Platform.isAndroid) {
       return;
     }
-    await FlutterForegroundTask.stopService();
+    try {
+      await FlutterForegroundTask.stopService();
+    } catch (e) {
+      dError("Error stopping foreground service", error: e);
+    }
   }
 }

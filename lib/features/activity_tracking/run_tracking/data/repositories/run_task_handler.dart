@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
@@ -19,7 +19,7 @@ void onNewPosition(Position? position) {
     return;
   }
   if (position.accuracy > 20) {
-    AppLogger().info("Low accuracy, discarding point");
+    dInfo("Low accuracy, discarding point");
   }
   FlutterForegroundTask.sendDataToMain(serializePosition(position));
 }
@@ -28,9 +28,13 @@ class RunTaskHandler extends TaskHandler {
   GeoLocationRepository geo = GeoLocationRepository();
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    LocationRequestResult permission = await geo.initialize();
-    if (permission == LocationRequestResult.granted) {
-      await geo.startStream(onNewPosition);
+    try {
+      LocationRequestResult permission = await geo.initialize();
+      if (permission == LocationRequestResult.granted) {
+        await geo.startStream(onNewPosition);
+      }
+    } catch (e) {
+      dError("Error starting RunTaskHandler", error: e);
     }
   }
 
@@ -41,17 +45,17 @@ class RunTaskHandler extends TaskHandler {
   void onReceiveData(Object data) {
     bool isJSON = data is Map<String, dynamic>;
     if (!isJSON) {
-      AppLogger().warning("Invalid JSON received: ${data.toString()}");
+      dWarn("Invalid JSON received: ${data.toString()}");
       return;
     }
     try {
       TaskCommand cmd = TaskCommand.fromJSON(data);
       ForegroundServiceController().updateService(cmd);
     } catch (e, trace) {
-      AppLogger().error(
+      dError(
         "Error parsing command or updating notification",
         error: e,
-        stackTrace: trace,
+        stack: trace,
       );
     }
 

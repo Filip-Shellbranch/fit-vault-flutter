@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
@@ -55,7 +55,7 @@ class RunTrackingService {
         runProvider.stopRun();
         break;
       default:
-        AppLogger().warning("Unknown data received from task handler: $str");
+        dWarn("Unknown data received from task handler: $str");
     }
   }
 

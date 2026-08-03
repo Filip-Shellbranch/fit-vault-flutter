@@ -33,6 +33,9 @@ class RunPoint {
     double distance = DistanceVincenty(
       roundResult: false,
     ).as(LengthUnit.Kilometer, p1, p2);
+    if (distance.isFinite) {
+      return 0;
+    }
     return distance;
   }
 

@@ -2,7 +2,7 @@ import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:flutter/foundation.dart';
 
 void dPrint(String str) {
-  if (kDebugMode || kProfileMode) {
+  if (kDebugMode || kProfileMode || kReleaseMode) {
     debugPrint(str);
   }
 }

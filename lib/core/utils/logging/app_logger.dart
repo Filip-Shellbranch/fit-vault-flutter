@@ -20,7 +20,7 @@ class AppLogger {
     final output = FileOutput(fileName);
     _logger = Logger(
       output: output,
-      level: Level.trace,
+      level: Level.all,
       filter:
           ProductionFilter(), // Allows logging even in --profile and --release modes
     );

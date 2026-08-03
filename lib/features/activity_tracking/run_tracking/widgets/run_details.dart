@@ -38,6 +38,7 @@ class RunDetails extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: 10),
           ],
         ),
       ),

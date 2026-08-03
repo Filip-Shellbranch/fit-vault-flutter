@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/location_permission_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
@@ -16,7 +17,12 @@ class RunControlPage extends ConsumerWidget {
     ref.read(runTrackingServiceProvider);
     final permission = ref.watch(locationPermissionProvider);
     return permission.when(
-      error: (Object o, StackTrace _) {
+      error: (Object error, StackTrace stack) {
+        AppLogger().error(
+          "Error getting permission",
+          error: error,
+          stackTrace: stack,
+        );
         return Text("Error getting permission");
       },
       loading: () {
@@ -28,22 +34,24 @@ class RunControlPage extends ConsumerWidget {
         }
         return Scaffold(
           appBar: AppBar(),
-          body: Column(
-            children: [
-              RunInfoWidget(),
-              Align(
-                alignment: AlignmentGeometry.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GpsStrengthWidget(),
+          body: SafeArea(
+            child: Column(
+              children: [
+                RunInfoWidget(),
+                Align(
+                  alignment: AlignmentGeometry.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GpsStrengthWidget(),
+                  ),
                 ),
-              ),
-              Expanded(child: SizedBox()),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 200),
-                child: RunControlMenu(),
-              ),
-            ],
+                Expanded(child: SizedBox()),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 180),
+                  child: RunControlMenu(),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -2,9 +2,11 @@ import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_position_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/displayed_run_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/milestone_marker.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_marker.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/map_markers/current_position_marker.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/map_markers/milestone_marker.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/map_markers/running_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +28,7 @@ class LiveRouteOverlay extends ConsumerWidget {
   }
 }
 
-class RouteOverlay extends StatelessWidget {
+class RouteOverlay extends ConsumerWidget {
   final Run run;
   final Color lineColor;
 
@@ -153,13 +155,21 @@ class RouteOverlay extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPos = ref.watch(currentPositionProvider);
     final polyLines = _createRouteLines(run.positions);
+
+    final markers = _loadMarkers(run.positions);
+    if (currentPos.value != null) {
+      markers.add(
+        Marker(point: currentPos.value!, child: CurrentPositionMarker()),
+      );
+    }
 
     return Stack(
       children: [
         PolylineLayer(polylines: polyLines),
-        MarkerLayer(markers: _loadMarkers(run.positions)),
+        MarkerLayer(markers: markers),
       ],
     );
   }

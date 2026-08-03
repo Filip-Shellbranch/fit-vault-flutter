@@ -135,7 +135,7 @@ class CurrentRun extends _$CurrentRun {
   Future<void> resumeRun() async {
     final run = state.value;
     final timePaused = run?.pausedAt;
-    if (run == null || timePaused == null || run.isPaused()) {
+    if (run == null || timePaused == null || !run.isPaused()) {
       return;
     }
 

@@ -17,11 +17,8 @@ Map<String, dynamic> serializePosition(Position position) {
   return map;
 }
 
-void onNewPosition(Position? position) {
+void onNewPosition(Position position) {
   try {
-    if (position == null) {
-      return;
-    }
     if (position.accuracy > 15) {
       dInfo("Low accuracy, discarding point");
     }

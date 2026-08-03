@@ -66,7 +66,7 @@ class GeoLocationRepository {
     return LocationRequestResult.granted;
   }
 
-  Future<bool> startStream(void Function(Position?) callback) async {
+  Future<bool> startStream(void Function(Position) callback) async {
     AndroidSettings settings = AndroidSettings(
       accuracy: LocationAccuracy.bestForNavigation,
       distanceFilter: 10,
@@ -76,12 +76,20 @@ class GeoLocationRepository {
       await _stream!.cancel();
     }
 
+    final permission = await _requestPermission();
+    if (permission != LocationRequestResult.granted) {
+      return false;
+    }
+
     try {
-      _stream = Geolocator.getPositionStream(
-        locationSettings: settings,
-      ).listen(callback);
-    } catch (e, trace) {
-      dError("Error starting position stream", error: e, stack: trace);
+      _stream = Geolocator.getPositionStream(locationSettings: settings).listen(
+        callback,
+        onError: (e, stack) {
+          dError("Error occurred in position stream", error: e, stack: stack);
+        },
+      );
+    } catch (e, stack) {
+      dError("Error starting position stream", error: e, stack: stack);
       return false;
     }
 
@@ -96,8 +104,8 @@ class GeoLocationRepository {
         ),
       );
       return current;
-    } catch (e, trace) {
-      dError("Error fetching current position", error: e, stack: trace);
+    } catch (e, stack) {
+      dError("Error fetching current position", error: e, stack: stack);
       return null;
     }
   }

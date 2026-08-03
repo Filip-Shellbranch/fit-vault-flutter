@@ -62,7 +62,15 @@ class RunTrackingService {
   }
 
   void _onPositionReceived(Map<String, dynamic> data) {
-    final point = RunPoint(data["lat"], data["lng"], altitude: data["lng"]);
-    ref.read(currentRunProvider.notifier).addNewPoint(point);
+    final point = RunPoint(
+      data["lat"],
+      data["lng"],
+      altitude: data["altitude"],
+    );
+    try {
+      ref.read(currentRunProvider.notifier).addNewPoint(point);
+    } catch (e, stack) {
+      dError("Error adding a new position to the run", error: e, stack: stack);
+    }
   }
 }

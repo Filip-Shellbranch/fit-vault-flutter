@@ -70,7 +70,7 @@ class GeoLocationRepository {
     AndroidSettings settings = AndroidSettings(
       accuracy: LocationAccuracy.bestForNavigation,
       distanceFilter: 10,
-      intervalDuration: Duration(seconds: 1),
+      intervalDuration: Duration(seconds: 2),
     );
     if (_stream != null) {
       await _stream!.cancel();

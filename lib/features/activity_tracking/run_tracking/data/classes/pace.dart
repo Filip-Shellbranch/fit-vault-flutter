@@ -4,10 +4,10 @@ class Pace {
   Pace(this.distance, this.time);
 
   String asMinsPerKm() {
-    if (distance == 0) {
+    if (distance <= 0 || time.inSeconds <= 0) {
       return "0:00";
     }
-    int secPerKm = (time.inSeconds.toDouble() / distance).round();
+    int secPerKm = (time.inSeconds / distance).round();
     int wholeMins = (secPerKm / 60).floor();
     int seconds = secPerKm - 60 * wholeMins;
 

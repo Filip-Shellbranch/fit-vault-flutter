@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
@@ -14,8 +15,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'current_run_provider.g.dart';
 
 void sendMessageToTask(TaskCommand command) {
-  if (Platform.isAndroid) {
-    FlutterForegroundTask.sendDataToTask(command.toJSON());
+  try {
+    if (Platform.isAndroid) {
+      FlutterForegroundTask.sendDataToTask(command.toJSON());
+    }
+  } catch (e, stack) {
+    dError(
+      "Error sending message to task (command = ${command.command})",
+      error: e,
+      stack: stack,
+    );
   }
 }
 

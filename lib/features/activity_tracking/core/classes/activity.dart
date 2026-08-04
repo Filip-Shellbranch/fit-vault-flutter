@@ -1,5 +1,5 @@
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_summary.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 
 sealed class Activity {
@@ -19,7 +19,8 @@ class WorkoutActivity extends Activity {
 }
 
 class RunActivity extends Activity {
-  Run run;
-  RunActivity(super.timestamp, this.run);
-  RunActivity.fromRun(Run run) : this(run.startTime, run);
+  RunSummary summary;
+  RunActivity(super.timestamp, this.summary);
+  RunActivity.fromRunSummary(RunSummary summary)
+    : this(summary.startTime, summary);
 }

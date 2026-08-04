@@ -1,5 +1,7 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_summary.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/view_run_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_run_provider.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +32,15 @@ class ActivityInfoDisplay extends StatelessWidget {
 
 class RunActivityCard extends ConsumerWidget {
   final RunActivity activity;
-  Run get run => activity.run;
+  RunSummary get runSummary => activity.summary;
 
   const RunActivityCard({super.key, required this.activity});
 
-  void openRun(BuildContext context, WidgetRef ref) {
+  void openRun(BuildContext context, WidgetRef ref) async {
+    Run? run = await ref.read(runRepositoryProvider).loadRun(runSummary.id);
+    if (run == null || !context.mounted) {
+      return;
+    }
     ref.read(editedRunProvider.notifier).beginEdit(run);
     Navigator.push(
       context,
@@ -85,11 +91,11 @@ class RunActivityCard extends ConsumerWidget {
                   children: [
                     ActivityInfoDisplay(
                       title: "Duration",
-                      displayedInfo: run.formatDuration(),
+                      displayedInfo: runSummary.formatDuration(),
                     ),
                     ActivityInfoDisplay(
                       title: "Distance",
-                      displayedInfo: "${run.formatDistance()} km",
+                      displayedInfo: "${runSummary.formatDistance()} km",
                     ),
                   ],
                 ),
@@ -98,7 +104,7 @@ class RunActivityCard extends ConsumerWidget {
                   children: [
                     ActivityInfoDisplay(
                       title: "Pace",
-                      displayedInfo: "${run.formatPace()} min/km",
+                      displayedInfo: "${runSummary.formatPace()} min/km",
                     ),
                   ],
                 ),

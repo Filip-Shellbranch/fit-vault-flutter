@@ -24,8 +24,10 @@ class ActivityList extends _$ActivityList {
     );
 
     final runsRepo = ref.read(runRepositoryProvider);
-    final runs = await runsRepo.getAllRuns();
-    activities.addAll(runs.map((run) => RunActivity.fromRun(run)));
+    final runSummaries = await runsRepo.loadRunSummaries();
+    activities.addAll(
+      runSummaries.map((summary) => RunActivity.fromRunSummary(summary)),
+    );
 
     final groupController = ActivityGroupController();
     final groupedActivities = groupController.groupActivites(activities);

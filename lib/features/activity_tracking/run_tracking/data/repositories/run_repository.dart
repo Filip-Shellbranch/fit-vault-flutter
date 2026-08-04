@@ -1,7 +1,9 @@
+import 'package:fit_vault_flutter/core/utils/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_summary.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_point_model.dart';
 import 'package:isar_community/isar.dart';
 
 class RunRepository {
@@ -19,12 +21,21 @@ class RunRepository {
     await db.writeTxn(() async {
       int id = await db.runModels.put(newModel);
       run.id = id;
+
+      final pointModels = run.positions
+          .map((point) => RunPointModel.fromRunPoint(point))
+          .toList();
+      await db.runPointModels.putAll(pointModels);
+      newModel.points.addAll(pointModels);
+      await newModel.points.save();
     });
     return run;
   }
 
   Future<List<RunSummary>> loadRunSummaries() async {
+    dPrint("Loading Run summaries");
     final models = await db.runModels.where().findAll();
+    dPrint("Run summaries loaded");
     return models.map((model) => RunSummary.fromRunModel(model)).toList();
   }
 
@@ -33,7 +44,6 @@ class RunRepository {
     if (model == null) {
       return null;
     }
-
     await model.points.load();
 
     final Run run = Run.fromModel(model);
@@ -41,7 +51,7 @@ class RunRepository {
         .map((pointModel) => RunPoint.fromModel(pointModel))
         .toList();
     run.positions.addAll(points);
-
+    dPrint("Run loaded");
     return run;
   }
 

@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_point_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/exercise_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
@@ -17,6 +18,7 @@ class IsarService {
       ExerciseModelSchema,
       ExerciseTypeModelSchema,
       RunModelSchema,
+      RunPointModelSchema,
     ];
     db = await Isar.open(schemas, directory: dir.path, inspector: true);
 

@@ -56,12 +56,16 @@ class FileOutput extends LogOutput {
   }
 
   Future<void> _write(OutputEvent event) async {
-    for (String line in event.lines) {
-      _sink.writeln('${DateTime.now().toIso8601String()} $line');
+    try {
+      for (String line in event.lines) {
+        _sink.writeln('${DateTime.now().toIso8601String()} $line');
+      }
+      _print("Flush IOSink");
+      await _sink.flush();
+      await rotateIfNeeded();
+    } catch (e) {
+      _print("Error writing to log: ${e.toString()}");
     }
-    _print("Flush IOSink");
-    await _sink.flush();
-    await rotateIfNeeded();
   }
 
   Future<void> rotateIfNeeded() async {

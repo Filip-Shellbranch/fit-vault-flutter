@@ -76,7 +76,6 @@ class CurrentRun extends _$CurrentRun {
     double segmentLength = newRun.addPoint(newPoint);
     ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
     state = AsyncValue.data(newRun);
-    updateRunNotification(newRun);
   }
 
   Future<bool> startRun({Run? run}) async {

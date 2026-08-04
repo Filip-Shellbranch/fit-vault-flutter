@@ -68,7 +68,7 @@ class GeoLocationRepository {
 
   Future<bool> startStream(void Function(Position) callback) async {
     AndroidSettings settings = AndroidSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
+      accuracy: LocationAccuracy.high,
       distanceFilter: 10,
       intervalDuration: Duration(seconds: 2),
     );

@@ -20,7 +20,6 @@ class RunTrackingService {
 
   Future<RunPoint?> createPointAtCurrentLocation(PointType pointType) async {
     Position? pos = await geo.getCurrentPosition();
-
     if (pos == null) {
       return null;
     }
@@ -62,12 +61,13 @@ class RunTrackingService {
   }
 
   void _onPositionReceived(Map<String, dynamic> data) {
-    final point = RunPoint(
-      data["lat"],
-      data["lng"],
-      altitude: data["altitude"],
-    );
     try {
+      final point = RunPoint(
+        data["lat"],
+        data["lng"],
+        altitude: data["altitude"],
+      );
+
       ref.read(currentRunProvider.notifier).addNewPoint(point);
     } catch (e, stack) {
       dError("Error adding a new position to the run", error: e, stack: stack);

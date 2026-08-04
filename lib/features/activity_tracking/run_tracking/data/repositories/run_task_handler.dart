@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:fit_vault_flutter/core/utils/debug.dart';
@@ -7,6 +8,7 @@ import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/r
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_provider/path_provider.dart';
 
 Map<String, dynamic> serializePosition(Position position) {
   Map<String, dynamic> map = {
@@ -20,7 +22,8 @@ Map<String, dynamic> serializePosition(Position position) {
 void onNewPosition(Position position) {
   try {
     if (position.accuracy > 15) {
-      dInfo("Low accuracy, discarding point");
+      dInfo("Low GPS accuracy, discarding point");
+      return;
     }
     FlutterForegroundTask.sendDataToMain(serializePosition(position));
   } catch (e, stack) {
@@ -54,19 +57,17 @@ class RunTaskHandler extends TaskHandler {
     errorPort = ReceivePort();
 
     Isolate.current.addErrorListener(errorPort.sendPort);
+    Isolate.current.addOnExitListener(errorPort.sendPort);
 
     errorPort.listen((dynamic error) {
-      if (error is List && error.length >= 2) {
-        final exception = error[0];
-        final String stackTraceString = error[1];
-
+      if (error is List) {
         dError(
-          "Uncaught error in foreground isolate",
-          error: exception,
-          stack: StackTrace.fromString(stackTraceString),
+          "Foreground isolate error",
+          error: error[0],
+          stack: StackTrace.fromString(error[1]),
         );
       } else {
-        dError("Uncaught error in foreground isolate", error: error);
+        dError("Foreground isolate exited", error: error);
       }
     });
   }
@@ -118,6 +119,14 @@ class RunTaskHandler extends TaskHandler {
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/service_lifecycle.log');
+
+    await file.writeAsString(
+      '${DateTime.now()} onDestroy\n',
+      mode: FileMode.append,
+      flush: true,
+    );
     try {
       await geo.dispose();
       errorPort.close();

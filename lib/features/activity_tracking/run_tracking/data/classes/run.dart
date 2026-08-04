@@ -2,6 +2,7 @@ import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_point_model.dart';
 
 enum RunState { notStarted, active, paused, completed }
 
@@ -38,9 +39,6 @@ class Run {
     run.endTime = model.endTime;
     run.pausedDuration = model.pausedDuration;
 
-    for (RunPointModel pModel in model.points) {
-      run.addPoint(RunPoint.fromModel(pModel));
-    }
     return run;
   }
 

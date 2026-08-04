@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_point_model.dart';
 import 'package:isar_community/isar.dart';
 
 part 'run_model.g.dart';
@@ -16,7 +17,7 @@ class RunModel {
   DateTime? endTime;
   double distance;
 
-  List<RunPointModel> points = [];
+  IsarLinks<RunPointModel> points = IsarLinks();
 
   int pausedDurationMillis = 0;
 
@@ -47,15 +48,19 @@ class RunModel {
     );
     model.pausedDuration = run.pausedDuration;
     model.id = run.id ?? Isar.autoIncrement;
-
-    model.points = run.positions
-        .map((point) => RunPointModel.fromRunPoint(point))
-        .toList();
     return model;
+  }
+
+  Duration calculateDuration() {
+    final DateTime? end = endTime;
+    if (state != RunState.completed || end == null) {
+      return Duration.zero;
+    }
+    return end.subtract(pausedDuration).difference(startTime);
   }
 }
 
-@embedded
+/*@embedded
 class RunPointModel {
   double? lat;
   double? lng;
@@ -81,3 +86,4 @@ class RunPointModel {
     return model;
   }
 }
+*/

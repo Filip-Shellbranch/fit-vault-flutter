@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_model.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/models/run_point_model.dart';
 import 'package:latlong2/latlong.dart';
 
 enum PointType { start, pause, resume, active, end }

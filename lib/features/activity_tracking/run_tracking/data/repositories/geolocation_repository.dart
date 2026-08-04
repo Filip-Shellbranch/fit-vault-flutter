@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:geolocator/geolocator.dart';
 
 enum LocationRequestResult {

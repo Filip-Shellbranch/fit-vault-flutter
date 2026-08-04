@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/logging/logger.dart';
 import 'package:logger/logger.dart' hide FileOutput;
 

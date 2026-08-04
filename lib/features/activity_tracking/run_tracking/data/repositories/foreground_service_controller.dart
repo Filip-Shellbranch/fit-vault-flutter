@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';

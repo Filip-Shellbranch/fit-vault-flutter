@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';

@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_summary.dart';

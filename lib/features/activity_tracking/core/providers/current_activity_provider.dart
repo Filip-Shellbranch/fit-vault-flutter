@@ -1,4 +1,4 @@
-import 'package:fit_vault_flutter/core/utils/debug.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

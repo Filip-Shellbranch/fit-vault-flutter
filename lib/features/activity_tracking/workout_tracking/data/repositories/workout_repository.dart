@@ -26,6 +26,7 @@ class WorkoutRepository {
         : WorkoutState.active;
 
     final newExercises = workout.exercises.map((exercise) {
+      exercise.date ??= workout.startTime;
       final newModel = ExerciseModel.fromExercise(exercise);
 
       if (newWorkout.currentState == WorkoutState.active) {
@@ -108,17 +109,15 @@ class WorkoutRepository {
     final exerciseRepo = ExerciseRepository(db);
 
     await model.exercises.load();
-    List<Future<Exercise>> loadExerciseTasks = model.exercises.map(
-      (exerciseModel) async {
-        final exercise = await exerciseRepo.loadExerciseFromModel(
-          exerciseModel,
-        );
-        if (workout.currentState == WorkoutState.completed) {
-          exercise.setLock(true);
-        }
-        return exercise;
-      }, // exerciseRepo.loadExerciseFromModel(exerciseModel),
-    ).toList();
+    List<Future<Exercise>> loadExerciseTasks = model.exercises.map((
+      exerciseModel,
+    ) async {
+      final exercise = await exerciseRepo.loadExerciseFromModel(exerciseModel);
+      if (workout.currentState == WorkoutState.completed) {
+        exercise.setLock(true);
+      }
+      return exercise;
+    }).toList();
 
     List<Exercise> newExercises = await Future.wait(loadExerciseTasks);
     workout.addExercises(newExercises);

@@ -11,6 +11,7 @@ part 'exercise_model.g.dart';
 class ExerciseModel {
   Id id = Isar.autoIncrement;
   bool isLocked = false;
+  DateTime? date;
 
   final exerciseType = IsarLink<ExerciseTypeModel>();
 
@@ -25,6 +26,7 @@ class ExerciseModel {
     final newModel = ExerciseModel();
     newModel.id = exercise.id ?? Isar.autoIncrement;
     newModel.isLocked = exercise.isLocked;
+    newModel.date = exercise.date;
     for (ExerciseSet set in exercise.sets) {
       final newSet = ExerciseSetModel.fromSet(set);
       newModel.sets.add(newSet);

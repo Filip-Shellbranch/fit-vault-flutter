@@ -17,9 +17,10 @@ const ExerciseModelSchema = CollectionSchema(
   name: r'Exercise',
   id: 2972066467915231902,
   properties: {
-    r'isLocked': PropertySchema(id: 0, name: r'isLocked', type: IsarType.bool),
+    r'date': PropertySchema(id: 0, name: r'date', type: IsarType.dateTime),
+    r'isLocked': PropertySchema(id: 1, name: r'isLocked', type: IsarType.bool),
     r'sets': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'sets',
       type: IsarType.objectList,
 
@@ -83,9 +84,10 @@ void _exerciseModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.isLocked);
+  writer.writeDateTime(offsets[0], object.date);
+  writer.writeBool(offsets[1], object.isLocked);
   writer.writeObjectList<ExerciseSetModel>(
-    offsets[1],
+    offsets[2],
     allOffsets,
     ExerciseSetModelSchema.serialize,
     object.sets,
@@ -99,11 +101,12 @@ ExerciseModel _exerciseModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ExerciseModel();
+  object.date = reader.readDateTimeOrNull(offsets[0]);
   object.id = id;
-  object.isLocked = reader.readBool(offsets[0]);
+  object.isLocked = reader.readBool(offsets[1]);
   object.sets =
       reader.readObjectList<ExerciseSetModel>(
-        offsets[1],
+        offsets[2],
         ExerciseSetModelSchema.deserialize,
         allOffsets,
         ExerciseSetModel(),
@@ -120,8 +123,10 @@ P _exerciseModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
+      return (reader.readBool(offset)) as P;
+    case 2:
       return (reader.readObjectList<ExerciseSetModel>(
                 offset,
                 ExerciseSetModelSchema.deserialize,
@@ -249,6 +254,79 @@ extension ExerciseModelQueryWhere
 
 extension ExerciseModelQueryFilter
     on QueryBuilder<ExerciseModel, ExerciseModel, QFilterCondition> {
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
+  dateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'date'),
+      );
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
+  dateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'date'),
+      );
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition> dateEqualTo(
+    DateTime? value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'date', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
+  dateGreaterThan(DateTime? value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'date',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition>
+  dateLessThan(DateTime? value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'date',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition> dateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'date',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
   QueryBuilder<ExerciseModel, ExerciseModel, QAfterFilterCondition> idEqualTo(
     Id value,
   ) {
@@ -414,6 +492,18 @@ extension ExerciseModelQueryLinks
 
 extension ExerciseModelQuerySortBy
     on QueryBuilder<ExerciseModel, ExerciseModel, QSortBy> {
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> sortByDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> sortByDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.desc);
+    });
+  }
+
   QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> sortByIsLocked() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isLocked', Sort.asc);
@@ -430,6 +520,18 @@ extension ExerciseModelQuerySortBy
 
 extension ExerciseModelQuerySortThenBy
     on QueryBuilder<ExerciseModel, ExerciseModel, QSortThenBy> {
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> thenByDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> thenByDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.desc);
+    });
+  }
+
   QueryBuilder<ExerciseModel, ExerciseModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -458,6 +560,12 @@ extension ExerciseModelQuerySortThenBy
 
 extension ExerciseModelQueryWhereDistinct
     on QueryBuilder<ExerciseModel, ExerciseModel, QDistinct> {
+  QueryBuilder<ExerciseModel, ExerciseModel, QDistinct> distinctByDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'date');
+    });
+  }
+
   QueryBuilder<ExerciseModel, ExerciseModel, QDistinct> distinctByIsLocked() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isLocked');
@@ -470,6 +578,12 @@ extension ExerciseModelQueryProperty
   QueryBuilder<ExerciseModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<ExerciseModel, DateTime?, QQueryOperations> dateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'date');
     });
   }
 

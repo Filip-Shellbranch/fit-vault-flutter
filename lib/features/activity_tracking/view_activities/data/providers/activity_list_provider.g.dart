@@ -33,7 +33,7 @@ final class ActivityListProvider
   ActivityList create() => ActivityList();
 }
 
-String _$activityListHash() => r'3cee2685edfc0ec57898ee74ff1a126cbbaa712e';
+String _$activityListHash() => r'edf77b21bf9c6b392a56a88e2582d1083e53b795';
 
 abstract class _$ActivityList extends $AsyncNotifier<List<GroupedActivity>> {
   FutureOr<List<GroupedActivity>> build();

@@ -11,6 +11,8 @@ class Exercise {
   bool _isLocked = false;
   bool get isLocked => _isLocked;
 
+  DateTime? date;
+
   String get name =>
       exerciseType == null ? "Unknown" : exerciseType!.exerciseName;
 
@@ -19,6 +21,7 @@ class Exercise {
   factory Exercise.fromModel(ExerciseModel model) {
     Exercise newExercise = Exercise();
     newExercise.id = model.id;
+    newExercise.date = model.date;
     newExercise.setLock(model.isLocked);
 
     for (ExerciseSetModel setModel in model.sets) {

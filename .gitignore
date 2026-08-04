@@ -17,6 +17,7 @@ libisar.dll
 .github
 .vscode
 .idea
+app_log.txt
 
 # Flutter repo-specific
 /bin/cache/

@@ -199,8 +199,10 @@ void main() {
       Workout workout = Workout(date);
       await workoutRepository.saveWorkout(workout);
 
-      expect(await isar.workoutModels.count(), 1);
-      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+      await expectLater(await isar.workoutModels.count(), 1);
+      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts(
+        includeActive: true,
+      );
       expect(allWorkouts.length, 1);
     });
     test("Get all workouts when there are multiple workouts", () async {
@@ -215,7 +217,9 @@ void main() {
       }
 
       expect(await isar.workoutModels.count(), numWorkouts);
-      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+      List<Workout> allWorkouts = await workoutRepository.getAllWorkouts(
+        includeActive: true,
+      );
       expect(allWorkouts.length, numWorkouts);
     });
 
@@ -236,7 +240,9 @@ void main() {
         await workoutRepository.saveWorkout(workout);
 
         expect(await isar.workoutModels.count(), 1);
-        List<Workout> allWorkouts = await workoutRepository.getAllWorkouts();
+        List<Workout> allWorkouts = await workoutRepository.getAllWorkouts(
+          includeActive: true,
+        );
         Workout foundWorkout = allWorkouts.first;
         expect(foundWorkout.startTime, date);
         expect(foundWorkout.id, id);

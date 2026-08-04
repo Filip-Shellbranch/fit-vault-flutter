@@ -41,7 +41,7 @@ final class CurrentActivityProvider
   }
 }
 
-String _$currentActivityHash() => r'3b069d8f0086fea6357271ca3b171ad4dd1f2de7';
+String _$currentActivityHash() => r'e22f13704ba2fc7f7c1ebd1eeb7fc0981da9913a';
 
 abstract class _$CurrentActivity extends $Notifier<ActivityType> {
   ActivityType build();

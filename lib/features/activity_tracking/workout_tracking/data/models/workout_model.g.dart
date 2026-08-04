@@ -68,7 +68,7 @@ const WorkoutModelSchema = CollectionSchema(
   getId: _workoutModelGetId,
   getLinks: _workoutModelGetLinks,
   attach: _workoutModelAttach,
-  version: '3.3.0',
+  version: '3.3.2',
 );
 
 int _workoutModelEstimateSize(

@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_activity_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_session_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/create_workout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,10 +19,14 @@ class _ContinueActivityButtonState extends State<ContinueActivityButton> {
         ActivityType currentActivity = ref.watch(currentActivityProvider);
         return FloatingActionButton.extended(
           onPressed: () {
-            if (currentActivity.isWorkout()) {
+            if (!currentActivity.isNone()) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CreateWorkoutPage()),
+                MaterialPageRoute(
+                  builder: (context) => currentActivity.isWorkout()
+                      ? CreateWorkoutPage()
+                      : RunSessionPage(),
+                ),
               );
             }
           },
@@ -32,6 +37,8 @@ class _ContinueActivityButtonState extends State<ContinueActivityButton> {
             style: TextStyle(fontSize: 22),
             currentActivity.isWorkout()
                 ? "Continue workout"
+                : currentActivity.isRun()
+                ? "Continue run"
                 : "Error unknown activity",
           ),
         );

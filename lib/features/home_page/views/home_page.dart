@@ -42,7 +42,7 @@ class HomePage extends ConsumerWidget {
               HomePageMenuButton(
                 icon: Icons.analytics,
                 title: "Statistics",
-                targetPage: Placeholder(),
+                targetPage: Text("Not implemented!"),
               ),
             ],
           ),

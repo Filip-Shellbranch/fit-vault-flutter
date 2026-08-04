@@ -42,7 +42,9 @@ class SetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final repsController = TextEditingController(text: set.reps.toString());
     final weightController = TextEditingController(
-      text: set.weight.toStringAsFixed(1),
+      text: set.weight == set.weight.truncateToDouble()
+          ? set.weight.toStringAsFixed(0)
+          : set.weight.toStringAsFixed(1),
     );
 
     return Container(

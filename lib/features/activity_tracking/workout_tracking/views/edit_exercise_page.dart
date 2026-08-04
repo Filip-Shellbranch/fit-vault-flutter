@@ -4,6 +4,7 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/da
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_type_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/repositories/exercise_type_repository.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/exercise_search_results.dart';
@@ -15,10 +16,19 @@ typedef CreateExerciseTypeCallback =
     Future<bool> Function(ExerciseType exerciseType);
 typedef DeleteExerciseTypeCallback = Future<bool> Function(String exerciseName);
 
-Exercise createDefaultExercise(ExerciseType exerciseType) {
+Future<Exercise> createDefaultExercise(
+  ExerciseType exerciseType,
+  WidgetRef ref,
+) async {
   final newExercise = Exercise();
   newExercise.exerciseType = exerciseType;
-  newExercise.addSet(0, 10);
+
+  final lastSet =
+      await ref
+          .read(exerciseRepositoryProvider)
+          .getLastSetForExercise(exerciseType.exerciseName) ??
+      ExerciseSet(0, 10);
+  newExercise.addSet(lastSet.weight, lastSet.reps);
   return newExercise;
 }
 
@@ -49,13 +59,14 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
     _searchResults.value = newList;
   }
 
-  void selectExercise(ExerciseType exerciseType) {
+  void selectExercise(ExerciseType exerciseType) async {
     final WorkoutNotifierBase workoutProvider = widget.isCurrentWorkout
         ? ref.read(currentWorkoutProvider.notifier)
         : ref.read(editedWorkoutProvider.notifier);
     bool isNewExercise =
         widget.exercise == null || widget.exerciseIndex == null;
-    final newExercise = widget.exercise ?? createDefaultExercise(exerciseType);
+    final newExercise =
+        widget.exercise ?? await createDefaultExercise(exerciseType, ref);
 
     if (isNewExercise) {
       workoutProvider.addExercise(newExercise);
@@ -63,7 +74,9 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
       newExercise.exerciseType = exerciseType;
       workoutProvider.updateExercise(widget.exerciseIndex!, newExercise);
     }
-    Navigator.pop(context);
+    if (ref.context.mounted) {
+      Navigator.pop(ref.context);
+    }
   }
 
   void searchForExercise(String searchQuery) {

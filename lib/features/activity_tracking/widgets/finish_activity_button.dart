@@ -53,9 +53,12 @@ class FinishActivityButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final BorderRadius finishButtonRadius = BorderRadius.circular(8);
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: PopupMenuButton<String>(
+        borderRadius: finishButtonRadius,
         color: Colors.grey.shade900, // Popup background
         onSelected: (value) {
           switch (value) {
@@ -70,7 +73,7 @@ class FinishActivityButton extends ConsumerWidget {
         child: Ink(
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor, // Open menu button color
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: finishButtonRadius,
           ),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -86,45 +89,36 @@ class FinishActivityButton extends ConsumerWidget {
         ),
         itemBuilder: (context) => [
           PopupMenuItem(
+            enabled: false,
+
             child: Text(
               isCurrent
                   ? "What would you like to do?"
                   : "Do you want to save your changes?",
+              style: TextStyle(color: Colors.white),
             ),
           ),
           PopupMenuItem(
             value: "Save",
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).highlightColor,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FinishChoiceButton(
-                  text: isCurrent ? "Save $activityName" : "Save changes",
-                  icon: Icons.save,
-                  fgColor: Colors.white,
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FinishChoiceButton(
+                text: isCurrent ? "Save $activityName" : "Save changes",
+                icon: Icons.save,
+                fgColor: Colors.white,
               ),
             ),
           ),
           PopupMenuItem(
             value: "Discard",
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).highlightColor,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FinishChoiceButton(
-                  text: isCurrent ? "Discard $activityName" : "Discard changes",
-                  icon: Icons.delete,
-                  fgColor: Colors.white,
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FinishChoiceButton(
+                text: isCurrent ? "Discard $activityName" : "Discard changes",
+                icon: Icons.delete,
+                fgColor: Colors.white,
               ),
             ),
           ),

@@ -56,7 +56,7 @@ class FinishActivityButton extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: PopupMenuButton<String>(
-        color: Theme.of(context).secondaryHeaderColor, // Popup background
+        color: Colors.grey.shade900, // Popup background
         onSelected: (value) {
           switch (value) {
             case "Save":

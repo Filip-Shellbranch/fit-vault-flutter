@@ -34,7 +34,7 @@ class GpsStrengthWidget extends ConsumerWidget {
             : Colors.red;
         return Container(
           decoration: BoxDecoration(
-            color: Colors.blueGrey.shade900,
+            color: Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Padding(

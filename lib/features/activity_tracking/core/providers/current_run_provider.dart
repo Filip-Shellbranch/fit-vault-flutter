@@ -6,7 +6,6 @@ import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/c
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -157,7 +156,7 @@ class CurrentRun extends _$CurrentRun {
       Duration pauseLength = DateTime.now().difference(timePaused);
       run.pausedDuration += pauseLength;
 
-      await ref.read(runRepositoryProvider).saveRun(run, isCompleted: true);
+      //await ref.read(runRepositoryProvider).saveRun(run, isCompleted: true);
     }
     await _runTracker.stopService();
     state = AsyncValue.data(null);

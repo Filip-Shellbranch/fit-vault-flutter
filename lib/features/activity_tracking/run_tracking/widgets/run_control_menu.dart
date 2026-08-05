@@ -1,6 +1,6 @@
-import 'package:fit_vault_flutter/features/activity_tracking/core/providers/activity_controller_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/gps_strength_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/views/run_summary_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_control_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,14 +61,30 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
     controller.reverse();
   }
 
-  void onFinishPressed() async {
+  void onFinishPressed() {
+    final run = ref.read(currentRunProvider).value;
+    if (run == null) {
+      return;
+    }
+    /*await ref.read(currentRunProvider.notifier).stopRun();
+    if (!ref.context.mounted) {
+      return;
+    }*/
+    Navigator.push(
+      ref.context,
+      MaterialPageRoute(builder: (context) => RunSummaryPage(run)),
+    );
+  }
+
+  /*void onFinishPressed() async {
+    
     await ref.read(currentRunProvider.notifier).stopRun();
     ref.read(activityControllerProvider).stop();
     if (mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }
   }
-
+*/
   @override
   void initState() {
     super.initState();

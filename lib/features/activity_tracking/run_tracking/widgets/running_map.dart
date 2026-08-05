@@ -9,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 class RunningMap extends ConsumerWidget {
-  final MapController controller;
-  const RunningMap({super.key, required this.controller});
+  final MapController? controller;
+  const RunningMap({super.key, this.controller});
 
   List<LatLng> _getRoutePoints(List<RunPoint> runPoints) {
     return runPoints.map((point) => point.getLatLng()).toList();
@@ -28,7 +28,7 @@ class RunningMap extends ConsumerWidget {
 
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
     return FlutterMap(
-      mapController: controller,
+      mapController: controller ?? MapController(),
       options: boundPoints.isEmpty
           ? MapOptions()
           : boundPoints.length == 1

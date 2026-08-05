@@ -43,9 +43,9 @@ void main() {
       final run = Run(time);
 
       final points = [
-        RunPoint(1, 4, altitude: 5, type: PointType.pause),
-        RunPoint(4, 24, altitude: 1, type: PointType.active),
-        RunPoint(7, 224, altitude: 111, type: PointType.resume),
+        RunPoint(1, 4, time, altitude: 5, type: PointType.pause),
+        RunPoint(4, 24, time, altitude: 1, type: PointType.active),
+        RunPoint(7, 224, time, altitude: 111, type: PointType.resume),
       ];
       for (var point in points) {
         run.addPoint(point);
@@ -87,12 +87,13 @@ void main() {
 
     group("test data intact when saving and getting", () {
       test("single run data intact", () async {
-        final run = Run(DateTime(5, 3, 3, 5, 5));
+        final DateTime time = DateTime(5, 3, 3, 5, 5);
+        final run = Run(time);
 
         final points = [
-          RunPoint(1, 4, altitude: 5, type: PointType.pause),
-          RunPoint(4, 24, altitude: 1, type: PointType.end),
-          RunPoint(7, 224, altitude: 111, type: PointType.resume),
+          RunPoint(1, 4, time, altitude: 5, type: PointType.pause),
+          RunPoint(4, 24, time, altitude: 1, type: PointType.end),
+          RunPoint(7, 224, time, altitude: 111, type: PointType.resume),
         ];
         for (var point in points) {
           run.addPoint(point);

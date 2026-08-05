@@ -78,11 +78,7 @@ class StatLineGraph extends StatelessWidget {
             ),
           ),
           bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 32,
-              interval: 5.0,
-            ),
+            sideTitles: SideTitles(showTitles: true, reservedSize: 32),
           ),
         ),
         lineBarsData: [

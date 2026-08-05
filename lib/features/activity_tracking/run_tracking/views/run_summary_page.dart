@@ -40,6 +40,7 @@ class RunSummaryPage extends StatelessWidget {
               child: ScrollConfiguration(
                 behavior: const ScrollBehavior().copyWith(overscroll: false),
                 child: Scrollbar(
+                  controller: ScrollController(),
                   thumbVisibility: true,
                   interactive: true,
                   child: Padding(

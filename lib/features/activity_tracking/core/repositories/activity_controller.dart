@@ -12,12 +12,12 @@ class ActivityController {
   /// This function is the one used in the UI to start a new workout.
   Future<void> startWorkout() async {
     await ref.read(currentWorkoutProvider.notifier).startWorkout();
-    ref.read(currentRunProvider.notifier).stopRun();
+    ref.read(currentRunProvider.notifier).clearRun();
   }
 
   void stop() {
     ref.read(activityListProvider.notifier).updateList();
-    ref.read(currentRunProvider.notifier).stopRun();
+    ref.read(currentRunProvider.notifier).clearRun();
     ref.read(currentWorkoutProvider.notifier).stopWorkout();
     ref.read(currentActivityProvider.notifier).stop();
   }

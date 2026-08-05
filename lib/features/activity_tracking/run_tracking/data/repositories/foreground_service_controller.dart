@@ -27,7 +27,8 @@ class ForegroundServiceController {
     if (!Platform.isAndroid) {
       return false;
     }
-    return await FlutterForegroundTask.isRunningService;
+    bool isRunning = await FlutterForegroundTask.isRunningService;
+    return isRunning;
   }
 
   Future<bool> _requestIgnoreBatteryOptimization() async {
@@ -147,6 +148,10 @@ class ForegroundServiceController {
     if (!Platform.isAndroid) {
       return;
     }
+    if (!await isRunning()) {
+      return;
+    }
+    dInfo("Stopping foreground service");
     try {
       await FlutterForegroundTask.stopService();
     } catch (e) {

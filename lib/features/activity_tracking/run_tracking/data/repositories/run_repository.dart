@@ -11,16 +11,6 @@ class RunRepository {
   RunRepository(this.db);
 
   Future<Run> saveRun(Run run, {bool isCompleted = false}) async {
-    if (isCompleted) {
-      final now = DateTime.now();
-      run.endTime = now;
-
-      final pausedAt = run.pausedAt;
-      if (pausedAt != null) {
-        final timeSincePause = now.difference(pausedAt);
-        run.pausedDuration += timeSincePause;
-      }
-    }
     RunModel newModel = RunModel.fromRun(run);
     if (isCompleted) {
       newModel.state = RunState.completed;

@@ -61,30 +61,21 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
     controller.reverse();
   }
 
-  void onFinishPressed() {
+  void onFinishPressed() async {
     final run = ref.read(currentRunProvider).value;
     if (run == null) {
       return;
     }
-    /*await ref.read(currentRunProvider.notifier).stopRun();
+    await ref.read(currentRunProvider.notifier).stopRun();
     if (!ref.context.mounted) {
       return;
-    }*/
+    }
     Navigator.push(
       ref.context,
       MaterialPageRoute(builder: (context) => RunSummaryPage(run)),
     );
   }
 
-  /*void onFinishPressed() async {
-    
-    await ref.read(currentRunProvider.notifier).stopRun();
-    ref.read(activityControllerProvider).stop();
-    if (mounted) {
-      Navigator.popUntil(context, ModalRoute.withName("/"));
-    }
-  }
-*/
   @override
   void initState() {
     super.initState();

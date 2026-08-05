@@ -155,12 +155,22 @@ class CurrentRun extends _$CurrentRun {
   Future<void> stopRun() async {
     final run = state.value;
     final timePaused = run?.pausedAt;
-    if (run != null && timePaused != null && run.isPaused()) {
-      Duration pauseLength = DateTime.now().difference(timePaused);
-      run.pausedDuration += pauseLength;
-
-      //await ref.read(runRepositoryProvider).saveRun(run, isCompleted: true);
+    if (run == null || timePaused == null || !run.isPaused()) {
+      dWarn("Not stopping run, run is not properly paused.");
+      return;
     }
+    final now = DateTime.now();
+
+    Run newRun = run.copy();
+    newRun.endTime = now;
+    Duration pauseLength = now.difference(timePaused);
+    run.pausedDuration += pauseLength;
+
+    state = AsyncValue.data(newRun);
+    await _runTracker.stopService();
+  }
+
+  Future<void> clearRun() async {
     await _runTracker.stopService();
     state = AsyncValue.data(null);
   }

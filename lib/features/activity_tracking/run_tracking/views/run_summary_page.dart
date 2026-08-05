@@ -1,9 +1,9 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/finalize_run/finish_run_button.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/graphs/run_elevation_graph.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/graphs/run_pace_graph.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_details.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_map.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/finalize_workout/finish_workout_button.dart';
 import 'package:flutter/material.dart';
 
 class RunSummaryPage extends StatelessWidget {
@@ -18,7 +18,7 @@ class RunSummaryPage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FinishWorkoutButton(isCurrentWorkout: true),
+            child: FinishRunButton(),
           ),
         ],
       ),

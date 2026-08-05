@@ -12,7 +12,14 @@ class RunRepository {
 
   Future<Run> saveRun(Run run, {bool isCompleted = false}) async {
     if (isCompleted) {
-      run.endTime = DateTime.now();
+      final now = DateTime.now();
+      run.endTime = now;
+
+      final pausedAt = run.pausedAt;
+      if (pausedAt != null) {
+        final timeSincePause = now.difference(pausedAt);
+        run.pausedDuration += timeSincePause;
+      }
     }
     RunModel newModel = RunModel.fromRun(run);
     if (isCompleted) {

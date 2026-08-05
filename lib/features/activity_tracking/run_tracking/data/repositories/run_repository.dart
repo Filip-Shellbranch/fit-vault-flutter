@@ -29,6 +29,7 @@ class RunRepository {
       newModel.points.addAll(pointModels);
       await newModel.points.save();
     });
+    dInfo("Run saved!");
     return run;
   }
 

@@ -3,6 +3,7 @@ import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
@@ -71,6 +72,8 @@ class ForegroundServiceController {
     if (!Platform.isAndroid) {
       return false;
     }
+    await GeoLocationRepository().initialize();
+
     if (!await _requestIgnoreBatteryOptimization()) {
       return false;
     }
@@ -87,6 +90,8 @@ class ForegroundServiceController {
     if (await isRunning()) {
       return;
     }
+
+    await requestPermissions();
     try {
       await FlutterForegroundTask.startService(
         serviceId: 9,

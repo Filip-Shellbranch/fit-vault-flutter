@@ -12,6 +12,7 @@ class RunSummaryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PageController controller = PageController();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -40,12 +41,13 @@ class RunSummaryPage extends StatelessWidget {
               child: ScrollConfiguration(
                 behavior: const ScrollBehavior().copyWith(overscroll: false),
                 child: Scrollbar(
-                  controller: ScrollController(),
+                  controller: controller,
                   thumbVisibility: true,
                   interactive: true,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: PageView(
+                      controller: controller,
                       scrollDirection: Axis.vertical,
                       children: [
                         ClipRRect(

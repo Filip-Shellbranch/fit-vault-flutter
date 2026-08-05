@@ -1,4 +1,4 @@
-package com.example.fit_vault_flutter
+package com.filiphellgren.fitvault
 
 import io.flutter.embedding.android.FlutterActivity
 

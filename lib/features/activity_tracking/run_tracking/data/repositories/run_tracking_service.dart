@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
@@ -27,6 +29,7 @@ class RunTrackingService {
     final newPoint = RunPoint(
       pos.latitude,
       pos.longitude,
+      DateTime.now(),
       altitude: pos.altitude,
       type: pointType,
     );
@@ -65,7 +68,8 @@ class RunTrackingService {
       final point = RunPoint(
         data["lat"],
         data["lng"],
-        altitude: data["altitude"],
+        DateTime.now(),
+        altitude: Random().nextInt(100).toDouble(), //data["altitude"],
       );
 
       ref.read(currentRunProvider.notifier).addNewPoint(point);

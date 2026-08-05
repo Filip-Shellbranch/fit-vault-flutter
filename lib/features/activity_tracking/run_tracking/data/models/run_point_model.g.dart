@@ -24,8 +24,9 @@ const RunPointModelSchema = CollectionSchema(
     ),
     r'lat': PropertySchema(id: 1, name: r'lat', type: IsarType.double),
     r'lng': PropertySchema(id: 2, name: r'lng', type: IsarType.double),
+    r'time': PropertySchema(id: 3, name: r'time', type: IsarType.dateTime),
     r'type': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'type',
       type: IsarType.string,
       enumMap: _RunPointModeltypeEnumValueMap,
@@ -66,7 +67,8 @@ void _runPointModelSerialize(
   writer.writeDouble(offsets[0], object.altitude);
   writer.writeDouble(offsets[1], object.lat);
   writer.writeDouble(offsets[2], object.lng);
-  writer.writeString(offsets[3], object.type.name);
+  writer.writeDateTime(offsets[3], object.time);
+  writer.writeString(offsets[4], object.type.name);
 }
 
 RunPointModel _runPointModelDeserialize(
@@ -79,8 +81,9 @@ RunPointModel _runPointModelDeserialize(
     altitude: reader.readDoubleOrNull(offsets[0]),
     lat: reader.readDoubleOrNull(offsets[1]),
     lng: reader.readDoubleOrNull(offsets[2]),
+    time: reader.readDateTimeOrNull(offsets[3]),
     type:
-        _RunPointModeltypeValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+        _RunPointModeltypeValueEnumMap[reader.readStringOrNull(offsets[4])] ??
         PointType.active,
   );
   object.id = id;
@@ -101,6 +104,8 @@ P _runPointModelDeserializeProp<P>(
     case 2:
       return (reader.readDoubleOrNull(offset)) as P;
     case 3:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 4:
       return (_RunPointModeltypeValueEnumMap[reader.readStringOrNull(offset)] ??
               PointType.active)
           as P;
@@ -562,6 +567,79 @@ extension RunPointModelQueryFilter
     });
   }
 
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  timeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'time'),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  timeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'time'),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition> timeEqualTo(
+    DateTime? value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'time', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  timeGreaterThan(DateTime? value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'time',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition>
+  timeLessThan(DateTime? value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'time',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition> timeBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'time',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
   QueryBuilder<RunPointModel, RunPointModel, QAfterFilterCondition> typeEqualTo(
     PointType value, {
     bool caseSensitive = true,
@@ -752,6 +830,18 @@ extension RunPointModelQuerySortBy
     });
   }
 
+  QueryBuilder<RunPointModel, RunPointModel, QAfterSortBy> sortByTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'time', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterSortBy> sortByTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'time', Sort.desc);
+    });
+  }
+
   QueryBuilder<RunPointModel, RunPointModel, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -816,6 +906,18 @@ extension RunPointModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<RunPointModel, RunPointModel, QAfterSortBy> thenByTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'time', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QAfterSortBy> thenByTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'time', Sort.desc);
+    });
+  }
+
   QueryBuilder<RunPointModel, RunPointModel, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -846,6 +948,12 @@ extension RunPointModelQueryWhereDistinct
   QueryBuilder<RunPointModel, RunPointModel, QDistinct> distinctByLng() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lng');
+    });
+  }
+
+  QueryBuilder<RunPointModel, RunPointModel, QDistinct> distinctByTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'time');
     });
   }
 
@@ -881,6 +989,12 @@ extension RunPointModelQueryProperty
   QueryBuilder<RunPointModel, double?, QQueryOperations> lngProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lng');
+    });
+  }
+
+  QueryBuilder<RunPointModel, DateTime?, QQueryOperations> timeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'time');
     });
   }
 

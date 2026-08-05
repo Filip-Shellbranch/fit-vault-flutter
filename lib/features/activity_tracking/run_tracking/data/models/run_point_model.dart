@@ -11,6 +11,7 @@ class RunPointModel {
   double? lat;
   double? lng;
   double? altitude;
+  DateTime? time;
 
   @Enumerated(EnumType.name)
   PointType type;
@@ -20,6 +21,7 @@ class RunPointModel {
     this.lng = 0,
     this.altitude = 0,
     this.type = PointType.active,
+    this.time,
   });
 
   factory RunPointModel.fromRunPoint(RunPoint point) {
@@ -28,6 +30,7 @@ class RunPointModel {
       lng: point.lng,
       altitude: point.altitude,
       type: point.type,
+      time: point.time,
     );
     return model;
   }

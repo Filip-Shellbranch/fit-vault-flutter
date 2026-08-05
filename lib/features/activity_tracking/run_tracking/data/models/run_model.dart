@@ -58,31 +58,3 @@ class RunModel {
     return end.subtract(pausedDuration).difference(startTime);
   }
 }
-
-/*@embedded
-class RunPointModel {
-  double? lat;
-  double? lng;
-  double? altitude;
-
-  @Enumerated(EnumType.name)
-  PointType type;
-
-  RunPointModel({
-    this.lat = 0,
-    this.lng = 0,
-    this.altitude = 0,
-    this.type = PointType.active,
-  });
-
-  factory RunPointModel.fromRunPoint(RunPoint point) {
-    final model = RunPointModel(
-      lat: point.lat,
-      lng: point.lng,
-      altitude: point.altitude,
-      type: point.type,
-    );
-    return model;
-  }
-}
-*/

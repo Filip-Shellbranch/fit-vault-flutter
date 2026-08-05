@@ -44,10 +44,10 @@ class FileOutput extends LogOutput {
 
   @override
   void output(OutputEvent event) {
+    _print("Output arrived:");
     for (var line in event.lines) {
-      _print("${DateTime.now().toIso8601String()} $line");
+      _print(line);
     }
-    _print("Output arrived: ${event.lines.toString()}");
     _queue = _queue.then((value) => _write(event));
   }
 

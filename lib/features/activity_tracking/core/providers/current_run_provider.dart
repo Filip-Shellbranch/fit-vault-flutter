@@ -71,6 +71,9 @@ class CurrentRun extends _$CurrentRun {
     if (run == null) {
       return;
     }
+    if (newPoint.type == PointType.active && run.isPaused()) {
+      return;
+    }
     Run newRun = run.copy();
     double segmentLength = newRun.addPoint(newPoint);
     ref.read(currentPaceProvider.notifier).updatePace(segmentLength);

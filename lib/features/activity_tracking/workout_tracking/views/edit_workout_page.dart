@@ -59,7 +59,7 @@ class _EditWorkoutPageState extends ConsumerState<EditWorkoutPage> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: isUnlocked
-                ? FinishWorkoutButton(isCurrentWorkout: widget.isCurrentWorkout)
+                ? FinishWorkoutButton(isCurrent: widget.isCurrentWorkout)
                 : EditWorkoutButton(callback: unlockWorkout),
           ),
         ],

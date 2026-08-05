@@ -35,6 +35,4 @@ class CurrentActivity extends _$CurrentActivity {
     dPrint("Current Activity: None");
     return ActivityType.none;
   }
-
-  void stop() => state = ActivityType.none;
 }

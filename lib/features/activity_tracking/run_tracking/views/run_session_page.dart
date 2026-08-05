@@ -40,11 +40,11 @@ class _RunSessionPageState extends ConsumerState<RunSessionPage>
   Widget build(BuildContext context) {
     final pages = [RunMapPage(), RunControlPage()];
     return PopScope(
-      onPopInvokedWithResult: (didPop, _) {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) {
           final run = ref.read(currentRunProvider).value;
           if (run == null || !run.isStarted()) {
-            ref.read(activityControllerProvider).stop();
+            await ref.read(activityControllerProvider).stop();
           }
         }
       },

@@ -101,7 +101,7 @@ class CurrentRun extends _$CurrentRun {
     run.positions.add(newPoint);
   }
 
-  void beginRun() async {
+  Future<void> beginRun() async {
     final run = state.value;
     if (run == null || run.isStarted()) {
       return;

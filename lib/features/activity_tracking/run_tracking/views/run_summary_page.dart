@@ -19,7 +19,7 @@ class RunSummaryPage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: FinishRunButton(),
+            child: FinishRunButton(isCurrent: true),
           ),
         ],
       ),

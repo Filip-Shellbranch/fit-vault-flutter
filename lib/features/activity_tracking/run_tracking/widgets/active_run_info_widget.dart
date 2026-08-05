@@ -17,13 +17,7 @@ class RunInfoWidget extends ConsumerWidget {
     }
     ref.watch(secondTickerProvider);
     ref.watch(
-      currentRunProvider.select((asyncVal) {
-        ref.watch(
-          currentRunProvider.select(
-            (asyncVal) => asyncVal.asData?.value?.pausedAt,
-          ),
-        );
-      }),
+      currentRunProvider.select((asyncVal) => asyncVal.asData?.value?.pausedAt),
     );
     Pace currentPace = ref.watch(currentPaceProvider);
     return Column(

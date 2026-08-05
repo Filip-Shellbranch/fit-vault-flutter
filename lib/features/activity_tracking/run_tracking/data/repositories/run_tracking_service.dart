@@ -46,6 +46,7 @@ class RunTrackingService {
 
   void _onCommandReceived(String str) {
     final runProvider = ref.read(currentRunProvider.notifier);
+    dWarn("Command received: $str");
     switch (str) {
       case "pause":
         runProvider.pauseRun();

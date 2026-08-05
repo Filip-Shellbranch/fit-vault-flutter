@@ -14,6 +14,9 @@ class GraphRepository {
       if (point.type != PointType.active) {
         continue;
       }
+      if (!currentX.isFinite || !point.altitude.isFinite) {
+        continue;
+      }
       final spot = FlSpot(currentX, point.altitude);
       spots.add(spot);
 
@@ -35,8 +38,12 @@ class GraphRepository {
       if (point.type != PointType.active) {
         continue;
       }
+
       Pace? currentPace = point.pacebetween(lastPoint);
       currentPace ??= previousPace ?? Pace(0, Duration(seconds: 1));
+      if (!currentX.isFinite || !currentPace.metersPerSecond.isFinite) {
+        continue;
+      }
       final spot = FlSpot(currentX, currentPace.metersPerSecond);
       spots.add(spot);
 

@@ -42,6 +42,7 @@ class RunTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     await AppLogger().init(fileName: "foreground.log");
+    dWarn("FOREGROUND SERVICE STARTED $timestamp");
     try {
       _addErrorHandling();
       LocationRequestResult permission = await geo.initialize();
@@ -73,7 +74,9 @@ class RunTaskHandler extends TaskHandler {
   }
 
   @override
-  void onRepeatEvent(DateTime timestamp) {}
+  void onRepeatEvent(DateTime timestamp) {
+    dInfo("Foreground task alive");
+  }
 
   @override
   void onReceiveData(Object data) {
@@ -121,9 +124,10 @@ class RunTaskHandler extends TaskHandler {
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/service_lifecycle.log');
+    dWarn("FOREGROUND SERVICE DESTROYED timeout=$isTimeout");
 
     await file.writeAsString(
-      '${DateTime.now()} onDestroy\n',
+      "${DateTime.now()} onDestroy, timeout: ${isTimeout.toString()}\n",
       mode: FileMode.append,
       flush: true,
     );

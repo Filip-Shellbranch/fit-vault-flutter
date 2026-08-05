@@ -1,6 +1,7 @@
 import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/home_page/views/home_page.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,8 @@ void main() async {
   await logger.init(); // Initializes app-wide singleton used to log to a file.
   // NOTE: Foreground isolate (run_task_handler uses a different AppLogger singleton)
   // and writes logs to a separate log file.
+
+  dWarn("MAIN STARTED ${DateTime.now()}");
 
   final isarService = IsarService();
   await isarService.init();
@@ -39,7 +42,10 @@ void main() async {
   FlutterForegroundTask.initCommunicationPort();
   if (kDebugMode) {
     if (await ForegroundServiceController().isRunning()) {
-      await FlutterForegroundTask.stopService();
+      dWarn(
+        "App restarted in debug mode, ignore stopping previous foregroundservice.",
+      );
+      //await ForegroundServiceController().stopService();
     }
   }
   FlutterForegroundTask.init(
@@ -50,8 +56,9 @@ void main() async {
     ),
     iosNotificationOptions: IOSNotificationOptions(),
     foregroundTaskOptions: ForegroundTaskOptions(
-      eventAction: ForegroundTaskEventAction.nothing(),
+      eventAction: ForegroundTaskEventAction.repeat(30 * 1000),
       allowWakeLock: true,
+      allowWifiLock: true,
     ),
   );
 

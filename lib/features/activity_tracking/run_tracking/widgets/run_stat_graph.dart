@@ -25,39 +25,30 @@ class RunStatGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Theme.of(context).primaryColor),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10),
+        Text(
+          yTitle,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 40, left: 0),
-            child: Text(
-              yTitle,
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        SizedBox(
+          height: 300,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: StatLineGraph(
+              spots: builder(run.positions),
+              toolTipBuilder: toolTipBuilder,
+              tickBuilder: tickBuilder,
+              xTitle: "Distance",
+              xUnit: "km",
+              yTitle: yTitle,
+              yUnit: yUnit,
             ),
           ),
-          SizedBox(
-            height: 350,
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: StatLineGraph(
-                spots: builder(run.positions),
-                toolTipBuilder: toolTipBuilder,
-                tickBuilder: tickBuilder,
-                xTitle: "Distance",
-                xUnit: "km",
-                yTitle: yTitle,
-                yUnit: yUnit,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

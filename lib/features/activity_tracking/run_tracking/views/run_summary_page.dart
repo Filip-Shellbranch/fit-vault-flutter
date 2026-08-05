@@ -26,14 +26,16 @@ class RunSummaryPage extends StatelessWidget {
         child: Column(
           spacing: 20,
           children: [
+            RunDetails(run: run),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                "Run completed, well done!",
-                style: TextStyle(fontSize: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Center(
+                child: Text(
+                  "Well done! Scroll to view your stats.",
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
             ),
-            RunDetails(run: run),
             Expanded(
               child: ScrollConfiguration(
                 behavior: const ScrollBehavior().copyWith(overscroll: false),
@@ -42,23 +44,22 @@ class RunSummaryPage extends StatelessWidget {
                   interactive: true,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadiusGeometry.circular(15),
-                            child: IgnorePointer(
-                              child: SizedBox(
-                                height: 350,
-                                width: double.infinity,
-                                child: RunningMap(),
-                              ),
+                    child: PageView(
+                      scrollDirection: Axis.vertical,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadiusGeometry.circular(15),
+                          child: IgnorePointer(
+                            child: SizedBox(
+                              height: 350,
+                              width: double.infinity,
+                              child: RunningMap(),
                             ),
                           ),
-                          RunPaceGraph(run: run),
-                          RunElevationGraph(run: run),
-                        ],
-                      ),
+                        ),
+                        RunPaceGraph(run: run),
+                        RunElevationGraph(run: run),
+                      ],
                     ),
                   ),
                 ),

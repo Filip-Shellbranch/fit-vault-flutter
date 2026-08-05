@@ -15,7 +15,7 @@
         android:label="fit_vault_flutter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" android:foregroundServiceType="location|dataSync|remoteMessaging" android:stopWithTask="true"/>
+        <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" android:foregroundServiceType="location|dataSync|remoteMessaging" android:stopWithTask="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

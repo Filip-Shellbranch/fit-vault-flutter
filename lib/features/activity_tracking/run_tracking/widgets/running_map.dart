@@ -10,7 +10,12 @@ import 'package:latlong2/latlong.dart';
 
 class RunningMap extends ConsumerWidget {
   final MapController? controller;
-  const RunningMap({super.key, this.controller});
+  final bool showCurrentPosition;
+  const RunningMap({
+    super.key,
+    this.controller,
+    this.showCurrentPosition = false,
+  });
 
   List<LatLng> _getRoutePoints(List<RunPoint> runPoints) {
     return runPoints.map((point) => point.getLatLng()).toList();
@@ -28,7 +33,7 @@ class RunningMap extends ConsumerWidget {
 
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
     return FlutterMap(
-      mapController: controller ?? MapController(),
+      mapController: controller,
       options: boundPoints.isEmpty
           ? MapOptions()
           : boundPoints.length == 1
@@ -42,7 +47,7 @@ class RunningMap extends ConsumerWidget {
             ),
       children: [
         ref.watch(mapProvider),
-        LiveRouteOverlay(),
+        LiveRouteOverlay(showCurrentPosition: showCurrentPosition),
         RichAttributionWidget(
           showFlutterMapAttribution: false,
           attributions: [

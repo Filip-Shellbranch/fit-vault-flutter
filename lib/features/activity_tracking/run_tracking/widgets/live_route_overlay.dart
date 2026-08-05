@@ -14,7 +14,12 @@ import 'package:latlong2/latlong.dart';
 
 class LiveRouteOverlay extends ConsumerWidget {
   final Color lineColor;
-  const LiveRouteOverlay({super.key, this.lineColor = Colors.red});
+  final bool showCurrentPosition;
+  const LiveRouteOverlay({
+    super.key,
+    this.lineColor = Colors.red,
+    required this.showCurrentPosition,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,15 +29,25 @@ class LiveRouteOverlay extends ConsumerWidget {
     }
     dPrint("Rebuild live route overlay");
 
-    return RouteOverlay(run, lineColor: lineColor);
+    return RouteOverlay(
+      run,
+      lineColor: lineColor,
+      showCurrentPosition: showCurrentPosition,
+    );
   }
 }
 
 class RouteOverlay extends ConsumerWidget {
   final Run run;
+  final bool showCurrentPosition;
   final Color lineColor;
 
-  const RouteOverlay(this.run, {super.key, required this.lineColor});
+  const RouteOverlay(
+    this.run, {
+    super.key,
+    required this.lineColor,
+    required this.showCurrentPosition,
+  });
 
   Marker _createMarker(RunPoint point) {
     return Marker(
@@ -156,14 +171,15 @@ class RouteOverlay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPos = ref.watch(currentPositionProvider);
+    LatLng? currentPos;
+    if (showCurrentPosition) {
+      currentPos = ref.watch(currentPositionProvider).value;
+    }
     final polyLines = _createRouteLines(run.positions);
 
     final markers = _loadMarkers(run.positions);
-    if (currentPos.value != null) {
-      markers.add(
-        Marker(point: currentPos.value!, child: CurrentPositionMarker()),
-      );
+    if (currentPos != null) {
+      markers.add(Marker(point: currentPos, child: CurrentPositionMarker()));
     }
 
     return Stack(

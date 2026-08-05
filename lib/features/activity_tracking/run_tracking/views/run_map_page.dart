@@ -20,6 +20,8 @@ class _RunMapPageState extends ConsumerState<RunMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: RunningMap(controller: _controller));
+    return Scaffold(
+      body: RunningMap(controller: _controller, showCurrentPosition: true),
+    );
   }
 }

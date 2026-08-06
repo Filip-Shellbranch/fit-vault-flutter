@@ -31,7 +31,7 @@ class Run {
   }
 
   factory Run.fromModel(RunModel model) {
-    final run = Run(model.startTime);
+    final run = Run(model.startTime, startingDistance: model.distance);
     run.startTime = model.startTime;
     run.id = model.id;
     run.state = model.state;

@@ -9,15 +9,16 @@ class RunPoint {
   final double lng;
   final double altitude;
   final DateTime? time;
-  final PointType type;
+  PointType _type;
+  PointType get type => _type;
 
   RunPoint(
     this.lat,
     this.lng,
     this.time, {
-    this.type = PointType.active,
+    PointType type = PointType.active,
     this.altitude = 0.0,
-  });
+  }) : _type = type;
 
   factory RunPoint.fromModel(RunPointModel model) {
     final point = RunPoint(
@@ -56,5 +57,9 @@ class RunPoint {
 
   LatLng getLatLng() {
     return LatLng(lat, lng);
+  }
+
+  void markAsEndPoint() {
+    _type = PointType.end;
   }
 }

@@ -164,7 +164,8 @@ class CurrentRun extends _$CurrentRun {
     Run newRun = run.copy();
     newRun.endTime = now;
     Duration pauseLength = now.difference(timePaused);
-    run.pausedDuration += pauseLength;
+    newRun.pausedDuration += pauseLength;
+    newRun.positions.last.markAsEndPoint();
 
     state = AsyncValue.data(newRun);
     await _runTracker.stopService();

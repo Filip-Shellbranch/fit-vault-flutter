@@ -15,6 +15,7 @@ class RunSummaryPage extends StatelessWidget {
     final PageController controller = PageController();
     return Scaffold(
       appBar: AppBar(
+        title: Text("Run summary"),
         automaticallyImplyLeading: false,
         actions: [
           Padding(

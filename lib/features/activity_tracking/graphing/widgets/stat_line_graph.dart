@@ -72,6 +72,7 @@ class StatLineGraph extends StatelessWidget {
           rightTitles: AxisTitles(
             sideTitles: SideTitles(
               minIncluded: false,
+              maxIncluded: false,
               showTitles: true,
               reservedSize: 32,
               getTitlesWidget: (value, meta) => Text(tickBuilder(value)),

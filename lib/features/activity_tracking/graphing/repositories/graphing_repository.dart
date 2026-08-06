@@ -13,7 +13,7 @@ class GraphRepository {
   }) {
     final List<FlSpot> spots = [];
     double currentX = 0;
-    if (points.length < 2 + previousSamples) {
+    if (points.length < 2) {
       return spots;
     }
 

@@ -64,7 +64,7 @@ class GraphRepository {
         return null;
       }
       Pace? currentPace = point.pacebetween(previousPoints.last);
-      if (currentPace == null) {
+      if (currentPace == null || currentPace.metersPerSecond == 0) {
         return null;
       }
       return currentPace.metersPerSecond;

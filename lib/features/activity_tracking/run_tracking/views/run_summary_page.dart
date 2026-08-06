@@ -29,15 +29,6 @@ class RunSummaryPage extends StatelessWidget {
           spacing: 20,
           children: [
             RunDetails(run: run),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Center(
-                child: Text(
-                  "Well done! Scroll to view your stats.",
-                  style: TextStyle(fontSize: 15),
-                ),
-              ),
-            ),
             Expanded(
               child: ScrollConfiguration(
                 behavior: const ScrollBehavior().copyWith(overscroll: false),
@@ -51,15 +42,27 @@ class RunSummaryPage extends StatelessWidget {
                       controller: controller,
                       scrollDirection: Axis.vertical,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadiusGeometry.circular(15),
-                          child: IgnorePointer(
-                            child: SizedBox(
-                              height: 350,
-                              width: double.infinity,
-                              child: RunningMap(),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: Center(
+                                child: Text(
+                                  "Well done! Scroll to view your stats.",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadiusGeometry.circular(15),
+                                child: IgnorePointer(child: RunningMap()),
+                              ),
+                            ),
+                          ],
                         ),
                         RunPaceGraph(run: run),
                         RunElevationGraph(run: run),

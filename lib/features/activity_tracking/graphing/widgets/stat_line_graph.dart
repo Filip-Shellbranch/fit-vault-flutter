@@ -62,11 +62,11 @@ class StatLineGraph extends StatelessWidget {
         ),
         titlesData: FlTitlesData(
           topTitles: AxisTitles(
-            axisNameSize: 32,
+            axisNameSize: 64,
             axisNameWidget: Text(_axisLabel(xTitle, xUnit)),
           ),
           leftTitles: AxisTitles(
-            axisNameSize: 32,
+            axisNameSize: 64,
             axisNameWidget: Text(_axisLabel(yTitle, yUnit)),
           ),
           rightTitles: AxisTitles(
@@ -74,12 +74,12 @@ class StatLineGraph extends StatelessWidget {
               minIncluded: false,
               maxIncluded: false,
               showTitles: true,
-              reservedSize: 32,
+              reservedSize: 64,
               getTitlesWidget: (value, meta) => Text(tickBuilder(value)),
             ),
           ),
           bottomTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: true, reservedSize: 32),
+            sideTitles: SideTitles(showTitles: true, reservedSize: 64),
           ),
         ),
         lineBarsData: [

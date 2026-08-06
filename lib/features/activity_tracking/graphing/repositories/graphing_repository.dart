@@ -1,4 +1,3 @@
-import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -29,8 +28,6 @@ class GraphRepository {
       }
       //Calculate the new Y based on previous points.
       double? y = calcY(point, previousPoints);
-      dPrint(point.type.toString());
-      dPrint(y.toString());
       if (y != null && y.isFinite) {
         double sum = previousValues.fold(
           y,

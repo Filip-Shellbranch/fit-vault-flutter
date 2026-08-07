@@ -5,7 +5,7 @@ You can fetch app logs created when running an android device by running the fol
 ```bash
 adb exec-out run-as com.filiphellgren.fitvault cat app_flutter/<logfile> > app_log.txt
 ```
-Where "<logfile>" is one of the following: "app.log", "foreground.log", "service_lifecycle.log".
+Where ```<logfile>``` is one of the following: ```app.log```, ```foreground.log```, ```service_lifecycle.log```.
 
 Icons by Icons8 (https://icons8.com/)
 Map tiles provided by OpenStreetMap (https://www.openstreetmap.org/)

@@ -10,11 +10,11 @@ class RunPaceGraph extends StatelessWidget {
   const RunPaceGraph({super.key, required this.run});
 
   String generateToolTip(FlSpot spot) {
-    return Pace.fromMps(spot.y).asMinsPerKm();
+    return Pace.fromMps(-spot.y).asMinsPerKm();
   }
 
   String generateTick(double mps) {
-    return Pace.fromMps(mps).asMinsPerKm();
+    return Pace.fromMps(-mps).asMinsPerKm();
   }
 
   @override

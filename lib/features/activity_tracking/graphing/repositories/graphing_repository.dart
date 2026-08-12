@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -5,10 +8,42 @@ import 'package:fl_chart/fl_chart.dart';
 typedef GraphFunc = double? Function(RunPoint, List<RunPoint>);
 
 class GraphRepository {
+  void _removeOutliers(List<FlSpot> spots, {double threshold = 3}) {
+    double mean =
+        spots.fold(0.0, (currentSum, b) => currentSum + b.y) / spots.length;
+
+    // Calculate the variance
+    double variance =
+        spots.map((x) => pow(x.y - mean, 2)).reduce((a, b) => a + b) /
+        (spots.length - 1);
+
+    // Calculate the standard deviation
+    double standardDeviation = sqrt(variance);
+    if (standardDeviation != 0) {
+      double lastUsableValue = mean;
+      int i = 0;
+      int numOutliers = 0;
+      for (FlSpot spot in spots) {
+        double outlierCoefficient = ((spot.y - mean).abs()) / standardDeviation;
+        if (outlierCoefficient > threshold) {
+          // Replace the y value with most recent usable value.
+          // TODO: Instead replace with average of surrounding values.
+          spots[i] = FlSpot(spot.x, lastUsableValue);
+          numOutliers++;
+        } else {
+          lastUsableValue = spot.y;
+        }
+        i++;
+      }
+      dPrint("Removed $numOutliers outliers from ${spots.length} points.");
+    }
+  }
+
   List<FlSpot> _generateGraph(
     List<RunPoint> points,
     GraphFunc calcY, {
     int previousSamples = 0,
+    bool trimOutliers = false,
   }) {
     final List<FlSpot> spots = [];
     double currentX = 0;
@@ -52,6 +87,10 @@ class GraphRepository {
       previousPoints.add(point);
     }
 
+    if (spots.length > 1 && trimOutliers) {
+      _removeOutliers(spots);
+    }
+
     return spots;
   }
 
@@ -64,17 +103,22 @@ class GraphRepository {
       if (currentPace == null || currentPace.metersPerSecond == 0) {
         return null;
       }
-      return currentPace.metersPerSecond;
+      return -currentPace.metersPerSecond;
     }
 
-    return _generateGraph(points, calcPace, previousSamples: 5);
+    return _generateGraph(
+      points,
+      calcPace,
+      previousSamples: 80,
+      trimOutliers: true,
+    );
   }
 
   List<FlSpot> elevationGraph(List<RunPoint> points) {
     double? getElevation(RunPoint point, List<RunPoint> previousPoints) {
-      return point.altitude;
+      return point.altitude - 30;
     }
 
-    return _generateGraph(points, getElevation, previousSamples: 10);
+    return _generateGraph(points, getElevation, previousSamples: 20);
   }
 }

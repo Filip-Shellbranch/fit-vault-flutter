@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/open_summary_button.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/run_details.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/running_map.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_run_provider.dart';
@@ -43,10 +44,18 @@ class _RunMapPageState extends ConsumerState<ViewRunPage> {
         body: SafeArea(
           child: Stack(
             children: [
-              RunningMap(controller: _controller),
               Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [RunDetails(run: widget.run)],
+                children: [
+                  Expanded(child: RunningMap(controller: _controller)),
+                  RunDetails(run: widget.run),
+                ],
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OpenRunSummaryButton(run: widget.run),
+                ),
               ),
             ],
           ),

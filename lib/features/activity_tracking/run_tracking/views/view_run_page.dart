@@ -46,7 +46,12 @@ class _RunMapPageState extends ConsumerState<ViewRunPage> {
             children: [
               Column(
                 children: [
-                  Expanded(child: RunningMap(controller: _controller)),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadiusGeometry.circular(10),
+                      child: RunningMap(controller: _controller),
+                    ),
+                  ),
                   RunDetails(run: widget.run),
                 ],
               ),

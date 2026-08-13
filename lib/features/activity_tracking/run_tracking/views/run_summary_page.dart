@@ -58,7 +58,7 @@ class RunSummaryPage extends StatelessWidget {
                             ),
                             Expanded(
                               child: ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(15),
+                                borderRadius: BorderRadiusGeometry.circular(10),
                                 child: RunningMap(interactable: false),
                               ),
                             ),

@@ -11,10 +11,12 @@ import 'package:latlong2/latlong.dart';
 class RunningMap extends ConsumerWidget {
   final MapController? controller;
   final bool showCurrentPosition;
+  final bool interactable;
   const RunningMap({
     super.key,
     this.controller,
     this.showCurrentPosition = false,
+    this.interactable = true,
   });
 
   List<LatLng> _getRoutePoints(List<RunPoint> runPoints) {
@@ -32,18 +34,26 @@ class RunningMap extends ConsumerWidget {
     }
 
     List<LatLng> boundPoints = _getRoutePoints(run.positions);
+    InteractionOptions interactionOptions = InteractionOptions(
+      flags: interactable ? InteractiveFlag.all : InteractiveFlag.none,
+    );
+
     return FlutterMap(
       mapController: controller,
       options: boundPoints.isEmpty
-          ? MapOptions()
+          ? MapOptions(interactionOptions: interactionOptions)
           : boundPoints.length == 1
-          ? MapOptions(initialCenter: run.positions.first.getLatLng())
+          ? MapOptions(
+              initialCenter: run.positions.first.getLatLng(),
+              interactionOptions: interactionOptions,
+            )
           : MapOptions(
               initialCameraFit: CameraFit.coordinates(
                 coordinates: boundPoints,
                 maxZoom: 17,
                 padding: EdgeInsets.all(90),
               ),
+              interactionOptions: interactionOptions,
             ),
       children: [
         ref.watch(mapProvider),

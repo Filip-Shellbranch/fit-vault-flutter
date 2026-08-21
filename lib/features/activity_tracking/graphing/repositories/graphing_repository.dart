@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
@@ -8,34 +9,55 @@ import 'package:fl_chart/fl_chart.dart';
 typedef GraphFunc = double? Function(RunPoint, List<RunPoint>);
 
 class GraphRepository {
-  void _removeOutliers(List<FlSpot> spots, {double threshold = 3}) {
-    double mean =
-        spots.fold(0.0, (currentSum, b) => currentSum + b.y) / spots.length;
+  void _removeOutliers(
+    List<FlSpot> spots, {
+    double threshold = 0.75,
+    int rollingCount = 30,
+  }) {
+    int i = 0;
+    int start = i;
+    int end = min(spots.length, rollingCount);
+    final rolling = Queue<FlSpot>.from(spots.getRange(start, end));
 
-    // Calculate the variance
-    double variance =
-        spots.map((x) => pow(x.y - mean, 2)).reduce((a, b) => a + b) /
-        (spots.length - 1);
+    for (FlSpot spot in spots) {
+      final newStart = max(0, i - rollingCount);
+      final newEnd = min(spots.length, i + rollingCount);
 
-    // Calculate the standard deviation
-    double standardDeviation = sqrt(variance);
-    if (standardDeviation != 0) {
-      double lastUsableValue = mean;
-      int i = 0;
-      int numOutliers = 0;
-      for (FlSpot spot in spots) {
-        double outlierCoefficient = ((spot.y - mean).abs()) / standardDeviation;
-        if (outlierCoefficient > threshold) {
-          // Replace the y value with most recent usable value.
-          // TODO: Instead replace with average of surrounding values.
-          spots[i] = FlSpot(spot.x, lastUsableValue);
-          numOutliers++;
-        } else {
-          lastUsableValue = spot.y;
-        }
-        i++;
+      if (newEnd < end) {
+        rolling.add(spots[newEnd]);
+        end++;
       }
-      dPrint("Removed $numOutliers outliers from ${spots.length} points.");
+      if (newStart > start) {
+        rolling.removeFirst();
+        start++;
+      }
+
+      if (rolling.isEmpty) {
+        end--;
+        continue;
+      }
+      double mean =
+          rolling.fold(0.0, (currentSum, b) => currentSum + b.y) /
+          rolling.length;
+
+      // Calculate the variance
+      double variance =
+          rolling.map((x) => pow(x.y - mean, 2)).reduce((a, b) => a + b) /
+          (rolling.length - 1);
+
+      // Calculate the standard deviation
+      double standardDeviation = sqrt(variance);
+
+      double outlierCoefficient = ((spot.y - mean).abs()) / standardDeviation;
+      if (outlierCoefficient > threshold) {
+        // Replace the y value with the average of surrounding values.
+        spots[i] = FlSpot(spot.x, mean);
+      }
+      dPrint(spot.y.toString());
+      if (start == i) {
+        dPrint(spot.y.toString());
+      }
+      i++;
     }
   }
 

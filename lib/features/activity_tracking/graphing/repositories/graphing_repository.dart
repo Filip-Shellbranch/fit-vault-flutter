@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/pace.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -52,10 +51,6 @@ class GraphRepository {
       if (outlierCoefficient > threshold) {
         // Replace the y value with the average of surrounding values.
         spots[i] = FlSpot(spot.x, mean);
-      }
-      dPrint(spot.y.toString());
-      if (start == i) {
-        dPrint(spot.y.toString());
       }
       i++;
     }

@@ -75,7 +75,8 @@ class RunTaskHandler extends TaskHandler {
 
   @override
   void onRepeatEvent(DateTime timestamp) {
-    dInfo("Foreground task alive");
+    //TODO: Revert if activity stops unexpectedly.
+    dPrint("Foreground task alive");
   }
 
   @override

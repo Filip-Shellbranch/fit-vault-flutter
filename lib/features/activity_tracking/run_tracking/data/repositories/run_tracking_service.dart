@@ -54,9 +54,6 @@ class RunTrackingService {
       case "resume":
         runProvider.resumeRun();
         break;
-      case "stop":
-        runProvider.stopRun();
-        break;
       default:
         dWarn("Unknown data received from task handler: $str");
     }

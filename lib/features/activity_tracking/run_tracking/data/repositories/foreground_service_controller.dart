@@ -98,10 +98,7 @@ class ForegroundServiceController {
         serviceId: 9,
         notificationTitle: "Tracking your run",
         notificationText: formatNotificationText(Duration.zero, 0),
-        notificationButtons: [
-          createNotificationButton("pause"),
-          createNotificationButton("stop"),
-        ],
+        notificationButtons: [createNotificationButton("pause")],
         callback: startCallback,
       );
     } catch (e) {
@@ -129,9 +126,6 @@ class ForegroundServiceController {
       case UpdateTextCommand cmd:
         newText = cmd.text;
         break;
-    }
-    if (buttons != null) {
-      buttons.add(createNotificationButton("stop"));
     }
     try {
       FlutterForegroundTask.updateService(

@@ -7,12 +7,17 @@ part 'displayed_run_provider.g.dart';
 
 @riverpod
 class DisplayedRun extends _$DisplayedRun {
+  bool _isEditing = true;
+
+  bool get isEditing => _isEditing;
   @override
   Run? build() {
     final editedRun = ref.watch(editedRunProvider);
     if (editedRun != null) {
+      _isEditing = true;
       return editedRun;
     }
+    _isEditing = false;
     final currentRun = ref.watch(currentRunProvider).value;
     return currentRun;
   }

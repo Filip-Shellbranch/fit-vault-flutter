@@ -13,12 +13,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 class LiveRouteOverlay extends ConsumerWidget {
-  final Color lineColor;
+  final Color? lineColor;
   final bool showCurrentPosition;
   const LiveRouteOverlay({
     super.key,
-    this.lineColor = Colors.red,
     required this.showCurrentPosition,
+    this.lineColor,
   });
 
   @override
@@ -31,7 +31,7 @@ class LiveRouteOverlay extends ConsumerWidget {
 
     return RouteOverlay(
       run,
-      lineColor: lineColor,
+      lineColor: lineColor ?? Theme.of(context).highlightColor,
       showCurrentPosition: showCurrentPosition,
     );
   }
@@ -69,7 +69,9 @@ class RouteOverlay extends ConsumerWidget {
     List<Marker> milestoneMarkers = milestones
         .map(
           (milestone) => Marker(
+            height: 40,
             point: LatLng(milestone.lat, milestone.lng),
+            alignment: Alignment.topCenter,
             child: MilestoneMarker(milestone: milestone),
           ),
         )
@@ -84,7 +86,7 @@ class RouteOverlay extends ConsumerWidget {
     }
     return Polyline(
       points: List.from(latLngPoints),
-      color: lineColor,
+      color: lineColor.withValues(alpha: 0.7),
       strokeWidth: 5.0,
       strokeCap: StrokeCap.round,
       strokeJoin: StrokeJoin.round,

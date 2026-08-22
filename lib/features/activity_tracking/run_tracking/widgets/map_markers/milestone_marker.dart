@@ -1,4 +1,5 @@
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/milestone_point.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/map_markers/pin_marker.dart';
 import 'package:flutter/material.dart';
 
 class MilestoneMarker extends StatelessWidget {
@@ -7,20 +8,9 @@ class MilestoneMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-      child: Center(
-        child: Text(
-          milestone.distance.toString(),
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-      ),
+    return PinMarker(
+      text: "${milestone.distance.toString()} km",
+      color: Theme.of(context).primaryColor.withValues(alpha: 0.9),
     );
   }
 }

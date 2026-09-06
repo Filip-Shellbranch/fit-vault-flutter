@@ -42,7 +42,14 @@ class RunTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     await AppLogger().init(fileName: "foreground.log");
-    dWarn("FOREGROUND SERVICE STARTED $timestamp");
+
+    dWarn(
+      "FG TASK STARTED "
+      "${DateTime.now()} "
+      "pid=$pid "
+      "isolate=${Isolate.current.hashCode}",
+    );
+
     try {
       _addErrorHandling();
       LocationRequestResult permission = await geo.initialize();

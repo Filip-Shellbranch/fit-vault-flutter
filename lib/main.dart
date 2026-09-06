@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +21,12 @@ void main() async {
   // NOTE: Foreground isolate (run_task_handler uses a different AppLogger singleton)
   // and writes logs to a separate log file.
 
-  dWarn("MAIN STARTED ${DateTime.now()}");
+  dWarn(
+    "MAIN STARTED "
+    "${DateTime.now()} "
+    "pid=$pid "
+    "isolate=${Isolate.current.hashCode} ",
+  );
 
   final isarService = IsarService();
   await isarService.init();

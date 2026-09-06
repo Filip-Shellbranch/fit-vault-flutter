@@ -4,7 +4,7 @@ import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_task_handler.dart';
+import 'package:fit_vault_flutter/features/foreground_task/foreground_task_handler.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 NotificationButton createNotificationButton(String id) {
@@ -17,7 +17,7 @@ String formatNotificationText(Duration duration, double dist) {
 
 @pragma('vm:entry-point')
 void startCallback() {
-  FlutterForegroundTask.setTaskHandler(RunTaskHandler());
+  FlutterForegroundTask.setTaskHandler(ForegroundTaskHandler());
 }
 
 class ForegroundServiceController {

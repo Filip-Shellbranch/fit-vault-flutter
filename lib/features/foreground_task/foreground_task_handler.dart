@@ -4,7 +4,7 @@ import 'dart:isolate';
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
+import 'package:fit_vault_flutter/features/foreground_task/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
@@ -35,7 +35,7 @@ void onNewPosition(Position position) {
   }
 }
 
-class RunTaskHandler extends TaskHandler {
+class ForegroundTaskHandler extends TaskHandler {
   late ReceivePort errorPort;
   GeoLocationRepository geo = GeoLocationRepository();
 
@@ -83,7 +83,7 @@ class RunTaskHandler extends TaskHandler {
   @override
   void onRepeatEvent(DateTime timestamp) {
     //TODO: Revert if activity stops unexpectedly.
-    dPrint("Foreground task alive");
+    dInfo("Foreground task alive");
   }
 
   @override

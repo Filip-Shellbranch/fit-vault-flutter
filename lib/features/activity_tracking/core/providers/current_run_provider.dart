@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/current_pace_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
+import 'package:fit_vault_flutter/features/foreground_task/foreground_service_controller.dart';
+import 'package:fit_vault_flutter/features/foreground_task/protocol/task_command.dart';
+import 'package:fit_vault_flutter/features/foreground_task/protocol/task_messaging_service.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,11 +27,11 @@ void sendMessageToTask(TaskCommand command) {
 }
 
 void updateRunNotification(Run run) {
-  sendMessageToTask(
+  /*sendMessageToTask(
     UpdateTextCommand(
       formatNotificationText(run.calculateDuration(), run.distance),
     ),
-  );
+  );*/
 }
 
 final oneSecond = Duration(seconds: 1);
@@ -41,11 +40,54 @@ final oneSecond = Duration(seconds: 1);
 class CurrentRun extends _$CurrentRun {
   final ForegroundServiceController _runTracker = ForegroundServiceController();
   Timer? _notificationUpdateTimer;
+  late final StreamSubscription<int?> _runStartedStream;
+  late final StreamSubscription<void> _runCompletedStream;
+  StreamSubscription<void>? _currentRunStream;
 
   @override
   Future<Run?> build() async {
-    ref.onDispose(stopTimer);
-    return null;
+    ref.onDispose(onDispose);
+
+    final runRepo = ref.read(runRepositoryProvider);
+    _runStartedStream = runRepo.watchRunCreated().listen((runId) async {
+      dWarn("New run created and accessed through stream");
+      Run? activeRun = await runRepo.getActiveRun();
+      if (activeRun != null) {
+        onRunUpdated(activeRun.id);
+      }
+      state = AsyncValue.data(activeRun);
+    });
+    _runCompletedStream = runRepo.watchRunCompleted().listen((_) {
+      dWarn("Stream noticed run completed.");
+      state = AsyncValue.data(null);
+      _currentRunStream?.cancel();
+    });
+
+    return await runRepo.getActiveRun();
+  }
+
+  void onDispose() {
+    stopTimer();
+    _runStartedStream.cancel();
+    _runCompletedStream.cancel();
+    _currentRunStream?.cancel();
+  }
+
+  void onRunUpdated(int? runId) {
+    if (runId == null) {
+      return;
+    }
+    _currentRunStream?.cancel();
+    final runRepo = ref.read(runRepositoryProvider);
+    _currentRunStream = runRepo.watchRun(runId).listen((run) {
+      dWarn("Stream noticed run updated.");
+      if (run != null) {
+        dPrint("Paused at: ${run.pausedAt.toString()}");
+        dPrint("TimePaused: ${run.pausedDuration.toString()}");
+        dPrint("State: ${run.state.toString()}");
+      }
+      state = AsyncValue.data(run);
+    });
   }
 
   void beginTimer() {
@@ -66,94 +108,30 @@ class CurrentRun extends _$CurrentRun {
     _notificationUpdateTimer = null;
   }
 
-  void addNewPoint(RunPoint newPoint) {
-    final run = state.value;
-    if (run == null) {
-      return;
-    }
-    if (newPoint.type == PointType.active && run.isPaused()) {
-      return;
-    }
-    Run newRun = run.copy();
-    double segmentLength = newRun.addPoint(newPoint);
-    ref.read(currentPaceProvider.notifier).updatePace(segmentLength);
-    state = AsyncValue.data(newRun);
-  }
-
   Future<bool> startRun({Run? run}) async {
-    run ??= Run.newRun();
-    state = AsyncValue.data(run);
-    bool granted = await _runTracker.requestPermissions();
-    if (!granted) {
-      return false;
-    }
-    await _runTracker.startService();
+    TaskMessagingService().sendCommand(StartRunCommand());
     return true;
   }
 
-  Future<void> _addPointAtCurrentPosition(Run run, PointType pointType) async {
-    final RunPoint? newPoint = await ref
-        .read(runTrackingServiceProvider)
-        .createPointAtCurrentLocation(pointType);
-    if (newPoint == null) {
-      return;
-    }
-    run.positions.add(newPoint);
-  }
-
   Future<void> beginRun() async {
-    final run = state.value;
-    if (run == null || run.isStarted()) {
-      return;
-    }
-    await _addPointAtCurrentPosition(run, PointType.start);
-
-    Run newRun = run.copy();
-    newRun.startTime = DateTime.now();
-    newRun.pausedAt = null;
-    newRun.state = RunState.active;
+    TaskMessagingService().sendCommand(BeginRunCommand());
     beginTimer();
-
-    state = AsyncValue.data(newRun);
   }
 
   Future<void> pauseRun() async {
-    final run = state.value;
-    if (run == null || run.isPaused()) {
-      return;
-    }
-    sendMessageToTask(PauseCommand());
-    await _addPointAtCurrentPosition(run, PointType.pause);
-
-    Run newRun = run.copy();
-    newRun.state = RunState.paused;
-    newRun.pausedAt = DateTime.now();
-    state = AsyncValue.data(newRun);
-    updateRunNotification(newRun);
+    TaskMessagingService().sendCommand(PauseRunCommand());
     stopTimer();
   }
 
   Future<void> resumeRun() async {
-    final run = state.value;
-    final timePaused = run?.pausedAt;
-    if (run == null || timePaused == null || !run.isPaused()) {
-      return;
-    }
-
-    sendMessageToTask(ResumeCommand());
-    await _addPointAtCurrentPosition(run, PointType.resume);
-
-    Run newRun = run.copy();
-    newRun.state = RunState.active;
-    Duration pauseLength = DateTime.now().difference(timePaused);
-    newRun.pausedDuration += pauseLength;
-    newRun.pausedAt = null;
-    state = AsyncValue.data(newRun);
+    TaskMessagingService().sendCommand(ResumeRunCommand());
     beginTimer();
   }
 
   Future<void> stopRun() async {
-    final run = state.value;
+    //TaskMessagingService().sendCommand(StopRunCommand());
+    stopTimer();
+    /*final run = state.value;
     final timePaused = run?.pausedAt;
     if (run == null || timePaused == null || !run.isPaused()) {
       dWarn("Not stopping run, run is not properly paused.");
@@ -167,8 +145,8 @@ class CurrentRun extends _$CurrentRun {
     newRun.pausedDuration += pauseLength;
     newRun.positions.last.markAsEndPoint();
 
-    state = AsyncValue.data(newRun);
-    await _runTracker.stopService();
+    state = AsyncValue.data(newRun);*/
+    //await _runTracker.stopService();
   }
 
   Future<void> clearRun() async {

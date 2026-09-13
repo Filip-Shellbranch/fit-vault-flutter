@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/displayed_run_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/finalize_run/finish_run_button.dart';
@@ -15,6 +16,9 @@ class RunSummaryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isEditing = ref.read(displayedRunProvider.notifier).isEditing;
+    if (!isEditing) {
+      ref.watch(currentRunProvider);
+    }
     final PageController controller = PageController();
     return Scaffold(
       appBar: AppBar(

@@ -11,6 +11,7 @@ class Run {
   DateTime? endTime;
   RunState state;
   List<RunPoint> positions = [];
+  final List<RunPoint> _newPoints = [];
 
   double _distance; // In kilometers.
   double get distance {
@@ -45,12 +46,13 @@ class Run {
     double segmentLength = 0;
     if (positions.isEmpty) {
       _distance = 0;
-    } else {
+    } else if (newPoint.type != PointType.resume) {
       RunPoint previousPoint = positions.last;
       segmentLength = previousPoint.distanceTo(newPoint);
       _distance += segmentLength;
     }
     positions.add(newPoint);
+    _newPoints.add(newPoint);
     return segmentLength;
   }
 
@@ -96,6 +98,14 @@ class Run {
 
   bool isPaused() {
     return state == RunState.paused;
+  }
+
+  List<RunPoint> getOnlyNewPoints() {
+    return _newPoints;
+  }
+
+  void clearNewPoints() {
+    _newPoints.clear();
   }
 
   Run copy() {

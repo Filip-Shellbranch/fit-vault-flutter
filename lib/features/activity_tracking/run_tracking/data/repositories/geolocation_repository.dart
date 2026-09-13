@@ -119,10 +119,14 @@ class GeoLocationRepository {
     }
   }
 
-  Future<void> dispose() async {
+  Future<void> cancelStream() async {
     if (_stream != null) {
       await _stream?.cancel();
       _stream = null;
     }
+  }
+
+  Future<void> dispose() async {
+    cancelStream();
   }
 }

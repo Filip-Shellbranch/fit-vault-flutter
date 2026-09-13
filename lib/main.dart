@@ -4,7 +4,7 @@ import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/foreground_service_controller.dart';
+import 'package:fit_vault_flutter/features/foreground_task/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/home_page/views/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,14 +48,6 @@ void main() async {
   };
 
   FlutterForegroundTask.initCommunicationPort();
-  if (kDebugMode) {
-    if (await ForegroundServiceController().isRunning()) {
-      dWarn(
-        "App restarted in debug mode, ignore stopping previous foregroundservice.",
-      );
-      //await ForegroundServiceController().stopService();
-    }
-  }
   FlutterForegroundTask.init(
     androidNotificationOptions: AndroidNotificationOptions(
       channelId: "run_tracking",
@@ -69,6 +61,12 @@ void main() async {
       allowWifiLock: true,
     ),
   );
+  final foregroundController = ForegroundServiceController();
+  if (await foregroundController.isRunning()) {
+    dInfo("Foreground service already running, restarting it.");
+    await foregroundController.stopService();
+  }
+  await foregroundController.startService();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

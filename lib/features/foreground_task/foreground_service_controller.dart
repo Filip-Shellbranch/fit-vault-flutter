@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/task_command.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:fit_vault_flutter/features/foreground_task/foreground_task_handler.dart';
+import 'package:fit_vault_flutter/features/foreground_task/protocol/task_command.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 NotificationButton createNotificationButton(String id) {
@@ -111,7 +111,7 @@ class ForegroundServiceController {
     if (!Platform.isAndroid) {
       return;
     }
-    String? newTitle;
+    /*String? newTitle;
     String? newText;
     List<NotificationButton>? buttons;
     switch (command) {
@@ -135,7 +135,7 @@ class ForegroundServiceController {
       );
     } catch (e) {
       dError("Error updating foreground service/notification", error: e);
-    }
+    }*/
   }
 
   Future<void> stopService() async {

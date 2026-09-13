@@ -36,9 +36,6 @@ class RunTrackingService {
 
   void _onTaskDataReceived(Object data) {
     if (data is Map<String, dynamic>) {
-      if (data.containsKey("lat")) {
-        _onPositionReceived(data);
-      }
     } else {
       _onCommandReceived(data.toString());
     }
@@ -56,21 +53,6 @@ class RunTrackingService {
         break;
       default:
         dWarn("Unknown data received from task handler: $str");
-    }
-  }
-
-  void _onPositionReceived(Map<String, dynamic> data) {
-    try {
-      final point = RunPoint(
-        data["lat"],
-        data["lng"],
-        DateTime.now(),
-        altitude: data["altitude"],
-      );
-
-      ref.read(currentRunProvider.notifier).addNewPoint(point);
-    } catch (e, stack) {
-      dError("Error adding a new position to the run", error: e, stack: stack);
     }
   }
 }

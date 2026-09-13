@@ -1,4 +1,4 @@
-sealed class TaskCommand {
+/*sealed class TaskCommand {
   final String command;
   final String? text;
 
@@ -55,3 +55,4 @@ class UpdateTextCommand extends TaskCommand {
   @override
   Map<String, dynamic> toJSON() => {"cmd": command, "text": text};
 }
+*/

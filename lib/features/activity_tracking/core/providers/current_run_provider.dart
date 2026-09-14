@@ -38,7 +38,11 @@ class CurrentRun extends _$CurrentRun {
       _currentRunStream?.cancel();
     });
 
-    return await runRepo.getActiveRun();
+    Run? currentRun = await runRepo.getActiveRun();
+    if (currentRun != null && currentRun.id != null) {
+      onRunUpdated(currentRun.id);
+    }
+    return currentRun;
   }
 
   void onDispose() {
@@ -59,6 +63,7 @@ class CurrentRun extends _$CurrentRun {
         dPrint("Paused at: ${run.pausedAt.toString()}");
         dPrint("TimePaused: ${run.pausedDuration.toString()}");
         dPrint("State: ${run.state.toString()}");
+        dPrint("Dist: ${run.distance.toString()} km");
       }
       state = AsyncValue.data(run);
     });

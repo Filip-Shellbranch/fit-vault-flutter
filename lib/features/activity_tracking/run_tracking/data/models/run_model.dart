@@ -19,6 +19,7 @@ class RunModel {
   IsarLinks<RunPointModel> points = IsarLinks();
 
   int pausedDurationMillis = 0;
+  DateTime? pausedAt;
 
   @ignore
   Duration get pausedDuration {
@@ -34,6 +35,7 @@ class RunModel {
     Duration pausedDuration = Duration.zero,
     this.distance = 0.0,
     this.state = RunState.completed,
+    this.pausedAt,
   }) {
     this.pausedDuration = pausedDuration;
   }
@@ -44,6 +46,7 @@ class RunModel {
       distance: run.distance,
       state: run.state,
       endTime: run.endTime,
+      pausedAt: run.pausedAt,
     );
     model.pausedDuration = run.pausedDuration;
     model.id = run.id ?? Isar.autoIncrement;

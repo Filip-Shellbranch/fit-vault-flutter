@@ -46,7 +46,6 @@ class RunRepository {
   }
 
   Future<List<RunSummary>> loadRunSummaries() async {
-    dPrint("Loading Run summaries");
     final models = await db.runModels.where().findAll();
     dPrint("Run summaries loaded");
     return models.map((model) => RunSummary.fromRunModel(model)).toList();

@@ -38,6 +38,7 @@ class Run {
     run.state = model.state;
     run.endTime = model.endTime;
     run.pausedDuration = model.pausedDuration;
+    run.pausedAt = model.pausedAt;
 
     return run;
   }

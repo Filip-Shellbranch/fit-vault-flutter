@@ -62,7 +62,7 @@ class ForegroundTaskHandler extends TaskHandler {
   }
 
   @override
-  void onReceiveData(Object data) {
+  void onReceiveData(Object data) async {
     super.onReceiveData(data);
 
     bool isJSON = data is Map<String, dynamic>;
@@ -80,7 +80,7 @@ class ForegroundTaskHandler extends TaskHandler {
         runHandler.beginRun();
         break;
       case PauseRunCommand():
-        runHandler.pauseRun();
+        await runHandler.pauseRun();
         break;
       case ResumeRunCommand():
         runHandler.resumeRun();
@@ -99,14 +99,11 @@ class ForegroundTaskHandler extends TaskHandler {
   void onNotificationButtonPressed(String id) {
     try {
       switch (id) {
-        case "resume":
-          FlutterForegroundTask.sendDataToMain(id);
+        case "run: resume":
+          runHandler.resumeRun();
           break;
-        case "pause":
-          FlutterForegroundTask.sendDataToMain(id);
-          break;
-        case "stop":
-          FlutterForegroundTask.sendDataToMain(id);
+        case "run: pause":
+          runHandler.pauseRun();
           break;
         default:
       }

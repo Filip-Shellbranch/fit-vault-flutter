@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run_point.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/run_repository.dart';
+import 'package:fit_vault_flutter/features/foreground_task/notification_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:isar_community/isar.dart';
 
 class RunTaskHandler {
   Run? activeRun;
+  Timer? _secondTicker;
   final RunRepository runRepository;
   final GeoLocationRepository geo = GeoLocationRepository();
+  final NotificationService notif = NotificationService();
 
   RunTaskHandler(Isar db) : runRepository = RunRepository(db);
 
@@ -18,8 +23,28 @@ class RunTaskHandler {
     dInfo("RunHandler - Active run: ${activeRun.toString()}");
   }
 
+  void _startTicker() {
+    if (_secondTicker != null) {
+      return;
+    }
+    _secondTicker = Timer.periodic(Duration(seconds: 1), (_) {
+      if (activeRun == null) {
+        return;
+      } else {
+        Run run = activeRun!;
+        notif.updateRunNotification(run);
+      }
+    });
+  }
+
+  Future<void> _stopTicker() async {
+    _secondTicker?.cancel();
+    _secondTicker = null;
+  }
+
   void dispose() {
     geo.dispose();
+    _stopTicker();
   }
 
   Future<void> startNewRun() async {
@@ -42,6 +67,9 @@ class RunTaskHandler {
     if (permission == LocationRequestResult.granted) {
       await geo.startStream(_onNewPosition);
     }
+
+    notif.updateRunNotification(run);
+    _startTicker();
   }
 
   void _addNewPoint(Run run, RunPoint newPoint) {
@@ -66,6 +94,7 @@ class RunTaskHandler {
       if (run != null) {
         _addNewPoint(run, newPoint);
         runRepository.saveRun(run, onlyAddNewPoints: true);
+        notif.updateRunNotification(run);
       }
     } catch (e, stack) {
       dError(
@@ -76,7 +105,7 @@ class RunTaskHandler {
     }
   }
 
-  void pauseRun() async {
+  Future<void> pauseRun() async {
     final run = activeRun;
     if (run == null) {
       return;
@@ -99,6 +128,8 @@ class RunTaskHandler {
       );
       _addNewPoint(run, newPoint);
     }
+    notif.updateRunNotification(run);
+    await _stopTicker();
     runRepository.saveRun(run, onlyAddNewPoints: true);
   }
 
@@ -129,11 +160,13 @@ class RunTaskHandler {
       );
       _addNewPoint(run, newPoint);
     }
+    notif.updateRunNotification(run);
+    _startTicker();
     runRepository.saveRun(run, onlyAddNewPoints: true);
     geo.startStream(_onNewPosition);
   }
 
-  void stopRun() {
+  Future<void> stopRun() async {
     final run = activeRun;
     if (run == null || run.positions.isEmpty) {
       return;
@@ -150,6 +183,8 @@ class RunTaskHandler {
     );
     _addNewPoint(run, newPoint);
     runRepository.saveRun(run, isCompleted: true, onlyAddNewPoints: true);
+    notif.updateRunNotification(run);
+    await _stopTicker();
   }
 
   void discardRun() async {
@@ -163,6 +198,7 @@ class RunTaskHandler {
       return;
     }
 
+    _stopTicker();
     bool success = await runRepository.deleteRun(id);
     if (success) {
       dInfo("Deleted current run with id: $id");

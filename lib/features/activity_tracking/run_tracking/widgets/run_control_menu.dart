@@ -66,10 +66,10 @@ class _RunControlMenuState extends ConsumerState<RunControlMenu>
     if (run == null) {
       return;
     }
-    await ref.read(currentRunProvider.notifier).stopRun();
+    /*await ref.read(currentRunProvider.notifier).stopRun();
     if (!ref.context.mounted) {
       return;
-    }
+    }*/
     Navigator.push(
       ref.context,
       MaterialPageRoute(builder: (context) => RunSummaryPage(run)),

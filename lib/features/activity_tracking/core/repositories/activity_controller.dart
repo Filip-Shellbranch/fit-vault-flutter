@@ -20,8 +20,8 @@ class ActivityController {
     ref.read(currentWorkoutProvider.notifier).stopWorkout();
   }
 
-  Future<void> startRun() async {
+  void startRun() {
     ref.read(currentWorkoutProvider.notifier).stopWorkout();
-    await ref.read(currentRunProvider.notifier).startRun();
+    ref.read(currentRunProvider.notifier).startRun();
   }
 }

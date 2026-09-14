@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
@@ -7,39 +6,15 @@ import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/p
 import 'package:fit_vault_flutter/features/foreground_task/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/foreground_task/protocol/task_command.dart';
 import 'package:fit_vault_flutter/features/foreground_task/protocol/task_messaging_service.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_run_provider.g.dart';
-
-void sendMessageToTask(TaskCommand command) {
-  try {
-    if (Platform.isAndroid) {
-      FlutterForegroundTask.sendDataToTask(command.toJSON());
-    }
-  } catch (e, stack) {
-    dError(
-      "Error sending message to task (command = ${command.command})",
-      error: e,
-      stack: stack,
-    );
-  }
-}
-
-void updateRunNotification(Run run) {
-  /*sendMessageToTask(
-    UpdateTextCommand(
-      formatNotificationText(run.calculateDuration(), run.distance),
-    ),
-  );*/
-}
 
 final oneSecond = Duration(seconds: 1);
 
 @Riverpod(keepAlive: true)
 class CurrentRun extends _$CurrentRun {
   final ForegroundServiceController _runTracker = ForegroundServiceController();
-  Timer? _notificationUpdateTimer;
   late final StreamSubscription<int?> _runStartedStream;
   late final StreamSubscription<void> _runCompletedStream;
   StreamSubscription<void>? _currentRunStream;
@@ -67,7 +42,6 @@ class CurrentRun extends _$CurrentRun {
   }
 
   void onDispose() {
-    stopTimer();
     _runStartedStream.cancel();
     _runCompletedStream.cancel();
     _currentRunStream?.cancel();
@@ -90,63 +64,20 @@ class CurrentRun extends _$CurrentRun {
     });
   }
 
-  void beginTimer() {
-    if (_notificationUpdateTimer != null) {
-      return;
-    }
-    _notificationUpdateTimer = Timer.periodic(oneSecond, (timer) {
-      final run = state.value;
-      if (run == null) {
-        return;
-      }
-      updateRunNotification(run);
-    });
-  }
-
-  void stopTimer() {
-    _notificationUpdateTimer?.cancel();
-    _notificationUpdateTimer = null;
-  }
-
-  Future<bool> startRun({Run? run}) async {
+  void startRun() {
     TaskMessagingService().sendCommand(StartRunCommand());
-    return true;
   }
 
-  Future<void> beginRun() async {
+  void beginRun() {
     TaskMessagingService().sendCommand(BeginRunCommand());
-    beginTimer();
   }
 
-  Future<void> pauseRun() async {
+  void pauseRun() {
     TaskMessagingService().sendCommand(PauseRunCommand());
-    stopTimer();
   }
 
-  Future<void> resumeRun() async {
+  void resumeRun() async {
     TaskMessagingService().sendCommand(ResumeRunCommand());
-    beginTimer();
-  }
-
-  Future<void> stopRun() async {
-    //TaskMessagingService().sendCommand(StopRunCommand());
-    stopTimer();
-    /*final run = state.value;
-    final timePaused = run?.pausedAt;
-    if (run == null || timePaused == null || !run.isPaused()) {
-      dWarn("Not stopping run, run is not properly paused.");
-      return;
-    }
-    final now = DateTime.now();
-
-    Run newRun = run.copy();
-    newRun.endTime = now;
-    Duration pauseLength = now.difference(timePaused);
-    newRun.pausedDuration += pauseLength;
-    newRun.positions.last.markAsEndPoint();
-
-    state = AsyncValue.data(newRun);*/
-    //await _runTracker.stopService();
   }
 
   Future<void> clearRun() async {

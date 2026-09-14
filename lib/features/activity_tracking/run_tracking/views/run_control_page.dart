@@ -1,6 +1,5 @@
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/location_permission_provider.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_tracking_service_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/repositories/geolocation_repository.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/gps_strength_widget.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/widgets/location_permission_widget.dart';
@@ -14,7 +13,6 @@ class RunControlPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(runTrackingServiceProvider);
     final permission = ref.watch(locationPermissionProvider);
     return permission.when(
       error: (Object error, StackTrace stack) {

@@ -15,8 +15,8 @@ sealed class TaskCommand {
         return PauseRunCommand.fromJSON(json);
       case "resumeRun":
         return ResumeRunCommand.fromJSON(json);
-      case "stopRun":
-        return StopRunCommand.fromJSON(json);
+      case "finishRun":
+        return FinishRunCommand.fromJSON(json);
       case "discardRun":
         return DiscardRunCommand.fromJSON(json);
       case "updateDist":
@@ -73,11 +73,11 @@ class ResumeRunCommand extends TaskCommand {
   Map<String, dynamic> toJSON() => {"cmd": command};
 }
 
-class StopRunCommand extends TaskCommand {
-  StopRunCommand() : super("stopRun");
+class FinishRunCommand extends TaskCommand {
+  FinishRunCommand() : super("finishRun");
 
-  factory StopRunCommand.fromJSON(Map<String, dynamic> json) {
-    return StopRunCommand();
+  factory FinishRunCommand.fromJSON(Map<String, dynamic> json) {
+    return FinishRunCommand();
   }
 
   @override

@@ -10,7 +10,7 @@ class FinishRunButton extends StatelessWidget {
   const FinishRunButton({super.key, this.isCurrent = false});
 
   Future<void> saveFunc(BuildContext context, WidgetRef ref) async {
-    TaskMessagingService().sendCommand(StopRunCommand());
+    TaskMessagingService().sendCommand(FinishRunCommand());
   }
 
   Future<void> discardFunc(BuildContext context, WidgetRef ref) async {

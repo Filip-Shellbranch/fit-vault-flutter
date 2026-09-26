@@ -85,8 +85,8 @@ class ForegroundTaskHandler extends TaskHandler {
       case ResumeRunCommand():
         runHandler.resumeRun();
         break;
-      case StopRunCommand():
-        runHandler.stopRun();
+      case FinishRunCommand():
+        runHandler.finishRun();
         break;
       case DiscardRunCommand():
         runHandler.discardRun();

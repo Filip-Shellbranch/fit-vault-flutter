@@ -166,7 +166,7 @@ class RunTaskHandler {
     geo.startStream(_onNewPosition);
   }
 
-  Future<void> stopRun() async {
+  Future<void> finishRun() async {
     final run = activeRun;
     if (run == null || run.positions.isEmpty) {
       return;

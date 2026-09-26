@@ -15,57 +15,60 @@ class ActivityListDisplay extends StatelessWidget {
     if (activities.isEmpty) {
       return Text("No activities found!");
     }
-    return GroupedListView(
-      elements: activities,
-      groupBy: (activity) => activity.group,
-      groupComparator: (a, b) => b.index.compareTo(a.index),
-      order: GroupedListOrder.DESC,
-      groupSeparatorBuilder: (ActivityGroup group) {
-        int numInGroup = activities
-            .where((activity) => activity.group == group)
-            .length;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).highlightColor,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    labelFromGroup(group),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+    return ScrollConfiguration(
+      behavior: ScrollBehavior().copyWith(overscroll: false),
+      child: GroupedListView(
+        elements: activities,
+        groupBy: (activity) => activity.group,
+        groupComparator: (a, b) => b.index.compareTo(a.index),
+        order: GroupedListOrder.DESC,
+        groupSeparatorBuilder: (ActivityGroup group) {
+          int numInGroup = activities
+              .where((activity) => activity.group == group)
+              .length;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).highlightColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      labelFromGroup(group),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "(${numInGroup.toString()} Activities)",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+                    Text(
+                      "(${numInGroup.toString()} Activities)",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
 
-      itemBuilder: (context, groupedActivity) {
-        switch (groupedActivity.activity) {
-          case WorkoutActivity():
-            return WorkoutActivityCard(
-              activity: groupedActivity.activity as WorkoutActivity,
-            );
-          case RunActivity():
-            return RunActivityCard(
-              activity: groupedActivity.activity as RunActivity,
-            );
-        }
-      },
+        itemBuilder: (context, groupedActivity) {
+          switch (groupedActivity.activity) {
+            case WorkoutActivity():
+              return WorkoutActivityCard(
+                activity: groupedActivity.activity as WorkoutActivity,
+              );
+            case RunActivity():
+              return RunActivityCard(
+                activity: groupedActivity.activity as RunActivity,
+              );
+          }
+        },
+      ),
     );
   }
 }

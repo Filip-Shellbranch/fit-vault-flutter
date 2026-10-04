@@ -26,10 +26,10 @@ class FinishActivityButton extends ConsumerWidget {
 
   void onSavePressed(BuildContext context, WidgetRef ref) async {
     await saveFunc(context, ref);
-    await ref.read(activityControllerProvider).stop();
     if (context.mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }
+    await ref.read(activityControllerProvider).stop();
   }
 
   void onDiscardPressed(BuildContext context, WidgetRef ref) {

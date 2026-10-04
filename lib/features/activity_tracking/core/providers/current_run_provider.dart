@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
-import 'package:fit_vault_flutter/features/foreground_task/foreground_service_controller.dart';
 import 'package:fit_vault_flutter/features/foreground_task/protocol/task_command.dart';
 import 'package:fit_vault_flutter/features/foreground_task/protocol/task_messaging_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +13,6 @@ final oneSecond = Duration(seconds: 1);
 
 @Riverpod(keepAlive: true)
 class CurrentRun extends _$CurrentRun {
-  final ForegroundServiceController _runTracker = ForegroundServiceController();
   late final StreamSubscription<int?> _runStartedStream;
   late final StreamSubscription<void> _runCompletedStream;
   StreamSubscription<void>? _currentRunStream;
@@ -86,7 +84,6 @@ class CurrentRun extends _$CurrentRun {
   }
 
   Future<void> clearRun() async {
-    await _runTracker.stopService();
     state = AsyncValue.data(null);
   }
 }

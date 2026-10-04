@@ -9,13 +9,14 @@ class StartRunButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FloatingActionButton.extended(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RunSessionPage()),
-        );
-
-        ref.read(activityControllerProvider).startRun();
+      onPressed: () async {
+        await ref.read(activityControllerProvider).startRun();
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RunSessionPage()),
+          );
+        }
       },
       backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,

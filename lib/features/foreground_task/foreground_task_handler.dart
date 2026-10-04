@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -12,7 +13,9 @@ import 'package:path_provider/path_provider.dart';
 class ForegroundTaskHandler extends TaskHandler {
   late ReceivePort errorPort;
   IsarService dbService = IsarService();
-  late RunTaskHandler runHandler;
+  RunTaskHandler runHandler = RunTaskHandler();
+  Future<void> _initialized = Future.value();
+  Queue<TaskCommand> commandQueue = Queue();
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
@@ -27,13 +30,19 @@ class ForegroundTaskHandler extends TaskHandler {
 
     try {
       _addErrorHandling();
-      await dbService.init();
 
-      runHandler = RunTaskHandler(dbService.db);
-      await runHandler.init();
+      _initialized = initialize();
+      await _initialized;
+
+      dInfo("FG TASK INITIALIZED");
     } catch (e) {
       dError("Error starting ForegroundTaskHandler", error: e);
     }
+  }
+
+  Future<void> initialize() async {
+    await dbService.init();
+    await runHandler.init(dbService.db);
   }
 
   void _addErrorHandling() {
@@ -72,6 +81,8 @@ class ForegroundTaskHandler extends TaskHandler {
     }
     TaskCommand command = TaskCommand.fromJSON(data);
     dInfo("Received command: ${command.toString()}");
+    await _initialized;
+    dInfo("Executing command: ${command.toString()}");
     switch (command) {
       case StartRunCommand():
         runHandler.startNewRun();

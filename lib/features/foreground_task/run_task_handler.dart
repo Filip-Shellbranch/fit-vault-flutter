@@ -12,15 +12,25 @@ import 'package:isar_community/isar.dart';
 class RunTaskHandler {
   Run? activeRun;
   Timer? _secondTicker;
-  final RunRepository runRepository;
+  late final RunRepository runRepository;
   final GeoLocationRepository geo = GeoLocationRepository();
   final NotificationService notif = NotificationService();
 
-  RunTaskHandler(Isar db) : runRepository = RunRepository(db);
+  RunTaskHandler();
 
-  Future<void> init() async {
+  bool isInitialized = false;
+
+  Future<void> init(Isar db) async {
+    runRepository = RunRepository(db);
     activeRun = await runRepository.getActiveRun();
     dInfo("RunHandler - Active run: ${activeRun.toString()}");
+    isInitialized = true;
+
+    final run = activeRun;
+    if (run != null) {
+      dInfo("Resuming GPS tracking");
+      await _startTracking(run);
+    }
   }
 
   void _startTicker() {
@@ -53,6 +63,16 @@ class RunTaskHandler {
     runRepository.saveRun(newRun);
   }
 
+  Future<void> _startTracking(Run run) async {
+    LocationRequestResult permission = await geo.initialize();
+    if (permission == LocationRequestResult.granted) {
+      await geo.startStream(_onNewPosition);
+    }
+
+    notif.updateRunNotification(run);
+    _startTicker();
+  }
+
   void beginRun() async {
     Run? run = activeRun;
     if (run == null || run.isStarted()) {
@@ -63,13 +83,7 @@ class RunTaskHandler {
       runRepository.saveRun(run, onlyAddNewPoints: true);
     }
 
-    LocationRequestResult permission = await geo.initialize();
-    if (permission == LocationRequestResult.granted) {
-      await geo.startStream(_onNewPosition);
-    }
-
-    notif.updateRunNotification(run);
-    _startTicker();
+    await _startTracking(run);
   }
 
   void _addNewPoint(Run run, RunPoint newPoint) {

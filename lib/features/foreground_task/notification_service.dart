@@ -2,6 +2,7 @@ import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/string_utils.dart';
 import 'package:fit_vault_flutter/core/utils/time_formatting.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/classes/run.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 NotificationButton _createRunButton(String id) {
@@ -14,6 +15,11 @@ List<NotificationButton> _createRunButtons(List<String> ids) {
 
 String _formatRunNotificationText(Duration duration, double dist) {
   return "${formatDurationHMS(duration)} ● Distance: ${dist.toStringAsFixed(2)} km";
+}
+
+String _formatWorkoutNotificationText(Workout workout) {
+  Duration duration = workout.calculateDuration();
+  return formatDurationHMS(duration);
 }
 
 class NotificationService {
@@ -51,6 +57,13 @@ class NotificationService {
         buttons = null;
         break;
     }
+    _updateNotification(title, text, buttons);
+  }
+
+  void updateWorkoutNotification(Workout workout) {
+    final title = "Workout in progress";
+    final text = _formatWorkoutNotificationText(workout);
+    final List<NotificationButton>? buttons = null;
     _updateNotification(title, text, buttons);
   }
 }

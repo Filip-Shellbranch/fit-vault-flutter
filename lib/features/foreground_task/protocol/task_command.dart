@@ -21,6 +21,8 @@ sealed class TaskCommand {
         return DiscardRunCommand.fromJSON(json);
       case "updateDist":
         return UpdateTextCommand.fromJSON(json);
+      case "startWorkout":
+        return StartWorkoutCommand.fromJSON(json);
       default:
         throw ArgumentError("Unknown command type '$command'");
     }
@@ -89,6 +91,17 @@ class DiscardRunCommand extends TaskCommand {
 
   factory DiscardRunCommand.fromJSON(Map<String, dynamic> json) {
     return DiscardRunCommand();
+  }
+
+  @override
+  Map<String, dynamic> toJSON() => {"cmd": command};
+}
+
+class StartWorkoutCommand extends TaskCommand {
+  StartWorkoutCommand() : super("startWorkout");
+
+  factory StartWorkoutCommand.fromJSON(Map<String, dynamic> json) {
+    return StartWorkoutCommand();
   }
 
   @override

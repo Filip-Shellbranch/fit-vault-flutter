@@ -7,6 +7,7 @@ import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/features/foreground_task/protocol/task_command.dart';
 import 'package:fit_vault_flutter/features/foreground_task/run_task_handler.dart';
+import 'package:fit_vault_flutter/features/foreground_task/workout_task_handler.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -14,6 +15,7 @@ class ForegroundTaskHandler extends TaskHandler {
   late ReceivePort errorPort;
   IsarService dbService = IsarService();
   RunTaskHandler runHandler = RunTaskHandler();
+  WorkoutTaskHandler workoutHandler = WorkoutTaskHandler();
   Future<void> _initialized = Future.value();
   Queue<TaskCommand> commandQueue = Queue();
 
@@ -42,7 +44,10 @@ class ForegroundTaskHandler extends TaskHandler {
 
   Future<void> initialize() async {
     await dbService.init();
-    await runHandler.init(dbService.db);
+    await Future.wait([
+      runHandler.init(dbService.db),
+      workoutHandler.init(dbService.db),
+    ]);
   }
 
   void _addErrorHandling() {
@@ -101,6 +106,9 @@ class ForegroundTaskHandler extends TaskHandler {
         break;
       case DiscardRunCommand():
         runHandler.discardRun();
+        break;
+      case StartWorkoutCommand():
+        workoutHandler.startWorkout();
         break;
       default:
     }

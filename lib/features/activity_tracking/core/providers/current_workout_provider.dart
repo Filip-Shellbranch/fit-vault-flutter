@@ -3,6 +3,8 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/da
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/workout.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/workout_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/workout_repository_provider.dart';
+import 'package:fit_vault_flutter/features/foreground_task/protocol/task_command.dart';
+import 'package:fit_vault_flutter/features/foreground_task/protocol/task_messaging_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_workout_provider.g.dart';
@@ -21,6 +23,8 @@ class CurrentWorkout extends _$CurrentWorkout implements WorkoutNotifierBase {
         .read(workoutRepositoryProvider)
         .saveWorkout(workout, isCompleted: false);
     state = AsyncValue.data(newSavedWorkout);
+
+    TaskMessagingService().sendCommand(StartWorkoutCommand());
   }
 
   @override

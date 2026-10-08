@@ -1,5 +1,4 @@
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
-import 'package:fit_vault_flutter/features/activity_tracking/core/providers/activity_controller_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/widgets/finish_activity_button.dart';
@@ -43,7 +42,6 @@ class FinishWorkoutButton extends StatelessWidget {
   Future<void> discardFunc(BuildContext context, WidgetRef ref) async {
     if (isCurrent) {
       await deleteCurrentWorkout(ref);
-      await ref.read(activityControllerProvider).stop();
     }
   }
 

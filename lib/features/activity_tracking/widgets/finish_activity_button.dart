@@ -25,10 +25,10 @@ class FinishActivityButton extends ConsumerWidget {
   });
 
   void onSavePressed(BuildContext context, WidgetRef ref) async {
-    await saveFunc(context, ref);
     if (context.mounted) {
       Navigator.popUntil(context, ModalRoute.withName("/"));
     }
+    await saveFunc(context, ref);
     await ref.read(activityControllerProvider).stop();
   }
 
@@ -38,10 +38,11 @@ class FinishActivityButton extends ConsumerWidget {
       builder: (context) {
         return ConfirmDialog(
           onConfirmFunc: () async {
-            await discardFunc(context, ref);
             if (context.mounted) {
               Navigator.popUntil(context, ModalRoute.withName("/"));
             }
+            await discardFunc(context, ref);
+            await ref.read(activityControllerProvider).stop();
           },
           prompt: isCurrent
               ? "Are you sure you want to discard the $activityName?"

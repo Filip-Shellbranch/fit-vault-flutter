@@ -63,7 +63,7 @@ class NotificationService {
   void updateWorkoutNotification(Workout workout) {
     final title = "Workout in progress";
     final text = _formatWorkoutNotificationText(workout);
-    final List<NotificationButton>? buttons = null;
+    final List<NotificationButton> buttons = [];
     _updateNotification(title, text, buttons);
   }
 }

@@ -7,6 +7,7 @@ import 'package:fit_vault_flutter/features/activity_tracking/core/providers/curr
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_type_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/repositories/exercise_type_repository.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/add_exercise_type_button.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/widgets/exercise_search_results.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -139,6 +140,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: TextField(
+                style: TextStyle(fontSize: 24),
                 controller: searchController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
@@ -158,12 +160,13 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
                   child: ExerciseSearchResults(
                     searchResults: _searchResults.value,
                     selectExerciseFunc: selectExercise,
-                    createExerciseFunc: createExerciseType,
                     deleteExerciseFunc: tryDeleteExerciseType,
                   ),
                 ),
               ),
             ),
+            AddExerciseTypeButton(createExerciseFunc: createExerciseType),
+            SizedBox(height: 50),
           ],
         ),
       ),

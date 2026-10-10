@@ -2,6 +2,7 @@ import 'dart:isolate';
 
 import 'package:fit_vault_flutter/core/database/isar_provider.dart';
 import 'package:fit_vault_flutter/core/database/isar_service.dart';
+import 'package:fit_vault_flutter/core/utils/app_core.dart';
 import 'package:fit_vault_flutter/core/utils/logging/app_logger.dart';
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/home_page/views/home_page.dart';
@@ -69,6 +70,7 @@ void main() async {
     ProviderScope(
       overrides: [isarProvider.overrideWithValue(isarService.db)],
       child: MaterialApp(
+        navigatorKey: AppCore.navigatorKey,
         theme: ThemeData.dark().copyWith(
           highlightColor: Color(0xffdf7315),
           primaryColor: Color(0xff035fa1),

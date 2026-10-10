@@ -85,8 +85,11 @@ class SetCard extends StatelessWidget {
           ),
           isBodyWeight
               ? Text(
-                  "Body weight",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "Bodyweight",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).highlightColor,
+                  ),
                 )
               : Row(
                   spacing: 8,

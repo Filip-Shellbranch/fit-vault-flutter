@@ -1,3 +1,4 @@
+import 'package:fit_vault_flutter/features/activity_tracking/statistics/views/exercise_info_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_exercise_page.dart';
 import 'package:flutter/material.dart';
@@ -34,26 +35,67 @@ class ExerciseSearchResults extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              alignment: Alignment.centerLeft,
+                            ),
+                            onPressed: () {
+                              selectExerciseFunc(exerciseType);
+                            },
+                            child: Text(
+                              exerciseName,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        selectExerciseFunc(exerciseType);
-                      },
-                      child: Text(exerciseName, style: TextStyle(fontSize: 20)),
-                    ),
+                    ],
                   ),
                 ),
                 exerciseType.isBodyWeight
                     ? Padding(
                         padding: const EdgeInsets.only(right: 8),
-                        child: Text("Uses body weight"),
+                        child: Text(
+                          "Bodyweight",
+                          style: TextStyle(
+                            color: Theme.of(context).highlightColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       )
                     : Container(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ExerciseInfoPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Show info",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
                 IconButton(
                   onPressed: () async {
                     bool success = await deleteExerciseFunc(exerciseName);
@@ -68,7 +110,7 @@ class ExerciseSearchResults extends ConsumerWidget {
                       messenger.showSnackBar(snackBar);
                     }
                   },
-                  icon: Icon(Icons.delete),
+                  icon: Icon(Icons.delete, color: Colors.red),
                 ),
               ],
             ),

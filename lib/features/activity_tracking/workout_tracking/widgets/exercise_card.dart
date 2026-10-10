@@ -92,23 +92,28 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    spacing: 16,
-                    children: [
-                      Text(
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 34,
-                          fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 16,
+                      children: [
+                        Text(
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 34,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          (widget.exerciseIndex + 1).toString(),
                         ),
-                        (widget.exerciseIndex + 1).toString(),
-                      ),
-                      Text(
-                        widget.exercise.name,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
+                        Flexible(
+                          child: Text(
+                            widget.exercise.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   !widget.isEditing
                       ? SizedBox()

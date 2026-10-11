@@ -82,7 +82,7 @@ class ExerciseSearchResults extends ConsumerWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return ExerciseInfoPage();
+                            return ExerciseInfoPage(exerciseName: exerciseName);
                           },
                         ),
                       );

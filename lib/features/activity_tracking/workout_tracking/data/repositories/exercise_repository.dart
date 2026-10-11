@@ -30,8 +30,7 @@ class ExerciseRepository {
     return allExercises;
   }
 
-  Future<ExerciseSet?> getLastSetForExercise(String exerciseName) async {
-    final history = await getExerciseHistory(exerciseName);
+  ExerciseSet? getLastSetFromHistory(List<ExerciseModel> history) {
     if (history.isEmpty || history.last.sets.isEmpty) {
       return null;
     }
@@ -44,5 +43,10 @@ class ExerciseRepository {
     }
     final lastSet = ExerciseSet(lastWeight, lastReps);
     return lastSet;
+  }
+
+  Future<ExerciseSet?> getLastSetForExercise(String exerciseName) async {
+    final history = await getExerciseHistory(exerciseName);
+    return getLastSetFromHistory(history);
   }
 }

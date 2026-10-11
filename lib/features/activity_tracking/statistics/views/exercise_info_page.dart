@@ -1,5 +1,6 @@
 import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/statistics/widgets/exercise_info_stat.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/statistics/widgets/history_set_item.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_repository_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,6 +87,32 @@ class ExerciseInfoPage extends ConsumerWidget {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(height: 40),
+                Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withAlpha(90),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    "Exercise history",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: ScrollConfiguration(
+                    behavior: ScrollBehavior().copyWith(overscroll: false),
+                    child: ListView.builder(
+                      itemCount: exerciseHistory.length,
+                      itemBuilder: (context, i) {
+                        final exercise = exerciseHistory.elementAt(
+                          exerciseHistory.length - i - 1,
+                        );
+                        return ExerciseHistoryItem(exercise: exercise);
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),

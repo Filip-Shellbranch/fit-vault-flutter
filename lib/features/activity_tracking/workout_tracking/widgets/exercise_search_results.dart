@@ -37,40 +37,42 @@ class ExerciseSearchResults extends ConsumerWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              alignment: Alignment.centerLeft,
-                            ),
-                            onPressed: () {
-                              selectExerciseFunc(exerciseType);
-                            },
-                            child: Text(
-                              exerciseName,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 20),
-                            ),
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+
+                            alignment: Alignment.centerLeft,
+                          ),
+                          onPressed: () {
+                            selectExerciseFunc(exerciseType);
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                exerciseName,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              exerciseType.isBodyWeight
+                                  ? Text(
+                                      "Uses bodyweight",
+                                      style: TextStyle(
+                                        color: Theme.of(context).highlightColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                exerciseType.isBodyWeight
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          "Bodyweight",
-                          style: TextStyle(
-                            color: Theme.of(context).highlightColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : Container(),
+
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: TextButton(

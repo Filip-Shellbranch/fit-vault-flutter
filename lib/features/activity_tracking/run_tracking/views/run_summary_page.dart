@@ -39,46 +39,43 @@ class RunSummaryPage extends ConsumerWidget {
           children: [
             RunDetails(run: run),
             Expanded(
-              child: ScrollConfiguration(
-                behavior: const ScrollBehavior().copyWith(overscroll: false),
-                child: Scrollbar(
-                  controller: controller,
-                  thumbVisibility: true,
-                  interactive: true,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PageView(
-                      controller: controller,
-                      scrollDirection: Axis.vertical,
-                      children: [
-                        Column(
-                          children: [
-                            isEditing
-                                ? Container()
-                                : Padding(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    child: Center(
-                                      child: Text(
-                                        "Well done! Scroll to view your stats.",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+              child: Scrollbar(
+                controller: controller,
+                thumbVisibility: true,
+                interactive: true,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PageView(
+                    controller: controller,
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      Column(
+                        children: [
+                          isEditing
+                              ? Container()
+                              : Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Center(
+                                    child: Text(
+                                      "Well done! Scroll to view your stats.",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(10),
-                                child: RunningMap(interactable: false),
-                              ),
+                                ),
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(10),
+                              child: RunningMap(interactable: false),
                             ),
-                          ],
-                        ),
-                        RunPaceGraph(run: run),
-                        RunElevationGraph(run: run),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      RunPaceGraph(run: run),
+                      RunElevationGraph(run: run),
+                    ],
                   ),
                 ),
               ),

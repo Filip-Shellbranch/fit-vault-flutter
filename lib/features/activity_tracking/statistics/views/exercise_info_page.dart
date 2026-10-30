@@ -101,17 +101,14 @@ class ExerciseInfoPage extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
-                  child: ScrollConfiguration(
-                    behavior: ScrollBehavior().copyWith(overscroll: false),
-                    child: ListView.builder(
-                      itemCount: exerciseHistory.length,
-                      itemBuilder: (context, i) {
-                        final exercise = exerciseHistory.elementAt(
-                          exerciseHistory.length - i - 1,
-                        );
-                        return ExerciseHistoryItem(exercise: exercise);
-                      },
-                    ),
+                  child: ListView.builder(
+                    itemCount: exerciseHistory.length,
+                    itemBuilder: (context, i) {
+                      final exercise = exerciseHistory.elementAt(
+                        exerciseHistory.length - i - 1,
+                      );
+                      return ExerciseHistoryItem(exercise: exercise);
+                    },
                   ),
                 ),
               ],

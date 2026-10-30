@@ -19,29 +19,26 @@ class ExerciseList extends StatelessWidget {
     final exercises = workout.exercises;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ScrollConfiguration(
-        behavior: ScrollBehavior().copyWith(overscroll: false),
-        child: Column(
-          children: [
-            ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: exercises.length,
-              shrinkWrap: true,
-              itemBuilder: (context, i) {
-                Exercise exercise = exercises.elementAt(i);
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: ExerciseCard(
-                    exercise: exercise,
-                    exerciseIndex: i,
-                    isCurrentWorkout: isCurrentWorkout,
-                    isEditing: isEditing,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          ListView.builder(
+            physics: ClampingScrollPhysics(),
+            itemCount: exercises.length,
+            shrinkWrap: true,
+            itemBuilder: (context, i) {
+              Exercise exercise = exercises.elementAt(i);
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: ExerciseCard(
+                  exercise: exercise,
+                  exerciseIndex: i,
+                  isCurrentWorkout: isCurrentWorkout,
+                  isEditing: isEditing,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

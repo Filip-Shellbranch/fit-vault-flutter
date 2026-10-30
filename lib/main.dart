@@ -71,6 +71,7 @@ void main() async {
       overrides: [isarProvider.overrideWithValue(isarService.db)],
       child: MaterialApp(
         navigatorKey: AppCore.navigatorKey,
+        scrollBehavior: ScrollBehavior().copyWith(overscroll: false),
         theme: ThemeData.dark().copyWith(
           highlightColor: Color(0xffdf7315),
           primaryColor: Color(0xff035fa1),

@@ -9,6 +9,53 @@ import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/wi
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class ButtonPopUp extends StatelessWidget {
+  final VoidCallback deleteExercise;
+  final VoidCallback replaceExercise;
+
+  const ButtonPopUp({
+    super.key,
+    required this.deleteExercise,
+    required this.replaceExercise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_horiz),
+      tooltip: 'More options',
+      onSelected: (String value) {
+        switch (value) {
+          case 'edit':
+            replaceExercise();
+            break;
+          case 'delete':
+            deleteExercise();
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem(
+          value: 'edit',
+          child: Row(
+            children: [Icon(Icons.edit), SizedBox(width: 10), Text('Replace')],
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: [
+              Icon(Icons.delete, color: Colors.red),
+              SizedBox(width: 10),
+              Text('Delete'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 typedef UpdateSetCallback =
     void Function(int setIndex, int newReps, double newWeight);
 typedef AddSetCallback = void Function();
@@ -120,8 +167,8 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                       : Row(
                           children: [
                             !widget.exercise.isLocked
-                                ? IconButton(
-                                    onPressed: () {
+                                ? ButtonPopUp(
+                                    deleteExercise: () {
                                       showDialog(
                                         context: context,
                                         builder: (context) {
@@ -131,12 +178,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                                         },
                                       );
                                     },
-                                    icon: Icon(Icons.delete),
-                                  )
-                                : Container(),
-                            !widget.exercise.isLocked
-                                ? IconButton(
-                                    onPressed: () {
+                                    replaceExercise: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -151,7 +193,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                                         ),
                                       );
                                     },
-                                    icon: Icon(Icons.edit),
                                   )
                                 : Container(),
                             IconButton(

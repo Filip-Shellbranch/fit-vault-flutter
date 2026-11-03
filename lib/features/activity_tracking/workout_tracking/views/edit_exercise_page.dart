@@ -1,9 +1,11 @@
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/default_exercises.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_workout_provider.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type_result.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/providers/exercise_type_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/repositories/exercise_type_repository.dart';
@@ -124,8 +126,16 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   @override
   void initState() {
     final repository = ref.read(exerciseTypeRepositoryProvider);
-    repository.getExerciseTypes().then((List<ExerciseType> savedExercises) {
-      updateExerciseList(savedExercises);
+    repository.getExerciseTypesOrderByUsage().then((
+      List<ExerciseTypeResult> savedExercises,
+    ) {
+      savedExercises.map((typeAndCount) {
+        dPrint(typeAndCount.type.exerciseName);
+        dPrint(typeAndCount.count.toString());
+      }).toList();
+      updateExerciseList(
+        savedExercises.map((typeAndCount) => typeAndCount.type).toList(),
+      );
     });
     super.initState();
   }

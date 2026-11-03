@@ -1,8 +1,10 @@
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/default_exercises.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type_result.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/models/exercise_type_model.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/repositories/workout_repository.dart';
 import 'package:isar_community/isar.dart';
+import 'package:collection/collection.dart';
 
 class ExerciseTypeSaveResult {
   final ExerciseType? exerciseType;
@@ -97,11 +99,30 @@ class ExerciseTypeRepository {
     List<ExerciseTypeModel> savedExercises = await db.exerciseTypeModels
         .where()
         .findAll();
+
     for (var savedExercise in savedExercises) {
       final newExercise = ExerciseType.fromModel(savedExercise);
       exerciseList.add(newExercise);
     }
     return exerciseList;
+  }
+
+  Future<List<ExerciseTypeResult>> getExerciseTypesOrderByUsage() async {
+    final exerciseList = await getExerciseTypes();
+    final typesAndCounts = await Future.wait(
+      exerciseList.map((exercise) async {
+        int count = await WorkoutRepository(
+          db,
+        ).countWorkoutsWithExercise(exercise.exerciseName);
+
+        return ExerciseTypeResult(exercise, count: count);
+      }),
+    );
+    PriorityQueue<ExerciseTypeResult> queue = PriorityQueue(
+      (e1, e2) => e2.count - e1.count,
+    );
+    queue.addAll(typesAndCounts);
+    return queue.toList();
   }
 
   Future<bool> tryDeleteExerciseType(String exerciseName) async {

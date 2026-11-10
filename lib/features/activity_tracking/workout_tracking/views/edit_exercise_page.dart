@@ -1,4 +1,3 @@
-import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/workout_notifier_base.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/providers/edited_workout_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/default_exercises.dart';
@@ -60,6 +59,11 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
   void updateExerciseList(List<ExerciseType> newList) {
     exerciseList = newList;
     _searchResults.value = newList;
+  }
+
+  List<ExerciseTypeResult> toResults(List<ExerciseType> types) {
+    //TODO: Rework file to use this.
+    return types.map((e) => ExerciseTypeResult(e)).toList();
   }
 
   void selectExercise(ExerciseType exerciseType) async {
@@ -129,10 +133,6 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
     repository.getExerciseTypesOrderByUsage().then((
       List<ExerciseTypeResult> savedExercises,
     ) {
-      savedExercises.map((typeAndCount) {
-        dPrint(typeAndCount.type.exerciseName);
-        dPrint(typeAndCount.count.toString());
-      }).toList();
       updateExerciseList(
         savedExercises.map((typeAndCount) => typeAndCount.type).toList(),
       );
@@ -168,7 +168,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
                 builder: (context, value, child) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ExerciseSearchResults(
-                    searchResults: _searchResults.value,
+                    searchResults: toResults(_searchResults.value),
                     selectExerciseFunc: selectExercise,
                     deleteExerciseFunc: tryDeleteExerciseType,
                   ),

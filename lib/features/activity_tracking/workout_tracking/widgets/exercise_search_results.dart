@@ -1,11 +1,12 @@
 import 'package:fit_vault_flutter/features/activity_tracking/statistics/views/exercise_info_page.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/data/classes/exercise_type_result.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/workout_tracking/views/edit_exercise_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExerciseSearchResults extends ConsumerWidget {
-  final List<ExerciseType> searchResults;
+  final List<ExerciseTypeResult> searchResults;
   final SelectExerciseCallback selectExerciseFunc;
   final DeleteExerciseTypeCallback deleteExerciseFunc;
   const ExerciseSearchResults({
@@ -20,7 +21,7 @@ class ExerciseSearchResults extends ConsumerWidget {
     return ListView.builder(
       itemCount: searchResults.length,
       itemBuilder: (context, i) {
-        ExerciseType exerciseType = searchResults.elementAt(i);
+        ExerciseType exerciseType = searchResults.elementAt(i).type;
         String exerciseName = exerciseType.exerciseName;
         return Container(
           padding: EdgeInsets.symmetric(vertical: 6),

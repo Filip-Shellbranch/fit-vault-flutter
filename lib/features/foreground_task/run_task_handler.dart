@@ -28,8 +28,14 @@ class RunTaskHandler {
 
     final run = activeRun;
     if (run != null) {
-      dInfo("Resuming GPS tracking");
-      await _startTracking(run);
+      int? runId = run.id;
+      if (run.isStarted()) {
+        dInfo("Resuming GPS tracking");
+        await _startTracking(run);
+      } else if (runId != null) {
+        dPrint("Delete unstarted active run");
+        await runRepository.deleteRun(runId);
+      }
     }
   }
 

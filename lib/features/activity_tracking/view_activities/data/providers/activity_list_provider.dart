@@ -1,4 +1,6 @@
+import 'package:fit_vault_flutter/core/utils/logging/debug.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/core/classes/activity.dart';
+import 'package:fit_vault_flutter/features/activity_tracking/core/providers/current_activity_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/run_tracking/data/providers/run_repository_provider.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/classes/grouped_activity.dart';
 import 'package:fit_vault_flutter/features/activity_tracking/view_activities/data/repositories/activity_group_controller.dart';
@@ -11,6 +13,8 @@ part 'activity_list_provider.g.dart';
 class ActivityList extends _$ActivityList {
   @override
   Future<List<GroupedActivity>> build() async {
+    ref.watch(currentActivityProvider);
+    dPrint("Update activity list");
     return _loadActivityList();
   }
 

@@ -46,7 +46,7 @@ abstract class _$CurrentPace extends $Notifier<Pace> {
   Pace build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Pace, Pace>;
     final element =
         ref.element
@@ -56,6 +56,6 @@ abstract class _$CurrentPace extends $Notifier<Pace> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

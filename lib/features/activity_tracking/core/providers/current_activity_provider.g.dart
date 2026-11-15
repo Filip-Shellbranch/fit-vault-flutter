@@ -47,7 +47,7 @@ abstract class _$CurrentActivity extends $Notifier<ActivityType> {
   ActivityType build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ActivityType, ActivityType>;
     final element =
         ref.element
@@ -57,6 +57,6 @@ abstract class _$CurrentActivity extends $Notifier<ActivityType> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -41,7 +41,7 @@ abstract class _$LocationPermission
   FutureOr<LocationRequestResult> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<LocationRequestResult>, LocationRequestResult>;
@@ -56,6 +56,6 @@ abstract class _$LocationPermission
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

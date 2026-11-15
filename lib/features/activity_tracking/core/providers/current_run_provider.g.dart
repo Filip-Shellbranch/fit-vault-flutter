@@ -39,7 +39,7 @@ abstract class _$CurrentRun extends $AsyncNotifier<Run?> {
   FutureOr<Run?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Run?>, Run?>;
     final element =
         ref.element
@@ -49,6 +49,6 @@ abstract class _$CurrentRun extends $AsyncNotifier<Run?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

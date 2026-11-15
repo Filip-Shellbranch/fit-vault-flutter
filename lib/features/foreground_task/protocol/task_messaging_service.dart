@@ -6,7 +6,7 @@ class TaskMessagingService {
   bool sendCommand(TaskCommand command) {
     try {
       FlutterForegroundTask.sendDataToTask(command.toJSON());
-    } catch (e, _) {
+    } catch (e) {
       dError("Error sending data to main task.");
       return false;
     }
@@ -16,7 +16,7 @@ class TaskMessagingService {
   Future<bool> sendToMain(Object message) async {
     try {
       FlutterForegroundTask.sendDataToMain(message);
-    } catch (e, _) {
+    } catch (e) {
       dError("Error sending data to main task.");
       return false;
     }
@@ -26,7 +26,7 @@ class TaskMessagingService {
   Future<bool> sendToTask(Object message) async {
     try {
       FlutterForegroundTask.sendDataToTask(message);
-    } catch (e, _) {
+    } catch (e) {
       dError("Error sending data to foreground task.");
       return false;
     }

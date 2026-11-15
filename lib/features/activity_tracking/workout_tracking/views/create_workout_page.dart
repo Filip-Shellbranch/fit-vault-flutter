@@ -16,7 +16,7 @@ class CreateWorkoutPage extends ConsumerWidget {
     late Workout workout;
     Workout? loadedValue = ref.watch(currentWorkoutProvider).value;
     if (loadedValue == null) {
-      return Text("Error no current workout.");
+      return CircularProgressIndicator();
     }
     workout = loadedValue;
     return Scaffold(

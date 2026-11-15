@@ -21,7 +21,8 @@ class ExerciseSearchResults extends ConsumerWidget {
     return ListView.builder(
       itemCount: searchResults.length,
       itemBuilder: (context, i) {
-        ExerciseType exerciseType = searchResults.elementAt(i).type;
+        ExerciseTypeResult exerciseResult = searchResults.elementAt(i);
+        ExerciseType exerciseType = exerciseResult.type;
         String exerciseName = exerciseType.exerciseName;
         return Container(
           padding: EdgeInsets.symmetric(vertical: 6),
@@ -55,6 +56,17 @@ class ExerciseSearchResults extends ConsumerWidget {
                               textAlign: TextAlign.left,
                               style: TextStyle(fontSize: 20),
                             ),
+                            exerciseResult.count > 0
+                                ? Text(
+                                    "Used ${exerciseResult.count} times",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                : Container(),
                             exerciseType.isBodyWeight
                                 ? Text(
                                     "Uses bodyweight",
@@ -71,7 +83,6 @@ class ExerciseSearchResults extends ConsumerWidget {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: TextButton(
@@ -91,7 +102,7 @@ class ExerciseSearchResults extends ConsumerWidget {
                   child: Text(
                     "Show info",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
                   ),

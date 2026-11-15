@@ -49,20 +49,19 @@ class EditExercisePage extends ConsumerStatefulWidget {
 }
 
 class _EditExercisePageState extends ConsumerState<EditExercisePage> {
-  List<ExerciseType> exerciseList = defaultExerciseList;
+  List<ExerciseTypeResult> exerciseList = List.empty();
 
-  final ValueNotifier<List<ExerciseType>> _searchResults =
-      ValueNotifier<List<ExerciseType>>(defaultExerciseList);
+  final ValueNotifier<List<ExerciseTypeResult>> _searchResults =
+      ValueNotifier<List<ExerciseTypeResult>>(List.empty());
 
   final searchController = TextEditingController();
 
-  void updateExerciseList(List<ExerciseType> newList) {
+  void updateExerciseList(List<ExerciseTypeResult> newList) {
     exerciseList = newList;
     _searchResults.value = newList;
   }
 
   List<ExerciseTypeResult> toResults(List<ExerciseType> types) {
-    //TODO: Rework file to use this.
     return types.map((e) => ExerciseTypeResult(e)).toList();
   }
 
@@ -88,7 +87,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
 
   void searchForExercise(String searchQuery) {
     final foundExercises = exerciseList.where((exerciseType) {
-      return exerciseType.exerciseName.toLowerCase().contains(
+      return exerciseType.type.exerciseName.toLowerCase().contains(
         searchQuery.toLowerCase().trim(),
       );
     }).toList();
@@ -102,7 +101,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
       newType,
     );
     if (result.isSuccess()) {
-      final newList = [...exerciseList, result.getType()];
+      final newList = [...exerciseList, ExerciseTypeResult(result.getType())];
       updateExerciseList(newList);
     }
     return result.isSuccess();
@@ -121,7 +120,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
     bool success = await repository.tryDeleteExerciseType(exerciseName);
     if (success) {
       final newList = [...exerciseList];
-      newList.removeWhere((e) => e.exerciseName == exerciseName);
+      newList.removeWhere((e) => e.type.exerciseName == exerciseName);
       updateExerciseList(newList);
     }
     return success;
@@ -129,13 +128,12 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
 
   @override
   void initState() {
+    exerciseList = toResults(defaultExerciseList);
     final repository = ref.read(exerciseTypeRepositoryProvider);
     repository.getExerciseTypesOrderByUsage().then((
       List<ExerciseTypeResult> savedExercises,
     ) {
-      updateExerciseList(
-        savedExercises.map((typeAndCount) => typeAndCount.type).toList(),
-      );
+      updateExerciseList(savedExercises);
     });
     super.initState();
   }
@@ -168,7 +166,7 @@ class _EditExercisePageState extends ConsumerState<EditExercisePage> {
                 builder: (context, value, child) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ExerciseSearchResults(
-                    searchResults: toResults(_searchResults.value),
+                    searchResults: _searchResults.value,
                     selectExerciseFunc: selectExercise,
                     deleteExerciseFunc: tryDeleteExerciseType,
                   ),

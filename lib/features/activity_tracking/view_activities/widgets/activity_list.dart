@@ -13,7 +13,21 @@ class ActivityListDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
-      return Text("No activities found!");
+      return SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "No activities found!",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+      );
     }
     return GroupedListView(
       elements: activities,

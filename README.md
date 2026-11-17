@@ -1,3 +1,5 @@
+<img width="256" height="256" alt="foreground" src="https://github.com/user-attachments/assets/68ddca77-3798-48ac-95db-a5054f033e0a" />
+
 # fit-vault-flutter
 A privacy centered, offline fitness tracker for both gym and running. Built using Flutter and Isar NoSQL. No account required.
 
